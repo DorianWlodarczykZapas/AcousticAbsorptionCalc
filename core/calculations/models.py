@@ -11,3 +11,8 @@ class Material(models.Model):
     _2000 = models.DecimalField(max_digits=22, decimal_places=2)
     _4000 = models.DecimalField(max_digits=22, decimal_places=2)
 
+
+class Norm(models.Model):
+    name = models.TextField()
+
+
