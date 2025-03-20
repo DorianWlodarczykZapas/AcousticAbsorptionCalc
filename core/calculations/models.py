@@ -21,3 +21,11 @@ class NormAbsorptionMultiplier(models.Model):
     absorption_multiplier = models.DecimalField(max_digits=22, decimal_places=2)
 
 
+class Calculation(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    reverberation_time = models.DecimalField(max_digits=10, decimal_places=2)
+    norm = models.ForeignKey(Norm, on_delete=models.CASCADE)
+    is_within_norm = models.BooleanField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
