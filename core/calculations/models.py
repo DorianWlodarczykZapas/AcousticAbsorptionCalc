@@ -16,3 +16,8 @@ class Norm(models.Model):
     name = models.TextField()
 
 
+class NormAbsorptionMultiplier(models.Model):
+    norm = models.ForeignKey(Norm, on_delete=models.CASCADE)
+    absorption_multiplier = models.DecimalField(max_digits=22, decimal_places=2)
+
+
