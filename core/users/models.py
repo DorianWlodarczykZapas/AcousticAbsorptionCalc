@@ -45,3 +45,8 @@ class ProjectNote(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+class SharedProject(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    shared_with_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    access_level = models.CharField(max_length=50)
+
