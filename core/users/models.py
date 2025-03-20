@@ -30,3 +30,10 @@ class RoomMaterial(models.Model):
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
     location = models.CharField(max_length=255)
 
+
+class Furnishing(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    material = models.ForeignKey(Material, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+
