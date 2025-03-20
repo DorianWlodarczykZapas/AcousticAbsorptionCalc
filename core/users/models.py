@@ -50,3 +50,11 @@ class SharedProject(models.Model):
     shared_with_user = models.ForeignKey(User, on_delete=models.CASCADE)
     access_level = models.CharField(max_length=50)
 
+
+class ChangeLog(models.Model):
+    entity_type = models.CharField(max_length=100)
+    entity_id = models.IntegerField()
+    changed_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    change_type = models.CharField(max_length=50)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
