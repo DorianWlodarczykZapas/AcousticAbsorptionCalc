@@ -37,3 +37,11 @@ class Furnishing(models.Model):
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
     quantity = models.IntegerField()
 
+
+class ProjectNote(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
