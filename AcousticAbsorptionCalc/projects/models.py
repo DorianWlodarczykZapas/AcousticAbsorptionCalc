@@ -1,4 +1,5 @@
 from django.db import models
+from rooms.models import Room
 from users.models import User
 
 
@@ -17,6 +18,6 @@ class SharedProject(models.Model):
 
 class ProjectNote(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    room = models.ForeignKey("rooms.Room", on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
