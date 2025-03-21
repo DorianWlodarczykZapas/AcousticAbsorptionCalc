@@ -29,6 +29,10 @@ INSTALLED_APPS = [
 INSTALLED_EXTENSIONS = [
     "users",
     "calculations",
+    "projects_history",
+    "plans",
+    "projects",
+    "rooms",
 ]
 
 INSTALLED_APPS += INSTALLED_EXTENSIONS
