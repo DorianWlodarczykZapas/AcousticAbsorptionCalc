@@ -43,3 +43,11 @@ class UserService:
         return User.objects.filter(email=email).first()
 
 
+    def delete_user(self, user_id: int) -> bool:
+        user = User.objects.filter(id=user_id).first()
+        if user:
+            user.delete()
+            return True
+        return False
+
+
