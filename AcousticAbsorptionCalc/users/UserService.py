@@ -24,3 +24,15 @@ class UserService:
             return User.objects.get(email=email, password_hash=password_hash)
         except User.DoesNotExist:
             return None
+
+    def update_user(self, user_id: int, **kwargs) -> Optional[User]:
+        try:
+            user = User.objects.get(id=user_id)
+            for key, value in kwargs.items():
+                if hasattr(user, key):
+                    setattr(user, key, value)
+            user.save()
+            return user
+        except User.DoesNotExist:
+            return None
+
