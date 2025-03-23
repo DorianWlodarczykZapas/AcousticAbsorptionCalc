@@ -17,3 +17,10 @@ class UserService:
             role=role
         )
         return user
+
+    def login_user(self, email: str, password: str) -> Optional[User]:
+        password_hash = self.hash_password(password)
+        try:
+            return User.objects.get(email=email, password_hash=password_hash)
+        except User.DoesNotExist:
+            return None
