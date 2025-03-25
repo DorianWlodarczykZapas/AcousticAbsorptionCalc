@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from .models import Material, Norm
+from .models import Material, Norm, NormAbsorptionMultiplier
 
 
 class RoomAcousticCalculator:
@@ -21,3 +21,10 @@ class RoomAcousticCalculator:
 
     def get_absorption_coefficient(self, material: Material, frequency: str) -> Decimal:
         return getattr(material, frequency)
+
+    def get_absorption_multiplier(self) -> Decimal:
+        try:
+            multiplier = NormAbsorptionMultiplier.objects.get(norm=self.norm)
+            return multiplier.absorption_multiplier
+        except NormAbsorptionMultiplier.DoesNotExist:
+            return Decimal("1.0")
