@@ -43,3 +43,12 @@ class RoomAcousticCalculator:
                 continue
 
         return total
+
+    def sabine_reverberation_time(self, frequency: str) -> Decimal:
+        A = self.total_absorption(frequency)
+        V = Decimal(self.volume())
+
+        if A == 0:
+            return Decimal("0.0")
+
+        return Decimal("0.161") * V / A
