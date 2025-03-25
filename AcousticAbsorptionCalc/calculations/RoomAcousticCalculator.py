@@ -59,3 +59,6 @@ class RoomAcousticCalculator:
         return Calculation.objects.create(
             reverberation_time=rt, norm=self.norm, is_within_norm=is_within
         )
+
+    def check_if_within_norm(self, rt: Decimal) -> bool:
+        return Decimal("0.3") <= rt <= Decimal("1.2")
