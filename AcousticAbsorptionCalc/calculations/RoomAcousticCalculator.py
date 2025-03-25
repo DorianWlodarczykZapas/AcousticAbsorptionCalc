@@ -28,3 +28,18 @@ class RoomAcousticCalculator:
             return multiplier.absorption_multiplier
         except NormAbsorptionMultiplier.DoesNotExist:
             return Decimal("1.0")
+
+    def total_absorption(self, frequency: str) -> Decimal:
+        all_materials = {**self.furnishing, **self.construction}
+        multiplier = self.get_absorption_multiplier()
+        total = Decimal("0.0")
+
+        for name, area in all_materials.items():
+            try:
+                material = Material.objects.get(name=name)
+                alpha = self.get_absorption_coefficient(material, frequency)
+                total += Decimal(area) * alpha * multiplier
+            except Material.DoesNotExist:
+                continue
+
+        return total
