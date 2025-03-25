@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from .models import Material, Norm, NormAbsorptionMultiplier
+from .models import Calculation, Material, Norm, NormAbsorptionMultiplier
 
 
 class RoomAcousticCalculator:
@@ -52,3 +52,10 @@ class RoomAcousticCalculator:
             return Decimal("0.0")
 
         return Decimal("0.161") * V / A
+
+    def save_calculation(self, frequency: str):
+        rt = self.sabine_reverberation_time(frequency)
+        is_within = self.check_if_within_norm(rt)
+        return Calculation.objects.create(
+            reverberation_time=rt, norm=self.norm, is_within_norm=is_within
+        )
