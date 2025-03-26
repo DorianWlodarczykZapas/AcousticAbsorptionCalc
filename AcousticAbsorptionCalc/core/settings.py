@@ -49,7 +49,7 @@ MIDDLEWARE = [
     "silk.middleware.SilkyMiddleware",
 ]
 
-ROOT_URLCONF = "AcousticAbsorptionCalc.urls"
+ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
     {
@@ -74,10 +74,9 @@ WSGI_APPLICATION = "AcousticAbsorptionCalc.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "default": env("db"),
-    }
+    "default": env.db(),
 }
+
 
 # DATABASES = {
 #     "default": {
