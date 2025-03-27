@@ -1,17 +1,17 @@
 from django.contrib import messages
-from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect, render
+
+from .forms import UserRegistrationForm
 
 
 def register(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data["username"]
-            messages.success(request, f"Account created for {username}")
-            return redirect("something")
+            user = form.save()
+            messages.success(request, f"Konto utworzone dla {user.username}")
+            return redirect("sth")
     else:
-        form = UserCreationForm()
+        form = UserRegistrationForm()
 
     return render(request, "users/register.html", {"form": form})
