@@ -5,7 +5,7 @@ from projects_history.Logger import Logger
 from .forms import UserRegistrationForm
 
 
-def register(request):
+def register(request):  # Class Based View - CBV
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
         if form.is_valid():

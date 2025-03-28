@@ -16,8 +16,13 @@ class RoomAcousticCalculator:
         self.construction = construction
         self.norm = norm
 
+    @property
     def volume(self):
         return self.height * self.length * self.width
+
+    @property
+    def all_materials(self) -> dict[..., ...]:
+        return {**self.furnishing, **self.construction}
 
     def get_absorption_coefficient(self, material: Material, frequency: str) -> Decimal:
         return getattr(material, frequency)
@@ -30,11 +35,10 @@ class RoomAcousticCalculator:
             return Decimal("1.0")
 
     def total_absorption(self, frequency: str) -> Decimal:
-        all_materials = {**self.furnishing, **self.construction}
         multiplier = self.get_absorption_multiplier()
         total = Decimal("0.0")
 
-        for name, area in all_materials.items():
+        for name, area in self.all_materials.items():
             try:
                 material = Material.objects.get(name=name)
                 alpha = self.get_absorption_coefficient(material, frequency)
@@ -46,7 +50,7 @@ class RoomAcousticCalculator:
 
     def sabine_reverberation_time(self, frequency: str) -> Decimal:
         A = self.total_absorption(frequency)
-        V = Decimal(self.volume())
+        V = Decimal(self.volume)
 
         if A == 0:
             return Decimal("0.0")
