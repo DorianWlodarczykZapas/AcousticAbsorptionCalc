@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>
+            {% block title %}iLanding App{% endblock %}
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="{% static 'ilanding/assets/img/favicon.png' %}" />
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap"
+              rel="stylesheet" />
+        <link href="{% static 'ilanding/assets/vendor/bootstrap/css/bootstrap.min.css' %}"
+              rel="stylesheet" />
+        <link href="{% static 'ilanding/assets/css/style.css' %}" rel="stylesheet" />
+        {% block extra_head %}{% endblock %}
+    </head>
+    <body>
+        {% block header %}{% endblock %}
+        <main id="main">
+            {% block content %}{% endblock %}
+        </main>
+        {% block footer %}{% endblock %}
+        <script src="{% static 'ilanding/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'ilanding/assets/js/main.js' %}"></script>
+        {% block extra_js %}{% endblock %}
+    </body>
+</html>
