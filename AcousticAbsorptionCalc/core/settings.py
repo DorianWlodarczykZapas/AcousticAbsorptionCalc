@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "debug_toolbar",
     "silk",
+    "widget_tweaks",
 ]
 
 INSTALLED_EXTENSIONS = [
