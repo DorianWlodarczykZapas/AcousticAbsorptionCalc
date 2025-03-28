@@ -67,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "AcousticAbsorptionCalc.wsgi.application"
+WSGI_APPLICATION = "core.wsgi.application"
 
 
 # Database
