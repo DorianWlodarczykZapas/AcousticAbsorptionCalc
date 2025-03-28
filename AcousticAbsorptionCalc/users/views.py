@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from projects_history import Logger
+from projects_history.Logger import Logger
 
 from .forms import UserRegistrationForm
 
@@ -14,7 +14,7 @@ def register(request):
             Logger.log_account_creation(user_id=user.id, changed_by=user)
 
             messages.success(request, f"Konto utworzone dla {user.username}")
-            return redirect("sth")
+            return redirect("users/home.html")
     else:
         form = UserRegistrationForm()
 
