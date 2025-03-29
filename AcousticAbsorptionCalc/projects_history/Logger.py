@@ -1,21 +1,14 @@
-from django.utils import timezone
 from users.models import User
-
-from .models import ChangeLog
 
 
 class Logger:
-    @staticmethod
-    def log_account_creation(user_id: int, changed_by: User):
-        try:
-            user = User.objects.get(pk=user_id)
+    """Wrapper for user and system logging actions."""
 
-            ChangeLog.objects.create(
-                entity_type="konto",
-                entity_id=user.id,
-                changed_by=changed_by,
-                change_type="Utworzono konto",
-                timestamp=timezone.now(),
-            )
-        except User.DoesNotExist:
-            print(f"User with id {user_id} does not exist.")
+    @staticmethod
+    @log_change(entity_type="konto", change_type="Utworzono konto")
+    def log_account_creation(user_id: int, changed_by: User) -> None:
+        """
+        Creates user and logs the action.
+        """
+        if not User.objects.filter(pk=user_id).exists():
+            raise User.DoesNotExist(f"User with id {user_id} does not exist.")
