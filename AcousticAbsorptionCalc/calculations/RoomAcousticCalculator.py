@@ -4,11 +4,40 @@ from .models import Calculation, Material, Norm, NormAbsorptionMultiplier
 
 
 class RoomAcousticCalculator:
+    """Performs room acoustic calculations using the Sabine formula.
+
+    This class calculates the reverberation time of a room based on its
+    dimensions, materials, and acoustic norm settings. It supports frequency-specific
+    computations and stores results in the database.
+
+    Args:
+        height (float): Height of the room in meters.
+        length (float): Length of the room in meters.
+        width (float): Width of the room in meters.
+        furnishing (dict[str, float]): Dictionary of furnishing materials and their areas (in m²).
+        construction (dict[str, float]): Dictionary of construction materials and their areas (in m²).
+        norm (Norm): The acoustic norm to be applied in the calculation.
+
+    Attributes:
+        height (float): Room height.
+        length (float): Room length.
+        width (float): Room width.
+        furnishing (dict[str, float]): Furnishing materials and areas.
+        construction (dict[str, float]): Construction materials and areas.
+        norm (Norm): Applied acoustic norm.
+
+    Methods:
+        volume: Calculates room volume.
+        all_materials: Merges furnishing and construction materials.
+        get_absorption_coefficient(material, frequency): Returns the absorption coefficient for a material at a given frequency.
+        get_absorption_multiplier(): Returns the multiplier based on the norm.
+        total_absorption(frequency): Calculates total sound absorption at a given frequency.
+        sabine_reverberation_time(frequency): Computes reverberation time using the Sabine formula.
+        check_if_within_norm(rt): Checks if a given reverberation time is within norm limits.
+        save_calculation(frequency): Saves the reverberation time calculation result to the database.
+    """
     def __init__(self, height, length, width, furnishing, construction, norm: Norm):
-        """
-        furnishing: dict {material_name: area_in_m2}
-        construction: dict {material_name: area_in_m2}
-        """
+       
         self.height = height
         self.length = length
         self.width = width
