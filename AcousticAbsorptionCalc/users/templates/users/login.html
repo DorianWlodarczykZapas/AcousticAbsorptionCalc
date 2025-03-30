@@ -1,21 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Login</title>
-    </head>
-    <body>
-        <h1>Logowanie</h1>
-        <form method="post">
-            {% csrf_token %}
-            <label for="username">Login:</label>
-            <input type="text" name="username" id="username" required>
-            <br>
-            <label for="password">Hasło:</label>
-            <input type="password" name="password" id="password" required>
-            <br>
-            <button type="submit">Zaloguj się</button>
-        </form>
-        {% if error %}<p style="color: red;">{{ error }}</p>{% endif %}
-    </body>
-</html>
+{% extends "base.html" %}
+{% block title %}Logowanie{% endblock %}
+{% block content %}
+    <h2>Logowanie</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="username">Login:</label>
+        <input type="text" name="username" id="username" required>
+        <br>
+        <label for="password">Hasło:</label>
+        <input type="password" name="password" id="password" required>
+        <br>
+        <button type="submit">Zaloguj się</button>
+    </form>
+    {% if error %}<p style="color: red;">{{ error }}</p>{% endif %}
+{% endblock %}
