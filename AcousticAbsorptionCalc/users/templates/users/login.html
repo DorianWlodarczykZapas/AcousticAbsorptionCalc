@@ -4,8 +4,8 @@
     <h2>Logowanie</h2>
     <form method="post">
         {% csrf_token %}
-        <label for="username">Login:</label>
-        <input type="text" name="username" id="username" required>
+        <label for="identifier">Login lub Email:</label>
+        <input type="text" name="identifier" id="identifier" required>
         <br>
         <label for="password">Hasło:</label>
         <input type="password" name="password" id="password" required>
