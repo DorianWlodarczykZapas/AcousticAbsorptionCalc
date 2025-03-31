@@ -1,5 +1,6 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth.hashers import check_password
+from django.db import models
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
@@ -7,6 +8,7 @@ from django.views.generic.edit import FormView
 from projects_history.Logger import Logger
 
 from .forms import UserRegistrationForm
+from .models import User
 
 
 class RegisterView(FormView):
@@ -28,12 +30,17 @@ class LoginView(View):
         return render(request, "login.html")
 
     def post(self, request):
-        username = request.POST.get("username")
+        identifier = request.POST.get("identifier")
         password = request.POST.get("password")
 
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
+        user = User.objects.filter(
+            models.Q(username=identifier) | models.Q(email=identifier)
+        ).first()
+
+        if user and check_password(password, user.password_hash):
+            request.session["user_id"] = user.id
+            request.user = user
             return redirect("home")
         else:
+            messages.error(request, "Invalid username/email or password")
             return render(request, "login.html", {"error": "Invalid credentials"})
