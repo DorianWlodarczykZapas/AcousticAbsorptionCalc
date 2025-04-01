@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container mt-4">
+        <h2>Moje logi</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Typ zmiany</th>
+                    <th>Typ obiektu</th>
+                    <th>ID obiektu</th>
+                    <th>Opis</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                    <tr>
+                        <td>{{ log.timestamp }}</td>
+                        <td>{{ log.get_change_type_display }}</td>
+                        <td>{{ log.get_entity_type_display }}</td>
+                        <td>{{ log.entity_id }}</td>
+                        <td>{{ log.metadata|default:"—" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5">Brak logów do wyświetlenia.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
