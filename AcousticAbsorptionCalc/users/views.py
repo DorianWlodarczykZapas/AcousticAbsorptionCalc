@@ -1,11 +1,14 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
+from django.views.generic import UpdateView
 from django.views.generic.edit import FormView
 from projects_history.Logger import Logger
 
-from .forms import UserRegistrationForm
+from .forms import UserProfileForm, UserRegistrationForm
+from .models import User
 from .services import AuthService, UserService
 
 
@@ -22,6 +25,7 @@ class RegisterView(FormView):
 
 
 class LoginView(View):
+
     def get(self, request):
         return render(request, "login.html")
 
@@ -37,3 +41,19 @@ class LoginView(View):
         else:
             messages.error(request, "Invalid username/email or password")
             return render(request, "login.html", {"error": "Invalid credentials"})
+
+
+class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
+
+    model = User
+    form_class = UserProfileForm
+    template_name = "edit_profile.html"
+    success_url = reverse_lazy("profile_success")
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def form_valid(self, form):
+        UserService.update_user(self.request.user, form.cleaned_data)
+        messages.success(self.request, "Profil został zaktualizowany.")
+        return super().form_valid(form)

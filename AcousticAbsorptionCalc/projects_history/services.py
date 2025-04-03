@@ -1,4 +1,4 @@
-from .repositories import ChangeLogRepository
+from .repository import ChangeLogRepository
 
 
 class ChangeLogService:
