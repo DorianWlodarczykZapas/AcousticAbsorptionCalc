@@ -13,3 +13,10 @@ class UserRepository:
     @staticmethod
     def create_user(user_data):
         return User.objects.create(**user_data)
+
+    @staticmethod
+    def update_user(user, updated_data):
+        for key, value in updated_data.items():
+            setattr(user, key, value)
+        user.save()
+        return user
