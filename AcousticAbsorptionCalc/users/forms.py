@@ -43,3 +43,22 @@ class UserRegistrationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class UserProfileForm(forms.ModelForm):
+
+    new_password = forms.CharField(
+        label="Nowe hasło",
+        max_length=255,
+        required=False,
+        widget=forms.PasswordInput,
+        help_text="Pozostaw puste, jeśli nie chcesz zmieniać hasła.",
+    )
+
+    class Meta:
+        model = User
+        fields = ["username", "email", "new_password"]
+
+    def clean_new_password(self):
+        new_password = self.cleaned_data.get("new_password")
+        return new_password if new_password else None
