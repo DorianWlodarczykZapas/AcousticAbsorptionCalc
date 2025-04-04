@@ -57,3 +57,11 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
         UserService.update_user(self.request.user, form.cleaned_data)
         messages.success(self.request, "Profil został zaktualizowany.")
         return super().form_valid(form)
+
+
+class LogoutView(View):
+    def post(self, request, *args, **kwargs):
+
+        AuthService.logout_user(request)
+        messages.success(request, "Zostałeś wylogowany pomyślnie.")
+        return redirect(reverse_lazy("users:login"))
