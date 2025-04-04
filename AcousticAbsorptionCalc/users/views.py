@@ -27,7 +27,7 @@ class RegisterView(FormView):
 class LoginView(View):
 
     def get(self, request):
-        return render(request, "login.html")
+        return render(request, "users/login.html")
 
     def post(self, request):
         identifier = request.POST.get("identifier")
@@ -37,10 +37,10 @@ class LoginView(View):
         if user:
             request.session["user_id"] = user.id
             request.user = user
-            return redirect("home")
+            return redirect("users/home.html")
         else:
             messages.error(request, "Invalid username/email or password")
-            return render(request, "login.html", {"error": "Invalid credentials"})
+            return render(request, "users/login.html", {"error": "Invalid credentials"})
 
 
 class UserProfileUpdateView(LoginRequiredMixin, UpdateView):

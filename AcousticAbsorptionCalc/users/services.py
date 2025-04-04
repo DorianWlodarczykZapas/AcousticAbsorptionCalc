@@ -1,3 +1,4 @@
+from django.contrib.auth import logout
 from django.contrib.auth.hashers import check_password, make_password
 
 from .models import User
@@ -29,3 +30,7 @@ class UserService:
             user.password_hash = make_password(new_password)
 
         user.save()
+
+    @staticmethod
+    def logout_user(request):
+        logout(request)

@@ -1,5 +1,7 @@
 from users.models import User
 
+from .log_change import log_change
+
 
 class Logger:
     """Wrapper for user and system logging actions."""
