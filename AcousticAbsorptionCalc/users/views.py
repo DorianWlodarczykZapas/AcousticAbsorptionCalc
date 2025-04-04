@@ -60,7 +60,7 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class LogoutView(View):
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
 
         UserService.logout_user(request)
         messages.success(request, "Zostałeś wylogowany pomyślnie.")
