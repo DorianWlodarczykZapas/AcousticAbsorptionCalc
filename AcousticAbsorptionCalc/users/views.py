@@ -60,8 +60,8 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class LogoutView(View):
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
 
-        AuthService.logout_user(request)
+        UserService.logout_user(request)
         messages.success(request, "Zostałeś wylogowany pomyślnie.")
         return redirect(reverse_lazy("users:login"))
