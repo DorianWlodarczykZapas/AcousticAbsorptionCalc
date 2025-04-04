@@ -23,6 +23,12 @@ class RegisterView(FormView):
         messages.success(self.request, f"Konto utworzone dla {user.username}")
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        messages.error(
+            self.request, "Błąd podczas tworzenia konta. Sprawdź poprawność formularza."
+        )
+        return self.render_to_response(self.get_context_data(form=form))
+
 
 class LoginView(View):
 
@@ -37,17 +43,18 @@ class LoginView(View):
         if user:
             request.session["user_id"] = user.id
             request.user = user
-            return redirect("users/home.html")
+            return redirect("users:home")
         else:
-            messages.error(request, "Invalid username/email or password")
-            return render(request, "users/login.html", {"error": "Invalid credentials"})
+            messages.error(request, "Nieprawidłowa nazwa użytkownika / email lub hasło")
+            return render(
+                request, "users/login.html", {"error": "Nieprawidłowe dane logowania"}
+            )
 
 
 class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
-
     model = User
     form_class = UserProfileForm
-    template_name = "edit_profile.html"
+    template_name = "users/edit_profile.html"
     success_url = reverse_lazy("profile_success")
 
     def get_object(self, queryset=None):
@@ -55,13 +62,24 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         UserService.update_user(self.request.user, form.cleaned_data)
-        messages.success(self.request, "Profil został zaktualizowany.")
+        messages.success(self.request, "Twój profil został zaktualizowany.")
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Błąd w formularzu. Spróbuj ponownie.")
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class LogoutView(View):
     def post(self, request, *args, **kwargs):
-
         UserService.logout_user(request)
         messages.success(request, "Zostałeś wylogowany pomyślnie.")
         return redirect(reverse_lazy("users:login"))
+
+
+class HomeView(LoginRequiredMixin, View):
+    login_url = "users:login"
+    redirect_field_name = "next"
+
+    def get(self, request):
+        return render(request, "home.html")
