@@ -74,11 +74,11 @@ class LogoutView(View):
     def post(self, request, *args, **kwargs):
         UserService.logout_user(request)
         messages.success(request, "Zostałeś wylogowany pomyślnie.")
-        return redirect(reverse_lazy("users:login"))
+        return redirect(reverse_lazy("login"))
 
 
-class HomeView(LoginRequiredMixin, View):
-    login_url = "users:login"
+class HomeView(LoginRequiredMixin, View):  # TemplateView
+    login_url = "login"
     redirect_field_name = "next"
 
     def get(self, request):

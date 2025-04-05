@@ -19,7 +19,7 @@
         {% block header %}
             <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
                 <div class="container">
-                    <a class="navbar-brand" href="{% url 'users:home' %}">iLanding</a>
+                    <a class="navbar-brand" href="{% url 'home' %}">iLanding</a>
                     <button class="navbar-toggler"
                             type="button"
                             data-bs-toggle="collapse"
@@ -32,22 +32,10 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'my_projects' %}">Moje projekty</a>
+                                <a class="nav-link" href="{% url 'edit_profile' %}">Ustawienia konta</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'sample_rooms' %}">Przykładowe pokoje</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'sample_projects' %}">Przykładowe projekty</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'account_history' %}">Historia konta</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'users:profile_edit' %}">Ustawienia konta</a>
-                            </li>
-                            <li class="nav-item">
-                                <form action="{% url 'users:logout' %}" method="post">
+                                <form action="{% url 'logout' %}" method="post">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-danger">Wyloguj się</button>
                                 </form>
