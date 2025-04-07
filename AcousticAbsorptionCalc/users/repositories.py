@@ -21,7 +21,10 @@ class UserRepository:
 
     @staticmethod
     def update_user(user, updated_data):
+        password = updated_data.pop("password", None)
         for key, value in updated_data.items():
             setattr(user, key, value)
+        if password:
+            user.set_password(password)
         user.save()
         return user
