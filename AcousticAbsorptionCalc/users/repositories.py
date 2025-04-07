@@ -12,7 +12,12 @@ class UserRepository:
 
     @staticmethod
     def create_user(user_data):
-        return User.objects.create(**user_data)
+        password = user_data.pop("password", None)
+        user = User(**user_data)
+        if password:
+            user.set_password(password)
+        user.save()
+        return user
 
     @staticmethod
     def update_user(user, updated_data):
