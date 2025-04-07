@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -31,7 +32,6 @@ class RegisterView(FormView):
 
 
 class LoginView(View):
-
     def get(self, request):
         return render(request, "users/login.html")
 
@@ -41,8 +41,7 @@ class LoginView(View):
 
         user = AuthService.authenticate(identifier, password)
         if user:
-            request.session["user_id"] = user.id
-            request.user = user
+            login(request, user)
             return redirect("users:home")
         else:
             messages.error(request, "Nieprawidłowa nazwa użytkownika / email lub hasło")
