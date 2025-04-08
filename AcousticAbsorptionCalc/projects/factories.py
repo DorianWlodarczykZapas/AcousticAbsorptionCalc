@@ -1,6 +1,6 @@
 import factory
 from factory.django import DjangoModelFactory
-from users.factories import UserFactory
+from users.tests.factories import UserFactory
 
 from .models import Project
 
