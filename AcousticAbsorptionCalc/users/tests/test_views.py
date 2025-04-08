@@ -33,3 +33,9 @@ def test_logout_view(client, user):
     client.login(username=user.username, password="password123")
     response = client.post(reverse("logout"))
     assert response.status_code == 302
+
+
+def test_home_view_requires_login(client):
+    response = client.get(reverse("users:home"))
+    assert response.status_code == 302
+    assert "/login" in response.url
