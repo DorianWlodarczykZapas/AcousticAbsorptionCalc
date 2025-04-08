@@ -24,3 +24,14 @@ def test_password_mismatch_fails():
     form = UserRegistrationForm(data=data)
     assert not form.is_valid()
     assert "Hasła muszą być takie same." in str(form.errors)
+
+
+def test_missing_email():
+    data = {
+        "username": "tester",
+        "password1": "password123",
+        "password2": "password123",
+    }
+    form = UserRegistrationForm(data=data)
+    assert not form.is_valid()
+    assert "email" in form.errors
