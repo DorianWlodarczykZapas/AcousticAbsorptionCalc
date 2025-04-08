@@ -9,3 +9,9 @@ def test_register_view(client, user_data):
     response = client.post(reverse("register"), data=user_data)
     assert response.status_code == 302
     assert User.objects.filter(username=user_data["username"]).exists()
+
+
+def test_login_success(client, user):
+    client.login(username=user.username, password="password123")
+    response = client.get(reverse("users:home"))
+    assert response.status_code == 200
