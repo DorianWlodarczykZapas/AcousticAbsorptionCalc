@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 from projects.forms import ProjectForm
-from projects.services.project_service import ProjectService
+from projects.project_services import ProjectService
 
 
 class ProjectCreateView(LoginRequiredMixin, FormView):

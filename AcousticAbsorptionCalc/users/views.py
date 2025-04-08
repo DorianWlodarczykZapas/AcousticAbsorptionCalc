@@ -32,7 +32,7 @@ class RegisterView(FormView):
 
 
 class LoginView(View):
-    def get(self, request):
+    def get(request):
         return render(request, "users/login.html")
 
     def post(self, request):
@@ -76,7 +76,7 @@ class LogoutView(View):
         return redirect(reverse_lazy("login"))
 
 
-class HomeView(LoginRequiredMixin, View):  # TemplateView
+class HomeView(LoginRequiredMixin, View):
     login_url = "login"
     redirect_field_name = "next"
 
