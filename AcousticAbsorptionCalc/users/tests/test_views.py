@@ -27,3 +27,9 @@ def test_login_fail(client):
     )
     assert response.status_code == 200
     assert "Nieprawidłowe dane logowania" in response.content.decode()
+
+
+def test_logout_view(client, user):
+    client.login(username=user.username, password="password123")
+    response = client.post(reverse("logout"))
+    assert response.status_code == 302
