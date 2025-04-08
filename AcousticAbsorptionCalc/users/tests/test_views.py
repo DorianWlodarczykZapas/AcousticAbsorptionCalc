@@ -15,3 +15,15 @@ def test_login_success(client, user):
     client.login(username=user.username, password="password123")
     response = client.get(reverse("users:home"))
     assert response.status_code == 200
+
+
+def test_login_fail(client):
+    response = client.post(
+        reverse("login"),
+        data={
+            "identifier": "wronguser",
+            "password": "wrongpass",
+        },
+    )
+    assert response.status_code == 200
+    assert "Nieprawidłowe dane logowania" in response.content.decode()
