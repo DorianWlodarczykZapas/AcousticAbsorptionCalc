@@ -12,3 +12,15 @@ def test_valid_user_registration_form(user_data):
     assert user.email == user_data["email"]
     assert user.check_password(user_data["password1"])
     assert user.role == "free_version"
+
+
+def test_password_mismatch_fails():
+    data = {
+        "username": "tester",
+        "email": "tester@example.com",
+        "password1": "password123",
+        "password2": "wrongpass",
+    }
+    form = UserRegistrationForm(data=data)
+    assert not form.is_valid()
+    assert "Hasła muszą być takie same." in str(form.errors)
