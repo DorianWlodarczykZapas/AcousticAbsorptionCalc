@@ -5,8 +5,15 @@ User = get_user_model()
 
 
 class Plan(models.Model):
+    class PlanType(models.TextChoices):
+        BASE = "base", "Base"
+        PREMIUM = "premium", "Premium"
+        TRIAL = "trial", "Trial"
+
     name = models.CharField(max_length=255)
-    type = models.CharField(max_length=50)  # base, premium, trial
+    type = models.CharField(
+        max_length=50, choices=PlanType.choices, default=PlanType.BASE
+    )
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     billing_period = models.CharField(max_length=50)
