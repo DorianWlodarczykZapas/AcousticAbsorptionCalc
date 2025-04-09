@@ -2,7 +2,7 @@ import factory
 from factory.django import DjangoModelFactory
 from users.tests.factories import UserFactory
 
-from .models import Project
+from .models import Project, SharedProject
 
 
 class ProjectFactory(DjangoModelFactory):
@@ -14,8 +14,10 @@ class ProjectFactory(DjangoModelFactory):
     description = factory.Faker("paragraph")
 
 
-# Usage
-# ProjectFacotry.create() # ...
-# ProjectFactory.create(name='new_project')
-# ProjectFactory.build()
-# ProjectFactory.create_batch(10, user=...)
+class SharedProjectFactory(DjangoModelFactory):
+    class Meta:
+        model = SharedProject
+
+    project = factory.SubFactory(ProjectFactory)
+    shared_with_user = factory.SubFactory(UserFactory)
+    access_level = factory.Iterator(["read", "write", "admin"])
