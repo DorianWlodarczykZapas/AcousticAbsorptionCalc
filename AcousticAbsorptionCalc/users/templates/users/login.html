@@ -12,5 +12,8 @@
         <br>
         <button type="submit">Zaloguj się</button>
     </form>
+    <p>
+        Nie masz konta? <a href="{% url 'register' %}">Zarejestruj się</a>
+    </p>
     {% if error %}<p style="color: red;">{{ error }}</p>{% endif %}
 {% endblock %}
