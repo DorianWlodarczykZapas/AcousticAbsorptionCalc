@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from projects.factories import ProjectFactory
 from rooms.factories import RoomFactory
+from rooms.models import Room
 
 
 class RoomViewsTestCase(TestCase):
@@ -28,3 +29,19 @@ class RoomViewsTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Dodaj nowy pokój")
+
+    def test_room_create_view_post(self):
+        url = reverse("rooms:room_add", kwargs={"project_id": self.project.id})
+        data = {
+            "name": "Nowy pokój",
+            "width": "5.00",
+            "length": "6.00",
+            "height": "2.80",
+        }
+
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+
+        room = Room.objects.get(name="Nowy pokój")
+        self.assertEqual(room.project, self.project)
+        self.assertEqual(str(room.width), "5.00")
