@@ -21,3 +21,10 @@ class RoomViewsTestCase(TestCase):
         self.assertContains(response, self.room1.name)
         self.assertContains(response, self.room2.name)
         self.assertEqual(len(response.context["rooms"]), 2)
+
+    def test_room_create_view_get(self):
+        url = reverse("rooms:room_add", kwargs={"project_id": self.project.id})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Dodaj nowy pokój")
