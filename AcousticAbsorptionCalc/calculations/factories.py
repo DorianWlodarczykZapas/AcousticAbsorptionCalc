@@ -1,6 +1,6 @@
 import factory
 
-from .models import Material, Norm
+from .models import Material, Norm, NormAbsorptionMultiplier
 
 
 class NormFactory(factory.django.DjangoModelFactory):
@@ -22,3 +22,13 @@ class MaterialFactory(factory.django.DjangoModelFactory):
     _1000 = factory.Faker("pydecimal", left_digits=2, right_digits=2, positive=True)
     _2000 = factory.Faker("pydecimal", left_digits=2, right_digits=2, positive=True)
     _4000 = factory.Faker("pydecimal", left_digits=2, right_digits=2, positive=True)
+
+
+class NormAbsorptionMultiplierFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = NormAbsorptionMultiplier
+
+    norm = factory.SubFactory(NormFactory)
+    absorption_multiplier = factory.Faker(
+        "pydecimal", left_digits=2, right_digits=2, positive=True
+    )
