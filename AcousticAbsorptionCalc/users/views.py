@@ -32,7 +32,7 @@ class RegisterView(FormView):
 
 
 class LoginView(View):
-    def get(request):
+    def get(self, request):
         return render(request, "users/login.html")
 
     def post(self, request):
