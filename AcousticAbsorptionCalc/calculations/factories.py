@@ -1,6 +1,6 @@
 import factory
 
-from .models import Material, Norm, NormAbsorptionMultiplier
+from .models import Calculation, Material, Norm, NormAbsorptionMultiplier
 
 
 class NormFactory(factory.django.DjangoModelFactory):
@@ -32,3 +32,14 @@ class NormAbsorptionMultiplierFactory(factory.django.DjangoModelFactory):
     absorption_multiplier = factory.Faker(
         "pydecimal", left_digits=2, right_digits=2, positive=True
     )
+
+
+class CalculationFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Calculation
+
+    reverberation_time = factory.Faker(
+        "pydecimal", left_digits=2, right_digits=2, positive=True
+    )
+    norm = factory.SubFactory(NormFactory)
+    is_within_norm = factory.Faker("boolean")
