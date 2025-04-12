@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Dostępne plany</h2>
+  <form method="post" action="{% url 'plans:change' %}">
+    {% csrf_token %}
+    {% for plan in plans %}
+      <div>
+        <h3>{{ plan.name }} ({{ plan.get_type_display }})</h3>
+        <p>{{ plan.description }}</p>
+        <p>Cena: {{ plan.price }} / {{ plan.billing_period }}</p>
+        <button type="submit" name="plan_type" value="{{ plan.type }}">Wybierz</button>
+      </div>
+    {% endfor %}
+  </form>
+{% endblock %}
