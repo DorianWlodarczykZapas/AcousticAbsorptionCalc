@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, DeleteView, UpdateView
 from projects.forms import ProjectForm
 from projects.project_services import ProjectService
 
@@ -30,6 +30,16 @@ class ProjectUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Project
     form_class = ProjectForm
     template_name = "projects/project_form.html"
+    success_url = reverse_lazy("projects:project_list")
+
+    def test_func(self):
+        project = self.get_object()
+        return can_edit_project(self.request.user, project)
+
+
+class ProjectDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Project
+    template_name = "projects/project_confirm_delete.html"
     success_url = reverse_lazy("projects:project_list")
 
     def test_func(self):
