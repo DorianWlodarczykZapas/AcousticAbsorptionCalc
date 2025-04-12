@@ -1,11 +1,17 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
 from projects.forms import ProjectForm
 from projects.project_services import ProjectService
 
 from .models import Project
-from .permissions import can_edit_project
+from .permissions import can_edit_project, can_view_project
 
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
@@ -59,3 +65,13 @@ class ProjectListView(LoginRequiredMixin, ListView):
         if user.is_staff:
             return Project.objects.all()
         return own_projects.union(shared_projects)
+
+
+class ProjectDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = Project
+    template_name = "projects/project_detail.html"
+    context_object_name = "project"
+
+    def test_func(self):
+        project = self.get_object()
+        return can_view_project(self.request.user, project)
