@@ -9,7 +9,7 @@ urlpatterns = [
     path("", lambda request: redirect("login", permanent=False)),
     path("admin/", admin.site.urls),
     path("users/", include("users.urls")),
-    path("project_history/", include("projects_history.urls")),
+    path("projects_history/", include("projects_history.urls")),
     path("projects/", include("projects.urls")),
     path("rooms/", include("rooms.urls")),
     path("calculations/", include("calculations.urls")),

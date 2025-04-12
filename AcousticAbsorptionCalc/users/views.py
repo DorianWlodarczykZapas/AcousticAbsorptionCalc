@@ -3,6 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import UpdateView
 from django.views.generic.edit import FormView
@@ -26,7 +27,8 @@ class RegisterView(FormView):
 
     def form_invalid(self, form):
         messages.error(
-            self.request, "Błąd podczas tworzenia konta. Sprawdź poprawność formularza."
+            self.request,
+            _("Błąd podczas tworzenia konta. Sprawdź poprawność formularza."),
         )
         return self.render_to_response(self.get_context_data(form=form))
 

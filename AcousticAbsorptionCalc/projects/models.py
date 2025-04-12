@@ -8,6 +8,12 @@ class Project(models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = (
+            "user",
+            "name",
+        )
+
 
 class SharedProject(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
