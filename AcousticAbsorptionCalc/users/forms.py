@@ -21,7 +21,7 @@ class UserRegistrationForm(forms.ModelForm):
         model = User
         fields = ("username", "email", "password1", "password2")
 
-    def clean(self):
+    def clean(self) -> dict[str, str]:
         cleaned_data = super().clean()
         password1 = cleaned_data.get("password1")
         password2 = cleaned_data.get("password2")
@@ -31,7 +31,7 @@ class UserRegistrationForm(forms.ModelForm):
 
         return cleaned_data
 
-    def save(self, commit=True):
+    def save(self, commit: bool = True) -> User:
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         user.role = "free_version"
@@ -54,7 +54,7 @@ class UserProfileForm(forms.ModelForm):
         model = User
         fields = ["username", "email", "new_password"]
 
-    def save(self, commit=True):
+    def save(self, commit: bool = True) -> User:
         user = super().save(commit=False)
         new_password = self.cleaned_data.get("new_password")
 
