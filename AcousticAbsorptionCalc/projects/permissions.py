@@ -1,7 +1,13 @@
+from typing import TYPE_CHECKING
+
+from django.contrib.auth.models import User
 from projects.models import SharedProject
 
+if TYPE_CHECKING:
+    from projects.models import Project
 
-def can_view_project(user, project):
+
+def can_view_project(user: User, project: "Project") -> bool:
     return (
         project.user == user
         or user.is_staff
@@ -9,7 +15,7 @@ def can_view_project(user, project):
     )
 
 
-def can_edit_project(user, project):
+def can_edit_project(user: User, project: "Project") -> bool:
     return (
         project.user == user
         or user.is_staff
