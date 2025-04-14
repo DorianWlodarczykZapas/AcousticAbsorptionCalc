@@ -1,4 +1,7 @@
-from django.http import JsonResponse
+import json
+from typing import Any
+
+from django.http import HttpRequest, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
 from RoomAcousticCalculator import RoomAcousticCalculator
@@ -7,24 +10,22 @@ from .models import Norm
 
 
 class AcousticCalculationView(View):
-    def post(self, request, *args, **kwargs):
-        import json
-
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> JsonResponse:
         try:
-            data = json.loads(request.body)
+            data: dict[str, Any] = json.loads(request.body)
 
-            height = data.get("height")
-            length = data.get("length")
-            width = data.get("width")
-            furnishing = data.get("furnishing", {})
-            construction = data.get("construction", {})
-            norm_id = data.get("norm_id")
-            frequency = data.get("frequency")
+            height: float | None = data.get("height")
+            length: float | None = data.get("length")
+            width: float | None = data.get("width")
+            furnishing: dict[str, float] = data.get("furnishing", {})
+            construction: dict[str, float] = data.get("construction", {})
+            norm_id: int | None = data.get("norm_id")
+            frequency: str | None = data.get("frequency")
 
             if not all([height, length, width, norm_id, frequency]):
                 return JsonResponse({"error": "Brakuje wymaganych danych."}, status=400)
 
-            norm = get_object_or_404(Norm, id=norm_id)
+            norm: Norm = get_object_or_404(Norm, id=norm_id)
 
             calculator = RoomAcousticCalculator(
                 height=height,
