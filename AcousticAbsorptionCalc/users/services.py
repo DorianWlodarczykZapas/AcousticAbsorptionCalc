@@ -1,13 +1,16 @@
+from typing import Dict, Optional
+
 from django.contrib.auth import logout
 from django.utils.timezone import now, timedelta
+from plans.models import Plan, UserPlan
+
 from .models import User
 from .repositories import UserRepository
-from plans.models import Plan
 
 
 class AuthService:
     @staticmethod
-    def authenticate(identifier, password):
+    def authenticate(identifier: str, password: str) -> Optional[User]:
         user = UserRepository.get_by_identifier(identifier)
         if user and user.check_password(password):
             return user
@@ -16,13 +19,15 @@ class AuthService:
 
 class UserService:
     @staticmethod
-    def register_user(form):
+    def register_user(form) -> User:
         user = form.save()
 
         try:
             trial_plan = Plan.objects.get(type=Plan.PlanType.TRIAL)
         except Plan.DoesNotExist:
-            raise Exception("Plan Trial nie został znaleziony. Upewnij się, że istnieje w bazie.")
+            raise Exception(
+                "Plan Trial nie został znaleziony. Upewnij się, że istnieje w bazie."
+            )
 
         UserPlan.objects.create(
             user=user,
@@ -36,7 +41,7 @@ class UserService:
         return user
 
     @staticmethod
-    def update_user(user: User, data: dict):
+    def update_user(user: User, data: Dict[str, str]) -> None:
         user.username = data.get("username", user.username)
         user.email = data.get("email", user.email)
 
@@ -47,5 +52,5 @@ class UserService:
         user.save()
 
     @staticmethod
-    def logout_user(request):
+    def logout_user(request) -> None:
         logout(request)
