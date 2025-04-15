@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from projects_history.Logger import Logger
 
 from .forms import RoomForm
 from .models import Room
@@ -21,7 +22,11 @@ class RoomCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.project_id = self.kwargs.get("project_id")
-        return super().form_valid(form)
+        response = super().form_valid(form)
+
+        Logger.log_room_created(user_id=self.object.pk, changed_by=self.request.user)
+
+        return response
 
     def get_success_url(self):
         return reverse_lazy(
