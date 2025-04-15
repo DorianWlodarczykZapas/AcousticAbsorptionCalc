@@ -58,6 +58,13 @@ class RoomDeleteView(DeleteView):
     template_name = "rooms/room_confirm_delete.html"
     context_object_name = "room"
 
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        Logger.log_room_deleted(user_id=self.object.pk, changed_by=request.user)
+
+        return super().delete(request, *args, **kwargs)
+
     def get_success_url(self):
         return reverse_lazy(
             "rooms:room_list", kwargs={"project_id": self.object.project_id}
