@@ -40,6 +40,13 @@ class RoomUpdateView(UpdateView):
     template_name = "rooms/room_form.html"
     context_object_name = "room"
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        Logger.log_room_updated(user_id=self.object.pk, changed_by=self.request.user)
+
+        return response
+
     def get_success_url(self):
         return reverse_lazy(
             "rooms:room_list", kwargs={"project_id": self.object.project_id}
