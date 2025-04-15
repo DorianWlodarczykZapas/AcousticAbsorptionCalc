@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .forms import RoomForm
 from .models import Room
@@ -33,6 +33,17 @@ class RoomUpdateView(UpdateView):
     model = Room
     form_class = RoomForm
     template_name = "rooms/room_form.html"
+    context_object_name = "room"
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "rooms:room_list", kwargs={"project_id": self.object.project_id}
+        )
+
+
+class RoomDeleteView(DeleteView):
+    model = Room
+    template_name = "rooms/room_confirm_delete.html"
     context_object_name = "room"
 
     def get_success_url(self):
