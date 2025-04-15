@@ -26,3 +26,8 @@ class Logger:
     @log_change(entity_type="pomieszczenie", change_type="Dodano")
     def log_room_created(user_id: int, changed_by: User) -> None:
         pass
+
+    @staticmethod
+    @log_change(entity_type="pomieszczenie", change_type="Zaktualizowano")
+    def log_room_updated(user_id: int, changed_by: User) -> None:
+        pass
