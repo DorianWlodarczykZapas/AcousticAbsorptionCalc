@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container mt-4">
+        <h2>Usuń pokój</h2>
+        <p>
+            Czy na pewno chcesz usunąć pokój: <strong>{{ object.name }}</strong>?
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Tak, usuń</button>
+            <a href="{% url 'rooms:room_list' project_id=object.project_id %}"
+               class="btn btn-secondary">Anuluj</a>
+        </form>
+    </div>
+{% endblock %}
