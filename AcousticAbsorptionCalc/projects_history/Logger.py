@@ -21,3 +21,8 @@ class Logger:
         """
         if not User.objects.filter(pk=user_id).exists():
             raise User.DoesNotExist(f"User with id {user_id} does not exist.")
+
+    @staticmethod
+    @log_change(entity_type="pomieszczenie", change_type="Dodano")
+    def log_room_created(user_id: int, changed_by: User) -> None:
+        pass
