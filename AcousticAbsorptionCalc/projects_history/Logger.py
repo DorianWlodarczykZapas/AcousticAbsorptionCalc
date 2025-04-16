@@ -46,3 +46,8 @@ class Logger:
     @log_change(entity_type="projekt", change_type="Zaktualizowano")
     def log_project_updated(user_id: int, changed_by: User) -> None:
         pass
+
+    @staticmethod
+    @log_change(entity_type="projekt", change_type="Usunięto")
+    def log_project_deleted(user_id: int, changed_by: User) -> None:
+        pass
