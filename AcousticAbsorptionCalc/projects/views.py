@@ -40,6 +40,11 @@ class ProjectUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         project = self.get_object()
         return can_edit_project(self.request.user, project)
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        Logger.log_project_updated(user_id=self.object.pk, changed_by=self.request.user)
+        return response
+
 
 class ProjectDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Project
