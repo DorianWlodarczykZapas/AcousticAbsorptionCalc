@@ -36,3 +36,8 @@ class Logger:
     @log_change(entity_type="pomieszczenie", change_type="Usunięto")
     def log_room_deleted(user_id: int, changed_by: User) -> None:
         pass
+
+    @staticmethod
+    @log_change(entity_type="projekt", change_type="Utworzono")
+    def log_project_created(user_id: int, changed_by: User) -> None:
+        pass
