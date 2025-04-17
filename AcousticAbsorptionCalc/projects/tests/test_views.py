@@ -87,3 +87,11 @@ class ProjectListViewTest(TestCase):
         self.assertIn(self.own_project, projects)
         self.assertIn(self.shared_project, projects)
         self.assertNotIn(self.unrelated_project, projects)
+
+
+class ProjectDetailViewTest(TestCase):
+    def setUp(self) -> None:
+        self.user: User = UserFactory()
+        self.other_user: User = UserFactory()
+        self.project: Project = ProjectFactory(user=self.user)
+        self.client = Client()
