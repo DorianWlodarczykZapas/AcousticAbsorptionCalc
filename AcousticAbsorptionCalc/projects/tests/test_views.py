@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.test import Client, TestCase
 from django.urls import reverse
+from projects.factories import ProjectFactory
 from projects.models import Project
 from users.factories import UserFactory
 from users.models import User
@@ -29,3 +30,11 @@ class ProjectCreateViewTest(TestCase):
         response: HttpResponse = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
         self.assertIn("/login", response.url)
+
+
+class ProjectUpdateViewTest(TestCase):
+    def setUp(self) -> None:
+        self.user: User = UserFactory()
+        self.other_user: User = UserFactory()
+        self.project: Project = ProjectFactory(user=self.user)
+        self.client: Client = Client()
