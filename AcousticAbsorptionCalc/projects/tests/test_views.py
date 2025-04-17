@@ -78,3 +78,12 @@ class ProjectListViewTest(TestCase):
         self.own_project = ProjectFactory(user=self.user)
         self.shared_project = SharedProjectFactory(shared_with_user=self.user).project
         self.unrelated_project = ProjectFactory(user=self.other_user)
+
+    def test_list_projects_includes_own_and_shared(self) -> None:
+        url = reverse("projects:project_list")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        projects = response.context["projects"]
+        self.assertIn(self.own_project, projects)
+        self.assertIn(self.shared_project, projects)
+        self.assertNotIn(self.unrelated_project, projects)
