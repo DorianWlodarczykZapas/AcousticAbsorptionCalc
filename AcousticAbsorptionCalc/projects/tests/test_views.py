@@ -38,3 +38,13 @@ class ProjectUpdateViewTest(TestCase):
         self.other_user: User = UserFactory()
         self.project: Project = ProjectFactory(user=self.user)
         self.client: Client = Client()
+
+    def test_user_can_update_own_project(self) -> None:
+        self.client.force_login(self.user)
+        url = reverse("projects:project_update", args=[self.project.pk])
+        response = self.client.post(
+            url, {"name": "Updated Name", "description": "Updated Description"}
+        )
+        self.assertEqual(response.status_code, 302)
+        self.project.refresh_from_db()
+        self.assertEqual(self.project.name, "Updated Name")
