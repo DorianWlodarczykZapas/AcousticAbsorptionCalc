@@ -95,3 +95,9 @@ class ProjectDetailViewTest(TestCase):
         self.other_user: User = UserFactory()
         self.project: Project = ProjectFactory(user=self.user)
         self.client = Client()
+
+    def test_view_own_project(self) -> None:
+        self.client.force_login(self.user)
+        url = reverse("projects:project_detail", args=[self.project.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
