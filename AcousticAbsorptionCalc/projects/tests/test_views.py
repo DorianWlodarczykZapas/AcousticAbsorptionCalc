@@ -23,3 +23,9 @@ class ProjectCreateViewTest(TestCase):
         )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(Project.objects.filter(name="New Test Project").exists())
+
+    def test_redirect_if_not_logged_in(self) -> None:
+        self.client.logout()
+        response: HttpResponse = self.client.get(self.url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/login", response.url)
