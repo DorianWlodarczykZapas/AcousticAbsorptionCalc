@@ -48,3 +48,9 @@ class ProjectUpdateViewTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.project.refresh_from_db()
         self.assertEqual(self.project.name, "Updated Name")
+
+    def test_other_user_cannot_update(self) -> None:
+        self.client.force_login(self.other_user)
+        url = reverse("projects:project_update", args=[self.project.pk])
+        response = self.client.post(url, {"name": "Hacked", "description": "Nope"})
+        self.assertEqual(response.status_code, 403)
