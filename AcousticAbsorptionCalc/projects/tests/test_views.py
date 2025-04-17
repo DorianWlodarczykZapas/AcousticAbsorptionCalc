@@ -54,3 +54,10 @@ class ProjectUpdateViewTest(TestCase):
         url = reverse("projects:project_update", args=[self.project.pk])
         response = self.client.post(url, {"name": "Hacked", "description": "Nope"})
         self.assertEqual(response.status_code, 403)
+
+
+class ProjectDeleteViewTest(TestCase):
+    def setUp(self) -> None:
+        self.user: User = UserFactory()
+        self.project: Project = ProjectFactory(user=self.user)
+        self.client.force_login(self.user)
