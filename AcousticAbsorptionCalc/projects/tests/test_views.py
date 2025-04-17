@@ -101,3 +101,9 @@ class ProjectDetailViewTest(TestCase):
         url = reverse("projects:project_detail", args=[self.project.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+    def test_cannot_view_project_without_permission(self) -> None:
+        self.client.force_login(self.other_user)
+        url = reverse("projects:project_detail", args=[self.project.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 403)
