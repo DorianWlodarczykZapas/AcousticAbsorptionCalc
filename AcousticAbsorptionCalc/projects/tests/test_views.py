@@ -61,3 +61,9 @@ class ProjectDeleteViewTest(TestCase):
         self.user: User = UserFactory()
         self.project: Project = ProjectFactory(user=self.user)
         self.client.force_login(self.user)
+
+    def test_user_can_delete_project(self) -> None:
+        url = reverse("projects:project_delete", args=[self.project.pk])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(Project.objects.filter(pk=self.project.pk).exists())
