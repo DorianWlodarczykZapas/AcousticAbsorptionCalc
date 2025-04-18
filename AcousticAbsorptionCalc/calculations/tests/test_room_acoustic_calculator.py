@@ -44,3 +44,15 @@ class TestRoomAcousticCalculator(unittest.TestCase):
     def test_get_absorption_multiplier_default(self, mock_get):
         mock_get.side_effect = Exception("Not found")
         self.assertEqual(self.calc.get_absorption_multiplier(), Decimal("1.0"))
+
+    @patch("acoustic.room_acoustic_calculator.Material.objects.get")
+    @patch.object(RoomAcousticCalculator, "get_absorption_multiplier")
+    def test_total_absorption(self, mock_multiplier, mock_material_get):
+        mock_multiplier.return_value = Decimal("1.0")
+        mock_mat = MagicMock()
+        mock_mat.oz = Decimal("0.2")
+        mock_material_get.return_value = mock_mat
+
+        total = self.calc.total_absorption("oz")
+        expected = Decimal("0.2") * Decimal("10.0") + Decimal("0.2") * Decimal("50.0")
+        self.assertEqual(total, expected)
