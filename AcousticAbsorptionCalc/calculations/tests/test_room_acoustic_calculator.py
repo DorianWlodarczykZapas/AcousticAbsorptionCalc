@@ -62,3 +62,8 @@ class TestRoomAcousticCalculator(unittest.TestCase):
         mock_total_abs.return_value = Decimal("12.0")
         rt = self.calc.sabine_reverberation_time("oz")
         self.assertAlmostEqual(rt, Decimal("0.805"))
+
+    def test_check_if_within_norm(self):
+        self.assertTrue(self.calc.check_if_within_norm(Decimal("0.5")))
+        self.assertTrue(self.calc.check_if_within_norm(Decimal("0.3")))
+        self.assertFalse(self.calc.check_if_within_norm(Decimal("0.2")))
