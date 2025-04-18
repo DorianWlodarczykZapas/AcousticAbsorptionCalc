@@ -1,6 +1,6 @@
 import unittest
 from decimal import Decimal
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from calculations.RoomAcousticCalculator import RoomAcousticCalculator
 
@@ -28,3 +28,9 @@ class TestRoomAcousticCalculator(unittest.TestCase):
         self.assertIn("Carpet", all_mats)
         self.assertIn("Concrete", all_mats)
         self.assertEqual(all_mats["Carpet"], 10.0)
+
+    @patch("acoustic.room_acoustic_calculator.Material.objects.get")
+    def test_get_absorption_coefficient(self, mock_get):
+        mock_get.return_value = self.material
+        alpha = self.calc.get_absorption_coefficient(self.material, "oz")
+        self.assertEqual(alpha, Decimal("0.5"))
