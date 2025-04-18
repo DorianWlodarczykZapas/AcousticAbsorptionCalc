@@ -19,3 +19,6 @@ class TestRoomAcousticCalculator(unittest.TestCase):
             construction={"Concrete": 50.0},
             norm=self.norm,
         )
+
+    def test_volume_calculation(self):
+        self.assertAlmostEqual(self.calc.volume, 60.0)
