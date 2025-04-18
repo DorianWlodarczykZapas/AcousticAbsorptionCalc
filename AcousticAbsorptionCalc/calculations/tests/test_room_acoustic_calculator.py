@@ -67,3 +67,14 @@ class TestRoomAcousticCalculator(unittest.TestCase):
         self.assertTrue(self.calc.check_if_within_norm(Decimal("0.5")))
         self.assertTrue(self.calc.check_if_within_norm(Decimal("0.3")))
         self.assertFalse(self.calc.check_if_within_norm(Decimal("0.2")))
+
+    @patch("acoustic.room_acoustic_calculator.Calculation.objects.create")
+    @patch.object(RoomAcousticCalculator, "sabine_reverberation_time")
+    @patch.object(RoomAcousticCalculator, "check_if_within_norm")
+    def test_save_calculation(self, mock_check, mock_rt, mock_create):
+        mock_rt.return_value = Decimal("0.5")
+        mock_check.return_value = True
+        self.calc.save_calculation("oz")
+        mock_create.assert_called_once_with(
+            reverberation_time=Decimal("0.5"), norm=self.norm, is_within_norm=True
+        )
