@@ -39,3 +39,8 @@ class TestRoomAcousticCalculator(unittest.TestCase):
     def test_get_absorption_multiplier_found(self, mock_get):
         mock_get.return_value.absorption_multiplier = Decimal("1.3")
         self.assertEqual(self.calc.get_absorption_multiplier(), Decimal("1.3"))
+
+    @patch("acoustic.room_acoustic_calculator.NormAbsorptionMultiplier.objects.get")
+    def test_get_absorption_multiplier_default(self, mock_get):
+        mock_get.side_effect = Exception("Not found")
+        self.assertEqual(self.calc.get_absorption_multiplier(), Decimal("1.0"))
