@@ -22,3 +22,9 @@ class TestRoomAcousticCalculator(unittest.TestCase):
 
     def test_volume_calculation(self):
         self.assertAlmostEqual(self.calc.volume, 60.0)
+
+    def test_all_materials_merge(self):
+        all_mats = self.calc.all_materials
+        self.assertIn("Carpet", all_mats)
+        self.assertIn("Concrete", all_mats)
+        self.assertEqual(all_mats["Carpet"], 10.0)
