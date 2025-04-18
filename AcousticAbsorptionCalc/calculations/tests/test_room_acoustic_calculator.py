@@ -34,3 +34,8 @@ class TestRoomAcousticCalculator(unittest.TestCase):
         mock_get.return_value = self.material
         alpha = self.calc.get_absorption_coefficient(self.material, "oz")
         self.assertEqual(alpha, Decimal("0.5"))
+
+    @patch("acoustic.room_acoustic_calculator.NormAbsorptionMultiplier.objects.get")
+    def test_get_absorption_multiplier_found(self, mock_get):
+        mock_get.return_value.absorption_multiplier = Decimal("1.3")
+        self.assertEqual(self.calc.get_absorption_multiplier(), Decimal("1.3"))
