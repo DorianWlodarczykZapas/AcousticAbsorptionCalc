@@ -2,6 +2,7 @@ from typing import Any
 
 from calculations.factories import NormFactory
 from calculations.models import Norm
+from calculations.RoomAcousticCalculator import Calculation
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APIClient
@@ -77,3 +78,22 @@ class AcousticCalculationViewTests(TestCase):
         response = self.client.post(self.url, data=payload, format="json")
         self.assertEqual(response.status_code, 500)
         self.assertIn("error", response.json())
+
+    def test_calculation_is_saved_in_database(self) -> None:
+        norm: Norm = NormFactory()
+        initial_count: int = Calculation.objects.count()
+
+        payload: dict[str, Any] = {
+            "height": 2.5,
+            "length": 5.0,
+            "width": 4.0,
+            "furnishing": {"carpet": 2.0},
+            "construction": {"wood": 1.5},
+            "norm_id": norm.id,
+            "frequency": "1000",
+        }
+
+        response = self.client.post(self.url, data=payload, format="json")
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(Calculation.objects.count(), initial_count + 1)
