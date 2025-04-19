@@ -32,3 +32,17 @@ class AcousticCalculationViewTests(TestCase):
         self.assertIn("reverberation_time", data)
         self.assertIn("is_within_norm", data)
         self.assertEqual(data["message"], "Pomiar wykonany poprawnie.")
+
+    def test_missing_required_fields_returns_400(self) -> None:
+        payload: dict[str, Any] = {
+            "height": 3.0,
+            "length": 5.0,
+            # brak width
+            "norm_id": None,
+            "frequency": "500",
+        }
+
+        response = self.client.post(self.url, data=payload, format="json")
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"], "Brakuje wymaganych danych.")
