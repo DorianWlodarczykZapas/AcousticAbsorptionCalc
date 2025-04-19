@@ -46,3 +46,17 @@ class AcousticCalculationViewTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["error"], "Brakuje wymaganych danych.")
+
+    def test_invalid_norm_id_returns_404(self) -> None:
+        payload: dict[str, Any] = {
+            "height": 3.0,
+            "length": 5.0,
+            "width": 4.0,
+            "furnishing": {"chair": 2.5},
+            "construction": {"brick": 1.5},
+            "norm_id": 999999,
+            "frequency": "500",
+        }
+
+        response = self.client.post(self.url, data=payload, format="json")
+        self.assertEqual(response.status_code, 404)
