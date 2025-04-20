@@ -38,3 +38,16 @@ class TestPlanChangeViewUnauthorized(TestCase):
         response = self.client.post(url, {"plan_type": "premium"})
         self.assertEqual(response.status_code, 302)
         self.assertIn("/login", response.url)
+
+
+class TestPlanChangeViewMissingData(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.client.force_login(self.user)
+
+    def test_missing_plan_type(self):
+        url = reverse("plans:change")
+        response = self.client.post(url, {})
+        messages = list(response.wsgi_request._messages)
+        self.assertEqual(len(messages), 1)
+        self.assertIn("error", messages[0].tags)
