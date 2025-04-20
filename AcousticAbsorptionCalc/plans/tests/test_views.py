@@ -17,3 +17,9 @@ class TestPlanChangeViewSuccess(TestCase):
         url = reverse("plans:change")
         response = self.client.post(url, {"plan_type": self.plan.type})
         self.assertRedirects(response, reverse("plans:list"))
+
+
+class TestPlanChangeViewInvalidPlan(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.client.force_login(self.user)
