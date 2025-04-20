@@ -65,3 +65,10 @@ class TestPlanChangeIdempotent(TestCase):
         response = self.client.post(url, {"plan_type": "base"})
         messages = list(response.wsgi_request._messages)
         self.assertIn("Zmieniono plan", messages[0].message)
+
+
+class TestPlanChangeMocked(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.plan = PlanFactory(type="premium")
+        self.client.force_login(self.user)
