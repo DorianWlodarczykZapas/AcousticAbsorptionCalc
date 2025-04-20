@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -72,3 +74,10 @@ class TestPlanChangeMocked(TestCase):
         self.user = UserFactory()
         self.plan = PlanFactory(type="premium")
         self.client.force_login(self.user)
+
+    @patch("plans.views.PlanService.change_user_plan")
+    def test_mocked_service_call(self, mock_change):
+        mock_change.return_value = None
+        url = reverse("plans:change")
+        self.client.post(url, {"plan_type": "premium"})
+        mock_change.assert_called_once()
