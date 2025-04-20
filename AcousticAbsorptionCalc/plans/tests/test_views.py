@@ -59,3 +59,9 @@ class TestPlanChangeIdempotent(TestCase):
         self.plan = PlanFactory(type="base")
         self.client.force_login(self.user)
         self.user_plan = UserPlanFactory(user=self.user, plan=self.plan)
+
+    def test_change_to_same_plan(self):
+        url = reverse("plans:change")
+        response = self.client.post(url, {"plan_type": "base"})
+        messages = list(response.wsgi_request._messages)
+        self.assertIn("Zmieniono plan", messages[0].message)
