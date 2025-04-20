@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-from plans.factories import PlanFactory
+from plans.factories import PlanFactory, UserPlanFactory
 from users.factories import UserFactory
 
 User = get_user_model()
@@ -51,3 +51,11 @@ class TestPlanChangeViewMissingData(TestCase):
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)
         self.assertIn("error", messages[0].tags)
+
+
+class TestPlanChangeIdempotent(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.plan = PlanFactory(type="base")
+        self.client.force_login(self.user)
+        self.user_plan = UserPlanFactory(user=self.user, plan=self.plan)
