@@ -30,3 +30,11 @@ class TestPlanChangeViewInvalidPlan(TestCase):
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)
         self.assertIn("error", messages[0].tags)
+
+
+class TestPlanChangeViewUnauthorized(TestCase):
+    def test_redirect_if_not_logged_in(self):
+        url = reverse("plans:change")
+        response = self.client.post(url, {"plan_type": "premium"})
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/login", response.url)
