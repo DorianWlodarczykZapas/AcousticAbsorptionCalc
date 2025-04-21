@@ -45,3 +45,16 @@ class RoomViewsTestCase(TestCase):
         room = Room.objects.get(name="Nowy pokój")
         self.assertEqual(room.project, self.project)
         self.assertEqual(str(room.width), "5.00")
+
+    def test_room_create_missing_name(self):
+        url = reverse("rooms:room_add", kwargs={"project_id": self.project.id})
+        data = {
+            "name": "",
+            "width": "5.00",
+            "length": "6.00",
+            "height": "2.80",
+        }
+
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, "form", "name", "To pole jest wymagane.")
