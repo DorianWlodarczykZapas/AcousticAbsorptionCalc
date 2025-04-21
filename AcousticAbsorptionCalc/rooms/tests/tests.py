@@ -101,3 +101,16 @@ class RoomViewsTestCase(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Room.objects.filter(pk=room.pk).exists())
+
+    def test_room_update_invalid_height(self):
+        url = reverse("rooms:room_update", kwargs={"pk": self.room1.pk})
+        data = {
+            "name": self.room1.name,
+            "width": self.room1.width,
+            "length": self.room1.length,
+            "height": "-1.00",
+        }
+
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, "form", "height", "Wartość musi być dodatnia.")
