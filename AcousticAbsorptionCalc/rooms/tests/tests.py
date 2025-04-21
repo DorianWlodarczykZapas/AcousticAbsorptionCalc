@@ -58,3 +58,16 @@ class RoomViewsTestCase(TestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, "form", "name", "To pole jest wymagane.")
+
+    def test_room_create_invalid_width(self):
+        url = reverse("rooms:room_add", kwargs={"project_id": self.project.id})
+        data = {
+            "name": "Zły pokój",
+            "width": "abc",
+            "length": "6.00",
+            "height": "2.80",
+        }
+
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, "form", "width", "Wprowadź liczbę.")
