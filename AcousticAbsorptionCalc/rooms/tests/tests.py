@@ -77,3 +77,12 @@ class RoomViewsTestCase(TestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 404)
+
+    def test_room_list_empty_for_project(self):
+        empty_project = ProjectFactory()
+        url = reverse("rooms:room_list", kwargs={"project_id": empty_project.id})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Brak pokoi")
+        self.assertEqual(len(response.context["rooms"]), 0)
