@@ -93,3 +93,11 @@ class RoomViewsTestCase(TestCase):
 
         other_room = Room.objects.filter(project=self.other_project).first()
         self.assertNotContains(response, other_room.name)
+
+    def test_room_delete(self):
+        room = RoomFactory(project=self.project)
+        url = reverse("rooms:room_delete", kwargs={"pk": room.pk})
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(Room.objects.filter(pk=room.pk).exists())
