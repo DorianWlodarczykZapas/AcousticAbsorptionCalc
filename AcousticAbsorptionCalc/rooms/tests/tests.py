@@ -71,3 +71,9 @@ class RoomViewsTestCase(TestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, "form", "width", "Wprowadź liczbę.")
+
+    def test_room_create_nonexistent_project(self):
+        url = reverse("rooms:room_add", kwargs={"project_id": 9999})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 404)
