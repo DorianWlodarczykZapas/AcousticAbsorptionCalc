@@ -86,3 +86,10 @@ class RoomViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Brak pokoi")
         self.assertEqual(len(response.context["rooms"]), 0)
+
+    def test_room_list_does_not_show_other_project_rooms(self):
+        url = reverse("rooms:room_list", kwargs={"project_id": self.project.id})
+        response = self.client.get(url)
+
+        other_room = Room.objects.filter(project=self.other_project).first()
+        self.assertNotContains(response, other_room.name)
