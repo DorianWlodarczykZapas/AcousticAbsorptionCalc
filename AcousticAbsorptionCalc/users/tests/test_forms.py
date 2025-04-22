@@ -78,3 +78,13 @@ class TestUserProfileForm:
 
         updated_user = form.save()
         assert updated_user.check_password("newsecurepass123")
+
+    def test_profile_invalid_email(self, user):
+        form_data = {
+            "username": "test",
+            "email": "not-an-email",
+            "new_password": "",
+        }
+        form = UserProfileForm(instance=user, data=form_data)
+        assert not form.is_valid()
+        assert "email" in form.errors
