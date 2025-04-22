@@ -40,3 +40,8 @@ class TestLoginView:
         )
         assert response.status_code == 200
         assert "Nieprawidłowe dane logowania" in response.content.decode()
+
+    def test_login_missing_fields(self, client):
+        response = client.post(reverse("login"), data={})
+        assert response.status_code == 200
+        assert "Nieprawidłowe dane logowania" in response.content.decode()
