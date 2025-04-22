@@ -21,3 +21,11 @@ class TestRegisterView:
         response = client.post(reverse("register"), data=invalid_data)
         assert response.status_code == 200
         assert "Błąd podczas tworzenia konta" in response.content.decode()
+
+
+class TestLoginView:
+    def test_login_success(self, client, user):
+        logged_in = client.login(username=user.username, password="password123")
+        assert logged_in is True
+        response = client.get(reverse("users:home"))
+        assert response.status_code == 200
