@@ -36,3 +36,16 @@ class TestUserRegistrationForm:
         form = UserRegistrationForm(data=data)
         assert not form.is_valid()
         assert "email" in form.errors
+
+    def test_form_short_password(self):
+        data = {
+            "username": "tester",
+            "email": "tester@example.com",
+            "password1": "123",
+            "password2": "123",
+        }
+        form = UserRegistrationForm(data=data)
+        assert not form.is_valid()
+        assert "Hasło musi mieć co najmniej 8 znaków." in str(
+            form.errors.get("password1", "")
+        )
