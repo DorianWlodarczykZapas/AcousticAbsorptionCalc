@@ -1,5 +1,5 @@
 import pytest
-from users.forms import UserRegistrationForm
+from users.forms import UserProfileForm, UserRegistrationForm
 
 pytestmark = pytest.mark.django_db
 
@@ -49,3 +49,20 @@ class TestUserRegistrationForm:
         assert "Hasło musi mieć co najmniej 8 znaków." in str(
             form.errors.get("password1", "")
         )
+
+
+class TestUserProfileForm:
+
+    def test_profile_update_without_password_change(self, user):
+        form_data = {
+            "username": "newname",
+            "email": "newemail@example.com",
+            "new_password": "",
+        }
+        form = UserProfileForm(instance=user, data=form_data)
+        assert form.is_valid()
+
+        updated_user = form.save()
+        assert updated_user.username == "newname"
+        assert updated_user.email == "newemail@example.com"
+        assert updated_user.check_password("password123")
