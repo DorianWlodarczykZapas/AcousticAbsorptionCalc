@@ -52,3 +52,10 @@ class TestLogoutView:
         client.login(username=user.username, password="password123")
         response = client.post(reverse("logout"))
         assert response.status_code == 302
+
+
+class TestHomeView:
+    def test_home_requires_login(self, client):
+        response = client.get(reverse("users:home"))
+        assert response.status_code == 302
+        assert reverse("login") in response.url
