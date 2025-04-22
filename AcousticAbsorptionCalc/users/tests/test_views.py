@@ -45,3 +45,10 @@ class TestLoginView:
         response = client.post(reverse("login"), data={})
         assert response.status_code == 200
         assert "Nieprawidłowe dane logowania" in response.content.decode()
+
+
+class TestLogoutView:
+    def test_logout_success(self, client, user):
+        client.login(username=user.username, password="password123")
+        response = client.post(reverse("logout"))
+        assert response.status_code == 302
