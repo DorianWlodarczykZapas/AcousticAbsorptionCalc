@@ -26,3 +26,13 @@ class TestUserRegistrationForm:
         form = UserRegistrationForm(data=data)
         assert not form.is_valid()
         assert "Hasła muszą być takie same." in str(form.errors)
+
+    def test_form_missing_email(self):
+        data = {
+            "username": "tester",
+            "password1": "password123",
+            "password2": "password123",
+        }
+        form = UserRegistrationForm(data=data)
+        assert not form.is_valid()
+        assert "email" in form.errors
