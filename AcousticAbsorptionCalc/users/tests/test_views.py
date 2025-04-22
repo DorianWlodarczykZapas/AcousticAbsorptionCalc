@@ -29,3 +29,14 @@ class TestLoginView:
         assert logged_in is True
         response = client.get(reverse("users:home"))
         assert response.status_code == 200
+
+    def test_login_fail_invalid_credentials(self, client):
+        response = client.post(
+            reverse("login"),
+            data={
+                "identifier": "wronguser",
+                "password": "wrongpass",
+            },
+        )
+        assert response.status_code == 200
+        assert "Nieprawidłowe dane logowania" in response.content.decode()
