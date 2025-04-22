@@ -66,3 +66,15 @@ class TestUserProfileForm:
         assert updated_user.username == "newname"
         assert updated_user.email == "newemail@example.com"
         assert updated_user.check_password("password123")
+
+    def test_profile_update_with_password_change(self, user):
+        form_data = {
+            "username": user.username,
+            "email": user.email,
+            "new_password": "newsecurepass123",
+        }
+        form = UserProfileForm(instance=user, data=form_data)
+        assert form.is_valid()
+
+        updated_user = form.save()
+        assert updated_user.check_password("newsecurepass123")
