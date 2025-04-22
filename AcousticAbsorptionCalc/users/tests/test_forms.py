@@ -15,3 +15,14 @@ class TestUserRegistrationForm:
         assert user.email == user_data["email"]
         assert user.check_password(user_data["password1"])
         assert user.role == "free_version"
+
+    def test_form_password_mismatch(self):
+        data = {
+            "username": "tester",
+            "email": "tester@example.com",
+            "password1": "password123",
+            "password2": "wrongpass",
+        }
+        form = UserRegistrationForm(data=data)
+        assert not form.is_valid()
+        assert "Hasła muszą być takie same." in str(form.errors)
