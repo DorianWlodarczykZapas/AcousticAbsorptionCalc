@@ -18,3 +18,10 @@ class LoggerTests(TestCase):
         self.assertEqual(log.change_type, "Utworzono konto")
         self.assertEqual(log.entity_id, self.user.id)
         self.assertEqual(log.changed_by, self.creator)
+
+    def test_log_account_creation_raises_when_user_does_not_exist(self):
+        non_existing_id = 9999
+        with self.assertRaises(User.DoesNotExist):
+            Logger.log_account_creation(
+                user_id=non_existing_id, changed_by=self.creator
+            )
