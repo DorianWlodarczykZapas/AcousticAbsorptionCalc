@@ -25,3 +25,7 @@ class LoggerTests(TestCase):
             Logger.log_account_creation(
                 user_id=non_existing_id, changed_by=self.creator
             )
+
+    def test_log_account_creation_missing_changed_by_does_not_log(self):
+        Logger.log_account_creation(user_id=self.user.id, changed_by=None)
+        self.assertIsNone(ChangeLog.objects.last())
