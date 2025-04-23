@@ -33,3 +33,12 @@ class LoggerTests(TestCase):
     def test_log_account_creation_missing_user_id_does_not_log(self):
         Logger.log_account_creation(user_id=None, changed_by=self.creator)
         self.assertIsNone(ChangeLog.objects.last())
+
+    def test_log_room_created_creates_changelog(self):
+        Logger.log_room_created(user_id=self.user.id, changed_by=self.creator)
+
+        log = ChangeLog.objects.last()
+        self.assertEqual(log.entity_type, "pomieszczenie")
+        self.assertEqual(log.change_type, "Dodano")
+        self.assertEqual(log.entity_id, self.user.id)
+        self.assertEqual(log.changed_by, self.creator)
