@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 from django.test import TestCase
-from projects_history.log_change import ChangeLog
+from projects_history.log_change import ChangeLog, log_change
 from projects_history.Logger import Logger
 from users.models import User
 
@@ -49,3 +49,11 @@ class LoggerTests(TestCase):
     def test_log_account_creation_calls_changelog_create(self, mock_create):
         Logger.log_account_creation(user_id=self.user.id, changed_by=self.creator)
         mock_create.assert_called_once()
+
+    def test_decorator_preserves_function_return_value(self):
+        @log_change(entity_type="test", change_type="typ")
+        def dummy_func(user_id, changed_by):
+            return "ok"
+
+        result = dummy_func(user_id=self.user.id, changed_by=self.creator)
+        self.assertEqual(result, "ok")
