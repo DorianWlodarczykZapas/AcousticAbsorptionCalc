@@ -57,3 +57,12 @@ class LoggerTests(TestCase):
 
         result = dummy_func(user_id=self.user.id, changed_by=self.creator)
         self.assertEqual(result, "ok")
+
+    def test_decorator_does_not_log_without_required_args(self):
+        @log_change(entity_type="test", change_type="typ")
+        def dummy_func(user_id=None, changed_by=None):
+            return "ok"
+
+        result = dummy_func()
+        self.assertEqual(result, "ok")
+        self.assertIsNone(ChangeLog.objects.last())
