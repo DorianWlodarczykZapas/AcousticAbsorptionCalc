@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.test import TestCase
 from projects_history.log_change import ChangeLog
 from projects_history.Logger import Logger
@@ -42,3 +44,8 @@ class LoggerTests(TestCase):
         self.assertEqual(log.change_type, "Dodano")
         self.assertEqual(log.entity_id, self.user.id)
         self.assertEqual(log.changed_by, self.creator)
+
+    @patch("logger.log_change.ChangeLog.objects.create")
+    def test_log_account_creation_calls_changelog_create(self, mock_create):
+        Logger.log_account_creation(user_id=self.user.id, changed_by=self.creator)
+        mock_create.assert_called_once()
