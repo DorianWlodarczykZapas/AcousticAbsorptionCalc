@@ -78,3 +78,7 @@ class TestRoomAcousticCalculator(unittest.TestCase):
         mock_create.assert_called_once_with(
             reverberation_time=Decimal("0.5"), norm=self.norm, is_within_norm=True
         )
+
+    def test_volume_zero_dimension(self):
+        self.calc.height = 0
+        self.assertEqual(self.calc.volume, 0.0)
