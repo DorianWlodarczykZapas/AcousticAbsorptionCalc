@@ -115,3 +115,6 @@ class TestRoomAcousticCalculator(unittest.TestCase):
     def test_sabine_reverberation_time_zero_absorption(self, mock_total):
         rt = self.calc.sabine_reverberation_time("oz")
         self.assertEqual(rt, Decimal("0.0"))
+
+    def test_check_if_within_norm_above_range(self):
+        self.assertFalse(self.calc.check_if_within_norm(Decimal("1.5")))
