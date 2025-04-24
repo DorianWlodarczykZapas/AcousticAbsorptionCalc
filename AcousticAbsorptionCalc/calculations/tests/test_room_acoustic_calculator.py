@@ -108,3 +108,10 @@ class TestRoomAcousticCalculator(unittest.TestCase):
         mock_get.side_effect = Exception("Not found")
         total = self.calc.total_absorption("oz")
         self.assertEqual(total, Decimal("0.0"))
+
+    @patch.object(
+        RoomAcousticCalculator, "total_absorption", return_value=Decimal("0.0")
+    )
+    def test_sabine_reverberation_time_zero_absorption(self, mock_total):
+        rt = self.calc.sabine_reverberation_time("oz")
+        self.assertEqual(rt, Decimal("0.0"))
