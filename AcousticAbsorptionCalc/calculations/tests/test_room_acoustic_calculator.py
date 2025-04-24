@@ -82,3 +82,9 @@ class TestRoomAcousticCalculator(unittest.TestCase):
     def test_volume_zero_dimension(self):
         self.calc.height = 0
         self.assertEqual(self.calc.volume, 0.0)
+
+    def test_all_materials_overlapping_keys(self):
+        self.calc.furnishing = {"Carpet": 10.0}
+        self.calc.construction = {"Carpet": 5.0}
+        all_mats = self.calc.all_materials
+        self.assertEqual(all_mats["Carpet"], 5.0)
