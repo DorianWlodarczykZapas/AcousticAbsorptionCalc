@@ -121,3 +121,6 @@ class TestRoomAcousticCalculator(unittest.TestCase):
 
     def test_check_if_within_norm_lower_bound(self):
         self.assertTrue(self.calc.check_if_within_norm(Decimal("0.3")))
+
+    def test_check_if_within_norm_upper_bound(self):
+        self.assertTrue(self.calc.check_if_within_norm(Decimal("1.2")))
