@@ -88,3 +88,9 @@ class TestRoomAcousticCalculator(unittest.TestCase):
         self.calc.construction = {"Carpet": 5.0}
         all_mats = self.calc.all_materials
         self.assertEqual(all_mats["Carpet"], 5.0)
+
+    def test_get_absorption_coefficient_missing_attribute(self):
+        with self.assertRaises(AttributeError):
+            mat = MagicMock()
+            del mat.oz
+            self.calc.get_absorption_coefficient(mat, "oz")
