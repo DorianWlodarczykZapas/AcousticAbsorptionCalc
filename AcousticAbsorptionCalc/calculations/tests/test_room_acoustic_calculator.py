@@ -99,3 +99,12 @@ class TestRoomAcousticCalculator(unittest.TestCase):
     def test_get_absorption_multiplier_raises_unexpected(self, mock_get):
         mock_get.side_effect = Exception("Unexpected error")
         self.assertEqual(self.calc.get_absorption_multiplier(), Decimal("1.0"))
+
+    @patch("acoustic.room_acoustic_calculator.Material.objects.get")
+    @patch.object(
+        RoomAcousticCalculator, "get_absorption_multiplier", return_value=Decimal("1.0")
+    )
+    def test_total_absorption_material_not_found(self, mock_multiplier, mock_get):
+        mock_get.side_effect = Exception("Not found")
+        total = self.calc.total_absorption("oz")
+        self.assertEqual(total, Decimal("0.0"))
