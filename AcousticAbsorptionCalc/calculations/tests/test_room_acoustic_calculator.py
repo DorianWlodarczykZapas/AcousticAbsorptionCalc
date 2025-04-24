@@ -94,3 +94,8 @@ class TestRoomAcousticCalculator(unittest.TestCase):
             mat = MagicMock()
             del mat.oz
             self.calc.get_absorption_coefficient(mat, "oz")
+
+    @patch("acoustic.room_acoustic_calculator.NormAbsorptionMultiplier.objects.get")
+    def test_get_absorption_multiplier_raises_unexpected(self, mock_get):
+        mock_get.side_effect = Exception("Unexpected error")
+        self.assertEqual(self.calc.get_absorption_multiplier(), Decimal("1.0"))
