@@ -130,3 +130,19 @@ class AcousticCalculationViewTests(TestCase):
         response = self.client.post(self.url, data=payload, format="json")
         self.assertEqual(response.status_code, 200)
         self.assertIn("reverberation_time", response.json())
+
+    def test_string_frequency_as_number_string_is_accepted(self) -> None:
+        norm: Norm = NormFactory()
+        payload: dict[str, Any] = {
+            "height": 2.6,
+            "length": 4.5,
+            "width": 3.5,
+            "furnishing": {"rug": 2.0},
+            "construction": {"concrete": 2.5},
+            "norm_id": norm.id,
+            "frequency": "1000",
+        }
+
+        response = self.client.post(self.url, data=payload, format="json")
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.json()["reverberation_time"], float)
