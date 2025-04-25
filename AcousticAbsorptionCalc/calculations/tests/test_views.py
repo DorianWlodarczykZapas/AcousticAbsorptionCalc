@@ -97,3 +97,20 @@ class AcousticCalculationViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(Calculation.objects.count(), initial_count + 1)
+
+    def test_extra_unknown_field_is_ignored(self) -> None:
+        norm: Norm = NormFactory()
+        payload: dict[str, Any] = {
+            "height": 2.8,
+            "length": 5.0,
+            "width": 4.0,
+            "furnishing": {"sofa": 3.0},
+            "construction": {"plaster": 1.5},
+            "norm_id": norm.id,
+            "frequency": "500",
+            "unexpected_field": "I should be ignored",
+        }
+
+        response = self.client.post(self.url, data=payload, format="json")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("reverberation_time", response.json())
