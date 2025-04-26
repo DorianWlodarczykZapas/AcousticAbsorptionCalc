@@ -53,16 +53,20 @@ class UserRegistrationForm(forms.ModelForm):
 
 class UserProfileForm(forms.ModelForm):
     new_password = forms.CharField(
-        label="Nowe hasło",
+        label=_("Nowe hasło"),
         max_length=255,
         required=False,
         widget=forms.PasswordInput,
-        help_text="Pozostaw puste, jeśli nie chcesz zmieniać hasła.",
+        help_text=_("Pozostaw puste, jeśli nie chcesz zmieniać hasła."),
     )
 
     class Meta:
         model = User
         fields = ["username", "email", "new_password"]
+        labels = {
+            "username": _("Nazwa użytkownika"),
+            "email": _("Adres e-mail"),
+        }
 
     def save(self, commit: bool = True) -> User:
         user = super().save(commit=False)
