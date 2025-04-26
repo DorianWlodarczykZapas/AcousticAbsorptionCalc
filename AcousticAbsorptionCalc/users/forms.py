@@ -1,33 +1,43 @@
+from typing import Any
+
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from .models import User
 
 
 class UserRegistrationForm(forms.ModelForm):
     password1 = forms.CharField(
-        label="Hasło",
+        label=_("Hasło"),
         widget=forms.PasswordInput,
         min_length=8,
-        help_text="Hasło musi mieć co najmniej 8 znaków.",
+        help_text=_("Hasło musi mieć co najmniej 8 znaków."),
     )
     password2 = forms.CharField(
-        label="Powtórz hasło",
+        label=_("Powtórz hasło"),
         widget=forms.PasswordInput,
         min_length=8,
     )
-    email = forms.EmailField(required=True, help_text="Wprowadź poprawny adres e-mail.")
+    email = forms.EmailField(
+        required=True,
+        help_text=_("Wprowadź poprawny adres e-mail."),
+    )
 
     class Meta:
         model = User
         fields = ("username", "email", "password1", "password2")
+        labels = {
+            "username": _("Nazwa użytkownika"),
+            "email": _("Adres e-mail"),
+        }
 
-    def clean(self) -> dict[str, str]:
+    def clean(self) -> dict[str, Any]:
         cleaned_data = super().clean()
         password1 = cleaned_data.get("password1")
         password2 = cleaned_data.get("password2")
 
         if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("Hasła muszą być takie same.")
+            raise forms.ValidationError(_("Hasła muszą być takie same."))
 
         return cleaned_data
 
