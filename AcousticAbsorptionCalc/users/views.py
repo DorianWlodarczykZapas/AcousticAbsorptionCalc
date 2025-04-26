@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -82,9 +84,11 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class LogoutView(View):
-    def post(self, request, *args, **kwargs):
+    LOGOUT_SUCCESS_MSG = _("Zostałeś wylogowany pomyślnie.")
+
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         UserService.logout_user(request)
-        messages.success(request, "Zostałeś wylogowany pomyślnie.")
+        messages.success(request, self.LOGOUT_SUCCESS_MSG)
         return redirect(reverse_lazy("login"))
 
 
