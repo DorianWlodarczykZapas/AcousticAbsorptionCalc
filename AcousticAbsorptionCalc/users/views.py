@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
@@ -39,10 +39,12 @@ class RegisterView(FormView):
 
 
 class LoginView(View):
-    def get(self, request):
+    INVALID_LOGIN_MSG = _("Nieprawidłowa nazwa użytkownika / email lub hasło")
+
+    def get(self, request: HttpRequest) -> HttpResponse:
         return render(request, "users/login.html")
 
-    def post(self, request):
+    def post(self, request: HttpRequest) -> HttpResponse:
         identifier = request.POST.get("identifier")
         password = request.POST.get("password")
 
@@ -51,9 +53,9 @@ class LoginView(View):
             login(request, user)
             return redirect("users:home")
         else:
-            messages.error(request, "Nieprawidłowa nazwa użytkownika / email lub hasło")
+            messages.error(request, self.INVALID_LOGIN_MSG)
             return render(
-                request, "users/login.html", {"error": "Nieprawidłowe dane logowania"}
+                request, "users/login.html", {"error": self.INVALID_LOGIN_MSG}
             )
 
 
