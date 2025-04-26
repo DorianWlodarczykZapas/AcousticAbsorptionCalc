@@ -65,16 +65,19 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "users/edit_profile.html"
     success_url = reverse_lazy("profile_success")
 
-    def get_object(self, queryset=None):
+    PROFILE_UPDATED_MSG = _("Twój profil został zaktualizowany.")
+    PROFILE_UPDATE_ERROR_MSG = _("Błąd w formularzu. Spróbuj ponownie.")
+
+    def get_object(self, queryset=None) -> User:
         return self.request.user
 
-    def form_valid(self, form):
+    def form_valid(self, form: UserProfileForm) -> HttpResponse:
         UserService.update_user(self.request.user, form.cleaned_data)
-        messages.success(self.request, "Twój profil został zaktualizowany.")
+        messages.success(self.request, self.PROFILE_UPDATED_MSG)
         return super().form_valid(form)
 
-    def form_invalid(self, form):
-        messages.error(self.request, "Błąd w formularzu. Spróbuj ponownie.")
+    def form_invalid(self, form: UserProfileForm) -> HttpResponse:
+        messages.error(self.request, self.PROFILE_UPDATE_ERROR_MSG)
         return self.render_to_response(self.get_context_data(form=form))
 
 
