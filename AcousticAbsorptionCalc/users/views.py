@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
@@ -19,17 +20,21 @@ class RegisterView(FormView):
     form_class = UserRegistrationForm
     success_url = reverse_lazy("login")
 
-    def form_valid(self, form):
+    ACCOUNT_CREATED_MSG = _("Konto utworzone dla {username}")
+    ACCOUNT_CREATION_ERROR_MSG = _(
+        "Błąd podczas tworzenia konta. Sprawdź poprawność formularza."
+    )
+
+    def form_valid(self, form: UserRegistrationForm) -> HttpResponse:
         user = UserService.register_user(form)
         Logger.log_account_creation(user_id=user.id, changed_by=user)
-        messages.success(self.request, f"Konto utworzone dla {user.username}")
+        messages.success(
+            self.request, self.ACCOUNT_CREATED_MSG.format(username=user.username)
+        )
         return super().form_valid(form)
 
-    def form_invalid(self, form):
-        messages.error(
-            self.request,
-            _("Błąd podczas tworzenia konta. Sprawdź poprawność formularza."),
-        )
+    def form_invalid(self, form: UserRegistrationForm) -> HttpResponse:
+        messages.error(self.request, self.ACCOUNT_CREATION_ERROR_MSG)
         return self.render_to_response(self.get_context_data(form=form))
 
 
