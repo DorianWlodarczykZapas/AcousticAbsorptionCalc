@@ -78,3 +78,7 @@ class UserProfileForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class PasswordResetRequestForm(forms.Form):
+    email = forms.EmailField(label="Email", max_length=254)
