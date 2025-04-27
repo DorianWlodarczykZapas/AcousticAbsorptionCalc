@@ -9,7 +9,7 @@ from django.utils.timezone import now, timedelta
 from plans.models import Plan, UserPlan
 from projects_history.Logger import Logger
 
-from .models import User
+from .models import PasswordResetToken, User
 from .repositories import UserRepository
 
 
@@ -80,3 +80,14 @@ class PasswordResetService:
             return True
         except User.DoesNotExist:
             return False
+
+    @staticmethod
+    def validate_token(token: str) -> User | None:
+        try:
+            reset_token = PasswordResetToken.objects.get(token=token)
+            if reset_token.is_expired():
+                reset_token.delete()
+                return None
+            return reset_token.user
+        except PasswordResetToken.DoesNotExist:
+            return None
