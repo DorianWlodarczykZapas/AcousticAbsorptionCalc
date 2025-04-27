@@ -18,7 +18,7 @@ from .forms import (
     UserProfileForm,
     UserRegistrationForm,
 )
-from .models import User
+from .models import PasswordResetToken, User
 from .services import AuthService, PasswordResetService, UserService
 
 
@@ -149,3 +149,9 @@ class PasswordResetConfirmView(FormView):
             messages.error(self.request, self.PASSWORD_RESET_ERROR_MSG)
             return redirect("password_reset_request")
         return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form: SetNewPasswordForm) -> HttpResponse:
+        PasswordResetService.reset_password(self.user, form.cleaned_data["password"])
+        messages.success(self.request, self.PASSWORD_RESET_SUCCESS_MSG)
+        PasswordResetToken.objects.filter(user=self.user).delete()
+        return super().form_valid(form)
