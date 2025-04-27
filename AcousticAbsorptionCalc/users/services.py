@@ -1,8 +1,13 @@
 from typing import Dict, Optional
 
+from django.conf import settings
 from django.contrib.auth import logout
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.crypto import get_random_string
 from django.utils.timezone import now, timedelta
 from plans.models import Plan, UserPlan
+from projects_history.Logger import Logger
 
 from .models import User
 from .repositories import UserRepository
@@ -54,3 +59,24 @@ class UserService:
     @staticmethod
     def logout_user(request) -> None:
         logout(request)
+
+
+class PasswordResetService:
+    @staticmethod
+    def initiate_password_reset(email: str) -> bool:
+        try:
+            user = User.objects.get(email=email)
+            token = get_random_string(length=32)
+            reset_link = f"{settings.FRONTEND_URL}/reset-password/{token}"
+
+            subject = "Resetowanie hasła"
+            message = render_to_string(
+                "emails/password_reset_email.html", {"reset_link": reset_link}
+            )
+            send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+
+            Logger.log_password_reset_requested(user_id=user.id, changed_by=user)
+
+            return True
+        except User.DoesNotExist:
+            return False
