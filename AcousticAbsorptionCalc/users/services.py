@@ -91,3 +91,9 @@ class PasswordResetService:
             return reset_token.user
         except PasswordResetToken.DoesNotExist:
             return None
+
+    @staticmethod
+    def reset_password(user: User, new_password: str) -> None:
+        user.set_password(new_password)
+        user.save()
+        Logger.log_password_reset(user_id=user.id, changed_by=user)
