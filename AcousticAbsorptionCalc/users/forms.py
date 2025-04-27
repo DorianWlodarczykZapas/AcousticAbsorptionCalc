@@ -82,3 +82,19 @@ class UserProfileForm(forms.ModelForm):
 
 class PasswordResetRequestForm(forms.Form):
     email = forms.EmailField(label="Email", max_length=254)
+
+
+class SetNewPasswordForm(forms.Form):
+    password = forms.CharField(label="Nowe hasło", widget=forms.PasswordInput())
+    confirm_password = forms.CharField(
+        label="Potwierdź nowe hasło", widget=forms.PasswordInput()
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if password and confirm_password and password != confirm_password:
+            raise forms.ValidationError("Hasła muszą być takie same.")
+        return cleaned_data
