@@ -12,7 +12,12 @@ from django.views.generic import UpdateView
 from django.views.generic.edit import FormView
 from projects_history.Logger import Logger
 
-from .forms import PasswordResetRequestForm, UserProfileForm, UserRegistrationForm
+from .forms import (
+    PasswordResetRequestForm,
+    SetNewPasswordForm,
+    UserProfileForm,
+    UserRegistrationForm,
+)
 from .models import User
 from .services import AuthService, PasswordResetService, UserService
 
@@ -124,3 +129,23 @@ class PasswordResetRequestView(FormView):
     def form_invalid(self, form: PasswordResetRequestForm) -> HttpResponse:
         messages.error(self.request, self.PASSWORD_RESET_ERROR_MSG)
         return self.render_to_response(self.get_context_data(form=form))
+
+
+class PasswordResetConfirmView(FormView):
+    template_name = "users/password_reset_confirm.html"
+    form_class = SetNewPasswordForm
+    success_url = reverse_lazy("login")
+
+    PASSWORD_RESET_SUCCESS_MSG = _(
+        "Twoje hasło zostało zmienione. Możesz się teraz zalogować."
+    )
+    PASSWORD_RESET_ERROR_MSG = _("Token resetu hasła jest nieprawidłowy lub wygasł.")
+
+    def dispatch(self, request, *args, **kwargs):
+        self.token = kwargs.get("token")
+        self.user = PasswordResetService.validate_token(self.token)
+
+        if not self.user:
+            messages.error(self.request, self.PASSWORD_RESET_ERROR_MSG)
+            return redirect("password_reset_request")
+        return super().dispatch(request, *args, **kwargs)
