@@ -155,3 +155,6 @@ class PasswordResetConfirmView(FormView):
         messages.success(self.request, self.PASSWORD_RESET_SUCCESS_MSG)
         PasswordResetToken.objects.filter(user=self.user).delete()
         return super().form_valid(form)
+
+    def form_invalid(self, form: SetNewPasswordForm) -> HttpResponse:
+        return self.render_to_response(self.get_context_data(form=form))
