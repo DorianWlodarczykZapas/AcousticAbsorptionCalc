@@ -12,9 +12,9 @@ from django.views.generic import UpdateView
 from django.views.generic.edit import FormView
 from projects_history.Logger import Logger
 
-from .forms import UserProfileForm, UserRegistrationForm
+from .forms import PasswordResetRequestForm, UserProfileForm, UserRegistrationForm
 from .models import User
-from .services import AuthService, UserService
+from .services import AuthService, PasswordResetService, UserService
 
 
 class RegisterView(FormView):
@@ -98,3 +98,29 @@ class HomeView(LoginRequiredMixin, View):
 
     def get(self, request):
         return render(request, "home.html")
+
+
+class PasswordResetRequestView(FormView):
+    template_name = "users/password_reset_request.html"
+    form_class = PasswordResetRequestForm
+    success_url = reverse_lazy("login")
+
+    PASSWORD_RESET_EMAIL_SENT_MSG = _(
+        "Jeśli konto istnieje, wysłaliśmy instrukcje resetu hasła na podany adres email."
+    )
+    PASSWORD_RESET_ERROR_MSG = _("Wystąpił błąd. Spróbuj ponownie później.")
+
+    def form_valid(self, form: PasswordResetRequestForm) -> HttpResponse:
+        email = form.cleaned_data["email"]
+        success = PasswordResetService.initiate_password_reset(email)
+
+        if success:
+            messages.success(self.request, self.PASSWORD_RESET_EMAIL_SENT_MSG)
+        else:
+            messages.success(self.request, self.PASSWORD_RESET_EMAIL_SENT_MSG)
+
+        return super().form_valid(form)
+
+    def form_invalid(self, form: PasswordResetRequestForm) -> HttpResponse:
+        messages.error(self.request, self.PASSWORD_RESET_ERROR_MSG)
+        return self.render_to_response(self.get_context_data(form=form))
