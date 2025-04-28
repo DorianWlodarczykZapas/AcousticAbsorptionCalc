@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -6,10 +7,12 @@ from django.views.generic import (
     DetailView,
     ListView,
     UpdateView,
+    View,
 )
 from projects.forms import ProjectForm
 from projects.project_services import ProjectService
 from projects_history.Logger import Logger
+from services import PDFGeneratorService
 
 from .models import Project
 from .permissions import can_edit_project, can_view_project
@@ -83,3 +86,19 @@ class ProjectDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def test_func(self):
         project = self.get_object()
         return can_view_project(self.request.user, project)
+
+
+class ProjectPDFView(View):
+    def get(self, request, project_id):
+        project = Project.objects.prefetch_related("rooms").get(id=project_id)
+
+        context = {
+            "project": project,
+            "rooms": project.rooms.all(),
+        }
+
+        pdf_content = PDFGeneratorService.generate_project_pdf(context)
+
+        response = HttpResponse(pdf_content, content_type="application/pdf")
+        response["Content-Disposition"] = f'inline; filename="project_{project.id}.pdf"'
+        return response
