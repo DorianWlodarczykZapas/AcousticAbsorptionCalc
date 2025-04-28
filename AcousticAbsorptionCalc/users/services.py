@@ -1,10 +1,10 @@
+import uuid
 from typing import Dict, Optional
 
 from django.conf import settings
 from django.contrib.auth import logout
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from django.utils.crypto import get_random_string
 from django.utils.timezone import now, timedelta
 from plans.models import Plan, UserPlan
 from projects_history.Logger import Logger
@@ -66,8 +66,8 @@ class PasswordResetService:
     def initiate_password_reset(email: str) -> bool:
         try:
             user = User.objects.get(email=email)
-            token = get_random_string(length=32)
-            reset_link = f"{settings.FRONTEND_URL}/reset-password/{token}"
+            reset_token = PasswordResetToken.objects.create(user=user)
+            reset_link = f"{settings.FRONTEND_URL}/reset-password/{reset_token.token}"
 
             subject = "Resetowanie hasła"
             message = render_to_string(
@@ -84,12 +84,13 @@ class PasswordResetService:
     @staticmethod
     def validate_token(token: str) -> User | None:
         try:
-            reset_token = PasswordResetToken.objects.get(token=token)
+            uuid_token = uuid.UUID(token)
+            reset_token = PasswordResetToken.objects.get(token=uuid_token)
             if reset_token.is_expired():
                 reset_token.delete()
                 return None
             return reset_token.user
-        except PasswordResetToken.DoesNotExist:
+        except (PasswordResetToken.DoesNotExist, ValueError):
             return None
 
     @staticmethod
