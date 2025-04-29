@@ -1,3 +1,4 @@
+from core.views import HomeView
 from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
 from django.conf.urls.static import static
@@ -14,6 +15,7 @@ urlpatterns = [
     path("rooms/", include("rooms.urls")),
     path("calculations/", include("calculations.urls")),
     path("plans/", include("plans.urls")),
+    path("", HomeView.as_view(), name="home"),
 ]
 
 
