@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ app_title }}{% endblock %}
+{% block content %}
+    <div class="container text-center mt-5">
+        <h1 class="mb-4">{{ app_title }}</h1>
+        <p class="mb-4">{{ description }}</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'login' %}" class="btn btn-primary">{{ login_text }}</a>
+            <a href="{% url 'register' %}" class="btn btn-success">{{ register_text }}</a>
+        </div>
+    </div>
+{% endblock %}
