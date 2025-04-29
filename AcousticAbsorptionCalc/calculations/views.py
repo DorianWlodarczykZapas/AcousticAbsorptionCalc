@@ -1,10 +1,10 @@
 import json
 from typing import Any
 
+from calculations.RoomAcousticCalculator import RoomAcousticCalculator
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
-from RoomAcousticCalculator import RoomAcousticCalculator
 
 from .models import Norm
 

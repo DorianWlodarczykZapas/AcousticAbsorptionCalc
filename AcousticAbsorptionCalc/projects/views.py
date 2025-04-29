@@ -11,8 +11,8 @@ from django.views.generic import (
 )
 from projects.forms import ProjectForm
 from projects.project_services import ProjectService
+from projects.services import PDFGeneratorService
 from projects_history.Logger import Logger
-from services import PDFGeneratorService
 
 from .models import Project
 from .permissions import can_edit_project, can_view_project

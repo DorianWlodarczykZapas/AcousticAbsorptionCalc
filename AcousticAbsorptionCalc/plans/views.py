@@ -5,7 +5,7 @@ from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.views import View
 from django.views.generic import ListView
-from services import PlanService
+from plans.services import PlanService
 
 from .models import Plan
 
