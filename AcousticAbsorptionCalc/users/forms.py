@@ -8,27 +8,27 @@ from .models import User
 
 class UserRegistrationForm(forms.ModelForm):
     password1 = forms.CharField(
-        label=_("Hasło"),
+        label=_("Password"),
         widget=forms.PasswordInput,
         min_length=8,
-        help_text=_("Hasło musi mieć co najmniej 8 znaków."),
+        help_text=_("Password must be at least 8 characters long."),
     )
     password2 = forms.CharField(
-        label=_("Powtórz hasło"),
+        label=_("Repeat password"),
         widget=forms.PasswordInput,
         min_length=8,
     )
     email = forms.EmailField(
         required=True,
-        help_text=_("Wprowadź poprawny adres e-mail."),
+        help_text=_("Enter a valid email address."),
     )
 
     class Meta:
         model = User
         fields = ("username", "email", "password1", "password2")
         labels = {
-            "username": _("Nazwa użytkownika"),
-            "email": _("Adres e-mail"),
+            "username": _("Username"),
+            "email": _("Email address"),
         }
 
     def clean(self) -> dict[str, Any]:
@@ -37,7 +37,7 @@ class UserRegistrationForm(forms.ModelForm):
         password2 = cleaned_data.get("password2")
 
         if password1 and password2 and password1 != password2:
-            raise forms.ValidationError(_("Hasła muszą być takie same."))
+            raise forms.ValidationError(_("Passwords must match."))
 
         return cleaned_data
 
@@ -53,19 +53,19 @@ class UserRegistrationForm(forms.ModelForm):
 
 class UserProfileForm(forms.ModelForm):
     new_password = forms.CharField(
-        label=_("Nowe hasło"),
+        label=_("New password"),
         max_length=255,
         required=False,
         widget=forms.PasswordInput,
-        help_text=_("Pozostaw puste, jeśli nie chcesz zmieniać hasła."),
+        help_text=_("Leave empty if you don't want to change the password."),
     )
 
     class Meta:
         model = User
         fields = ["username", "email", "new_password"]
         labels = {
-            "username": _("Nazwa użytkownika"),
-            "email": _("Adres e-mail"),
+            "username": _("Username"),
+            "email": _("Email address"),
         }
 
     def save(self, commit: bool = True) -> User:
@@ -81,13 +81,13 @@ class UserProfileForm(forms.ModelForm):
 
 
 class PasswordResetRequestForm(forms.Form):
-    email = forms.EmailField(label="Email", max_length=254)
+    email = forms.EmailField(label=_("Email"), max_length=254)
 
 
 class SetNewPasswordForm(forms.Form):
-    password = forms.CharField(label="Nowe hasło", widget=forms.PasswordInput())
+    password = forms.CharField(label=_("New password"), widget=forms.PasswordInput())
     confirm_password = forms.CharField(
-        label="Potwierdź nowe hasło", widget=forms.PasswordInput()
+        label=_("Confirm new password"), widget=forms.PasswordInput()
     )
 
     def clean(self):
@@ -96,5 +96,5 @@ class SetNewPasswordForm(forms.Form):
         confirm_password = cleaned_data.get("confirm_password")
 
         if password and confirm_password and password != confirm_password:
-            raise forms.ValidationError("Hasła muszą być takie same.")
+            raise forms.ValidationError(_("Passwords must match."))
         return cleaned_data
