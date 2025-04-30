@@ -30,7 +30,7 @@ INSTALLED_APPS = [
 INSTALLED_EXTENSIONS = [
     "users",
     "calculations",
-    "projects_history",
+    "user_logs",
     "plans",
     "projects",
     "rooms",
