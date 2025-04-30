@@ -1,0 +1,374 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-04-30 12:25+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: .\calculations\views.py:27
+msgid "Missing required data."
+msgstr ""
+
+#: .\calculations\views.py:47
+msgid "Measurement completed successfully."
+msgstr ""
+
+#: .\core\views.py:8
+msgid "Acoustic Absorption Calculator"
+msgstr ""
+
+#: .\core\views.py:9
+msgid "Easily calculate and manage sound absorption projects."
+msgstr ""
+
+#: .\core\views.py:10
+msgid "Log in"
+msgstr ""
+
+#: .\core\views.py:11 .\templates\users\login.html:40
+#: .\templates\users\register.html:12 .\templates\users\register.html:35
+msgid "Register"
+msgstr ""
+
+#: .\plans\views.py:28
+#, python-brace-format
+msgid "Plan changed to {plan_type}."
+msgstr ""
+
+#: .\templates\plans\plan_list.html:4
+msgid "Available plans"
+msgstr ""
+
+#: .\templates\plans\plan_list.html:11
+msgid "Price:"
+msgstr ""
+
+#: .\templates\plans\plan_list.html:12
+msgid "Choose"
+msgstr ""
+
+#: .\templates\projects\project_detail_pdf.html:4
+msgid "Project:"
+msgstr ""
+
+#: .\templates\projects\project_detail_pdf.html:6
+msgid "Description:"
+msgstr ""
+
+#: .\templates\projects\project_detail_pdf.html:9
+msgid "Creation date:"
+msgstr ""
+
+#: .\templates\projects\project_detail_pdf.html:11
+msgid "Rooms"
+msgstr ""
+
+#: .\templates\projects\project_detail_pdf.html:15
+msgid "Name"
+msgstr ""
+
+#: .\templates\projects\project_detail_pdf.html:16
+msgid "Area (m²)"
+msgstr ""
+
+#: .\templates\projects\project_detail_pdf.html:17
+#: .\templates\user_logs\user_logs.html:13
+msgid "Description"
+msgstr ""
+
+#: .\templates\projects\project_detail_pdf.html:29
+msgid "No rooms in this project."
+msgstr ""
+
+#: .\templates\rooms\room_delete.html:5
+msgid "Delete Room"
+msgstr ""
+
+#: .\templates\rooms\room_delete.html:7
+msgid "Are you sure you want to delete the room:"
+msgstr ""
+
+#: .\templates\rooms\room_delete.html:11
+msgid "Yes, delete"
+msgstr ""
+
+#: .\templates\rooms\room_delete.html:13 .\templates\rooms\update_view.html:17
+msgid "Cancel"
+msgstr ""
+
+#: .\templates\rooms\room_form.html:4 .\templates\rooms\update_view.html:9
+msgid "Add Room"
+msgstr ""
+
+#: .\templates\rooms\room_form.html:7
+msgid "Add New Room"
+msgstr ""
+
+#: .\templates\rooms\room_form.html:11 .\templates\rooms\update_view.html:15
+msgid "Save"
+msgstr ""
+
+#: .\templates\rooms\update_view.html:7
+msgid "Edit Room"
+msgstr ""
+
+#: .\templates\user_logs\user_logs.html:5
+msgid "My Logs"
+msgstr ""
+
+#: .\templates\user_logs\user_logs.html:9
+msgid "Date"
+msgstr ""
+
+#: .\templates\user_logs\user_logs.html:10
+msgid "Change Type"
+msgstr ""
+
+#: .\templates\user_logs\user_logs.html:11
+msgid "Entity Type"
+msgstr ""
+
+#: .\templates\user_logs\user_logs.html:12
+msgid "Entity ID"
+msgstr ""
+
+#: .\templates\user_logs\user_logs.html:27
+msgid "No logs to display."
+msgstr ""
+
+#: .\templates\users\edit_profile.html:4
+msgid "Edit Profile"
+msgstr ""
+
+#: .\templates\users\edit_profile.html:8
+msgid "Save Changes"
+msgstr ""
+
+#: .\templates\users\login.html:4 .\templates\users\login.html:11
+#: .\templates\users\login.html:35 .\user_logs\models.py:17
+msgid "Login"
+msgstr ""
+
+#: .\templates\users\login.html:19
+msgid "Username or Email:"
+msgstr ""
+
+#: .\templates\users\login.html:27
+msgid "Password:"
+msgstr ""
+
+#: .\templates\users\login.html:39
+msgid "Don't have an account?"
+msgstr ""
+
+#: .\templates\users\main_page.html:4
+msgid "Home"
+msgstr ""
+
+#: .\templates\users\main_page.html:8
+msgid "Welcome to the homepage!"
+msgstr ""
+
+#: .\templates\users\main_page.html:9
+msgid "Select one of the options from the menu to get started."
+msgstr ""
+
+#: .\templates\users\password_reset_request.html:4
+msgid "Password Reset"
+msgstr ""
+
+#: .\templates\users\password_reset_request.html:8
+msgid "Send Instructions"
+msgstr ""
+
+#: .\templates\users\register.html:5
+msgid "Registration"
+msgstr ""
+
+#: .\templates\users\register.html:19 .\users\forms.py:30 .\users\forms.py:67
+msgid "Username"
+msgstr ""
+
+#: .\templates\users\register.html:23 .\users\forms.py:84
+msgid "Email"
+msgstr ""
+
+#: .\templates\users\register.html:27 .\users\forms.py:11
+msgid "Password"
+msgstr ""
+
+#: .\templates\users\register.html:31
+msgid "Confirm Password"
+msgstr ""
+
+#: .\user_logs\Logger.py:11
+msgid "Account"
+msgstr ""
+
+#: .\user_logs\Logger.py:11
+msgid "Account created"
+msgstr ""
+
+#: .\user_logs\Logger.py:27 .\user_logs\Logger.py:32 .\user_logs\Logger.py:37
+msgid "Room"
+msgstr ""
+
+#: .\user_logs\Logger.py:27
+msgid "Added"
+msgstr ""
+
+#: .\user_logs\Logger.py:32 .\user_logs\Logger.py:47 .\user_logs\models.py:15
+msgid "Updated"
+msgstr ""
+
+#: .\user_logs\Logger.py:37 .\user_logs\Logger.py:52 .\user_logs\models.py:16
+msgid "Deleted"
+msgstr ""
+
+#: .\user_logs\Logger.py:42 .\user_logs\Logger.py:47 .\user_logs\Logger.py:52
+#: .\user_logs\models.py:9
+msgid "Project"
+msgstr ""
+
+#: .\user_logs\Logger.py:42 .\user_logs\models.py:14
+msgid "Created"
+msgstr ""
+
+#: .\user_logs\models.py:8
+msgid "User"
+msgstr ""
+
+#: .\user_logs\models.py:10
+msgid "Document"
+msgstr ""
+
+#: .\user_logs\models.py:11
+msgid "Tag"
+msgstr ""
+
+#: .\user_logs\models.py:18
+msgid "Logout"
+msgstr ""
+
+#: .\user_logs\models.py:19
+msgid "View"
+msgstr ""
+
+#: .\user_logs\models.py:20
+msgid "Other action"
+msgstr ""
+
+#: .\user_logs\models.py:25
+msgid "The entity type to which the action applies"
+msgstr ""
+
+#: .\user_logs\models.py:28
+msgid "ID of the entity (e.g., user.id, project.id)"
+msgstr ""
+
+#: .\user_logs\models.py:31
+msgid "The user who performed the action"
+msgstr ""
+
+#: .\user_logs\models.py:36
+msgid "The type of change or action"
+msgstr ""
+
+#: .\user_logs\models.py:43
+msgid "Additional contextual data – e.g., IP, device info, payload"
+msgstr ""
+
+#: .\users\forms.py:14
+msgid "Password must be at least 8 characters long."
+msgstr ""
+
+#: .\users\forms.py:17
+msgid "Repeat password"
+msgstr ""
+
+#: .\users\forms.py:23
+msgid "Enter a valid email address."
+msgstr ""
+
+#: .\users\forms.py:31 .\users\forms.py:68
+msgid "Email address"
+msgstr ""
+
+#: .\users\forms.py:40 .\users\forms.py:99
+msgid "Passwords must match."
+msgstr ""
+
+#: .\users\forms.py:56 .\users\forms.py:88
+msgid "New password"
+msgstr ""
+
+#: .\users\forms.py:60
+msgid "Leave empty if you don't want to change the password."
+msgstr ""
+
+#: .\users\forms.py:90
+msgid "Confirm new password"
+msgstr ""
+
+#: .\users\services.py:35
+msgid "Trial plan was not found. Make sure it exists in the database."
+msgstr ""
+
+#: .\users\services.py:73
+msgid "Password reset"
+msgstr ""
+
+#: .\users\views.py:35
+#, python-brace-format
+msgid "Account created for {username}"
+msgstr ""
+
+#: .\users\views.py:42
+msgid "Error while creating account. Please check the form."
+msgstr ""
+
+#: .\users\views.py:60
+msgid "Invalid username/email or password"
+msgstr ""
+
+#: .\users\views.py:76
+msgid "Your profile has been updated."
+msgstr ""
+
+#: .\users\views.py:81
+msgid "There was an error in the form. Please try again."
+msgstr ""
+
+#: .\users\views.py:89
+msgid "You have been successfully logged out."
+msgstr ""
+
+#: .\users\views.py:113
+msgid ""
+"If the account exists, we've sent password reset instructions to the "
+"provided email."
+msgstr ""
+
+#: .\users\views.py:119
+msgid "An error occurred. Please try again later."
+msgstr ""
+
+#: .\users\views.py:134
+msgid "The password reset token is invalid or has expired."
+msgstr ""
+
+#: .\users\views.py:142
+msgid "Your password has been changed. You can now log in."
+msgstr ""
