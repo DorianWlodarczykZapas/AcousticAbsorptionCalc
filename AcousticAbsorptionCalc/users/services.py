@@ -6,6 +6,7 @@ from django.contrib.auth import logout
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.timezone import now, timedelta
+from django.utils.translation import gettext_lazy as _
 from plans.models import Plan, UserPlan
 from projects_history.Logger import Logger
 
@@ -31,7 +32,7 @@ class UserService:
             trial_plan = Plan.objects.get(type=Plan.PlanType.TRIAL)
         except Plan.DoesNotExist:
             raise Exception(
-                "Plan Trial nie został znaleziony. Upewnij się, że istnieje w bazie."
+                _("Trial plan was not found. Make sure it exists in the database.")
             )
 
         UserPlan.objects.create(
@@ -69,7 +70,7 @@ class PasswordResetService:
             reset_token = PasswordResetToken.objects.create(user=user)
             reset_link = f"{settings.FRONTEND_URL}/reset-password/{reset_token.token}"
 
-            subject = "Resetowanie hasła"
+            subject = _("Password reset")
             message = render_to_string(
                 "emails/password_reset_email.html", {"reset_link": reset_link}
             )
