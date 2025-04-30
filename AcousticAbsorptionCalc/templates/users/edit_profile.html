@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block content %}
-    <h2>Edytuj profil</h2>
+    <h2>{% trans "Edit Profile" %}</h2>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Zapisz zmiany</button>
+        <button type="submit">{% trans "Save Changes" %}</button>
     </form>
 {% endblock %}
