@@ -4,6 +4,7 @@ from typing import Any
 from calculations.RoomAcousticCalculator import RoomAcousticCalculator
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import get_object_or_404
+from django.utils.translation import gettext as _
 from django.views import View
 
 from .models import Norm
@@ -23,7 +24,7 @@ class AcousticCalculationView(View):
             frequency: str | None = data.get("frequency")
 
             if not all([height, length, width, norm_id, frequency]):
-                return JsonResponse({"error": "Brakuje wymaganych danych."}, status=400)
+                return JsonResponse({"error": _("Missing required data.")}, status=400)
 
             norm: Norm = get_object_or_404(Norm, id=norm_id)
 
@@ -43,7 +44,7 @@ class AcousticCalculationView(View):
                 {
                     "reverberation_time": float(rt),
                     "is_within_norm": is_within,
-                    "message": "Pomiar wykonany poprawnie.",
+                    "message": _("Measurement completed successfully."),
                 }
             )
 
