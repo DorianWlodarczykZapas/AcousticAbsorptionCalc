@@ -15,7 +15,7 @@ class PlanService:
         try:
             new_plan: Plan = Plan.objects.get(type=new_plan_type)
         except Plan.DoesNotExist:
-            raise Exception(f"Plan '{new_plan_type}' nie istnieje.")
+            raise Exception(f"Plan '{new_plan_type}' does not exist.")
 
         user_plan, _ = UserPlan.objects.get_or_create(user=user)
         user_plan.plan = new_plan
