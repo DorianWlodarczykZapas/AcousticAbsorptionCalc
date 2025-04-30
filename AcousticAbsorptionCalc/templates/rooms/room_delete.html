@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+    <div class="container mt-4">
+        <h2>{% trans "Delete Room" %}</h2>
+        <p>
+            {% trans "Are you sure you want to delete the room:" %} <strong>{{ object.name }}</strong>?
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">{% trans "Yes, delete" %}</button>
+            <a href="{% url 'rooms:room_list' project_id=object.project_id %}"
+               class="btn btn-secondary">{% trans "Cancel" %}</a>
+        </form>
+    </div>
+{% endblock %}
