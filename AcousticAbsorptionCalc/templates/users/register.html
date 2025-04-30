@@ -1,36 +1,38 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load widget_tweaks %}
-{% block title %}Rejestracja{% endblock %}
+{% block title %}
+    {% trans "Registration" %}
+{% endblock %}
 {% block content %}
     <section class="section mt-5">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-6">
-                    <h2 class="mb-4 text-center">Zarejestruj się</h2>
+                    <h2 class="mb-4 text-center">{% trans "Register" %}</h2>
                     {% if messages %}
                         {% for message in messages %}<div class="alert alert-success">{{ message }}</div>{% endfor %}
                     {% endif %}
                     <form method="POST" class="php-email-form">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label for="id_username" class="form-label">Nazwa użytkownika</label>
+                            <label for="id_username" class="form-label">{% trans "Username" %}</label>
                             {{ form.username|add_class:"form-control" }}
                         </div>
                         <div class="mb-3">
-                            <label for="id_email" class="form-label">Email</label>
+                            <label for="id_email" class="form-label">{% trans "Email" %}</label>
                             {{ form.email|add_class:"form-control" }}
                         </div>
                         <div class="mb-3">
-                            <label for="id_password1" class="form-label">Hasło</label>
+                            <label for="id_password1" class="form-label">{% trans "Password" %}</label>
                             {{ form.password1|add_class:"form-control" }}
                         </div>
                         <div class="mb-3">
-                            <label for="id_password2" class="form-label">Powtórz hasło</label>
+                            <label for="id_password2" class="form-label">{% trans "Confirm Password" %}</label>
                             {{ form.password2|add_class:"form-control" }}
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Zarejestruj</button>
+                            <button type="submit" class="btn btn-primary">{% trans "Register" %}</button>
                         </div>
                     </form>
                 </div>
