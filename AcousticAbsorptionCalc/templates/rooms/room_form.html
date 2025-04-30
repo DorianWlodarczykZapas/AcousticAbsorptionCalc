@@ -1,10 +1,13 @@
 {% extends "base.html" %}
-{% block title %}Dodaj pokój{% endblock %}
+{% load i18n %}
+{% block title %}
+    {% trans "Add Room" %}
+{% endblock %}
 {% block content %}
-    <h2>Dodaj nowy pokój</h2>
+    <h2>{% trans "Add New Room" %}</h2>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Zapisz</button>
+        <button type="submit">{% trans "Save" %}</button>
     </form>
 {% endblock %}
