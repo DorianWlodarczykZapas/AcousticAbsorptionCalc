@@ -27,27 +27,24 @@ class RegisterView(FormView):
     form_class = UserRegistrationForm
     success_url = reverse_lazy("users:login")
 
-    ACCOUNT_CREATED_MSG = _("Konto utworzone dla {username}")
-    ACCOUNT_CREATION_ERROR_MSG = _(
-        "Błąd podczas tworzenia konta. Sprawdź poprawność formularza."
-    )
-
     def form_valid(self, form: UserRegistrationForm) -> HttpResponse:
         user = UserService.register_user(form)
         Logger.log_account_creation(user_id=user.id, changed_by=user)
         messages.success(
-            self.request, self.ACCOUNT_CREATED_MSG.format(username=user.username)
+            self.request,
+            _("Account created for {username}").format(username=user.username),
         )
         return super().form_valid(form)
 
     def form_invalid(self, form: UserRegistrationForm) -> HttpResponse:
-        messages.error(self.request, self.ACCOUNT_CREATION_ERROR_MSG)
+        messages.error(
+            self.request,
+            _("Error while creating account. Please check the form."),
+        )
         return self.render_to_response(self.get_context_data(form=form))
 
 
 class LoginView(View):
-    INVALID_LOGIN_MSG = _("Nieprawidłowa nazwa użytkownika / email lub hasło")
-
     def get(self, request: HttpRequest) -> HttpResponse:
         return render(request, "users/login.html")
 
@@ -60,10 +57,9 @@ class LoginView(View):
             login(request, user)
             return redirect("users:home")
         else:
-            messages.error(request, self.INVALID_LOGIN_MSG)
-            return render(
-                request, "users/login.html", {"error": self.INVALID_LOGIN_MSG}
-            )
+            error_msg = _("Invalid username/email or password")
+            messages.error(request, error_msg)
+            return render(request, "users/login.html", {"error": error_msg})
 
 
 class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
@@ -72,28 +68,25 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "users/edit_profile.html"
     success_url = reverse_lazy("profile_success")
 
-    PROFILE_UPDATED_MSG = _("Twój profil został zaktualizowany.")
-    PROFILE_UPDATE_ERROR_MSG = _("Błąd w formularzu. Spróbuj ponownie.")
-
     def get_object(self, queryset=None) -> User:
         return self.request.user
 
     def form_valid(self, form: UserProfileForm) -> HttpResponse:
         UserService.update_user(self.request.user, form.cleaned_data)
-        messages.success(self.request, self.PROFILE_UPDATED_MSG)
+        messages.success(self.request, _("Your profile has been updated."))
         return super().form_valid(form)
 
     def form_invalid(self, form: UserProfileForm) -> HttpResponse:
-        messages.error(self.request, self.PROFILE_UPDATE_ERROR_MSG)
+        messages.error(
+            self.request, _("There was an error in the form. Please try again.")
+        )
         return self.render_to_response(self.get_context_data(form=form))
 
 
 class LogoutView(View):
-    LOGOUT_SUCCESS_MSG = _("Zostałeś wylogowany pomyślnie.")
-
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         UserService.logout_user(request)
-        messages.success(request, self.LOGOUT_SUCCESS_MSG)
+        messages.success(request, _("You have been successfully logged out."))
         return redirect(reverse_lazy("login"))
 
 
@@ -110,24 +103,20 @@ class PasswordResetRequestView(FormView):
     form_class = PasswordResetRequestForm
     success_url = reverse_lazy("login")
 
-    PASSWORD_RESET_EMAIL_SENT_MSG = _(
-        "Jeśli konto istnieje, wysłaliśmy instrukcje resetu hasła na podany adres email."
-    )
-    PASSWORD_RESET_ERROR_MSG = _("Wystąpił błąd. Spróbuj ponownie później.")
-
     def form_valid(self, form: PasswordResetRequestForm) -> HttpResponse:
         email = form.cleaned_data["email"]
-        success = PasswordResetService.initiate_password_reset(email)
+        PasswordResetService.initiate_password_reset(email)
 
-        if success:
-            messages.success(self.request, self.PASSWORD_RESET_EMAIL_SENT_MSG)
-        else:
-            messages.success(self.request, self.PASSWORD_RESET_EMAIL_SENT_MSG)
-
+        messages.success(
+            self.request,
+            _(
+                "If the account exists, we've sent password reset instructions to the provided email."
+            ),
+        )
         return super().form_valid(form)
 
     def form_invalid(self, form: PasswordResetRequestForm) -> HttpResponse:
-        messages.error(self.request, self.PASSWORD_RESET_ERROR_MSG)
+        messages.error(self.request, _("An error occurred. Please try again later."))
         return self.render_to_response(self.get_context_data(form=form))
 
 
@@ -136,23 +125,22 @@ class PasswordResetConfirmView(FormView):
     form_class = SetNewPasswordForm
     success_url = reverse_lazy("login")
 
-    PASSWORD_RESET_SUCCESS_MSG = _(
-        "Twoje hasło zostało zmienione. Możesz się teraz zalogować."
-    )
-    PASSWORD_RESET_ERROR_MSG = _("Token resetu hasła jest nieprawidłowy lub wygasł.")
-
     def dispatch(self, request, *args, **kwargs):
         self.token = kwargs.get("token")
         self.user = PasswordResetService.validate_token(self.token)
 
         if not self.user:
-            messages.error(self.request, self.PASSWORD_RESET_ERROR_MSG)
+            messages.error(
+                request, _("The password reset token is invalid or has expired.")
+            )
             return redirect("password_reset_request")
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form: SetNewPasswordForm) -> HttpResponse:
         PasswordResetService.reset_password(self.user, form.cleaned_data["password"])
-        messages.success(self.request, self.PASSWORD_RESET_SUCCESS_MSG)
+        messages.success(
+            self.request, _("Your password has been changed. You can now log in.")
+        )
         PasswordResetToken.objects.filter(user=self.user).delete()
         return super().form_valid(form)
 
