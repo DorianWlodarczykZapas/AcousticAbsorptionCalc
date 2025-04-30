@@ -25,7 +25,7 @@ from .services import AuthService, PasswordResetService, UserService
 class RegisterView(FormView):
     template_name = "users/register.html"
     form_class = UserRegistrationForm
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("users:login")
 
     ACCOUNT_CREATED_MSG = _("Konto utworzone dla {username}")
     ACCOUNT_CREATION_ERROR_MSG = _(
