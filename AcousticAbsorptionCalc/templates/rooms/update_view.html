@@ -1,13 +1,20 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block content %}
     <div class="container mt-4">
-        <h2>{{ view.object.pk|yesno:"Edytuj pokój,Dodaj pokój" }}</h2>
+        <h2>
+            {% if view.object.pk %}
+                {% trans "Edit Room" %}
+            {% else %}
+                {% trans "Add Room" %}
+            {% endif %}
+        </h2>
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Zapisz</button>
+            <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
             <a href="{% url 'rooms:room_list' project_id=view.object.project_id %}"
-               class="btn btn-secondary">Anuluj</a>
+               class="btn btn-secondary">{% trans "Cancel" %}</a>
         </form>
     </div>
 {% endblock %}
