@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib import settings
 from django.utils.timezone import now
 
 from .models import Plan, UserPlan
@@ -9,7 +9,7 @@ from .models import Plan, UserPlan
 class PlanService:
     @staticmethod
     def change_user_plan(
-        user: AbstractBaseUser,
+        user: settings.AUTH_USER_MODEL,
         new_plan_type: str,
     ) -> UserPlan:
         try:
@@ -26,5 +26,5 @@ class PlanService:
             if new_plan.type != Plan.PlanType.TRIAL
             else now().date() + timedelta(days=7)
         )
-        user_plan.save()
+        user_plan.save(updated_fields=["plan", "is_trail", "start_date", "valid_to"])
         return user_plan

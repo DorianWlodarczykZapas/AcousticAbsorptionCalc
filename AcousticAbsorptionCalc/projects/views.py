@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponse
+from django.db.models import Q, QuerySet
+from django.http import Http404, HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -12,7 +13,7 @@ from django.views.generic import (
 from projects.forms import ProjectForm
 from projects.project_services import ProjectService
 from projects.services import PDFGeneratorService
-from user_logs.Logger import Logger
+from user_logs.logger import Logger
 
 from .models import Project
 from .permissions import can_edit_project, can_view_project
@@ -69,13 +70,15 @@ class ProjectListView(LoginRequiredMixin, ListView):
     template_name = "projects/project_list.html"
     context_object_name = "projects"
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Project]:
+        queryset = super().get_queryset()
         user = self.request.user
-        own_projects = Project.objects.filter(user=user)
-        shared_projects = Project.objects.filter(sharedproject__shared_with_user=user)
         if user.is_staff:
-            return Project.objects.all()
-        return own_projects.union(shared_projects)
+            return queryset
+
+        return queryset.filter(
+            Q(user=user) | Q(sharedproject__shared_with_user=user)
+        ).disticnt()
 
 
 class ProjectDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
@@ -90,7 +93,11 @@ class ProjectDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
 class ProjectPDFView(View):
     def get(self, request, project_id):
-        project = Project.objects.prefetch_related("rooms").get(id=project_id)
+
+        try:
+            project = Project.objects.prefetch_related("rooms").get(id=project_id)
+        except Project.DoesNotExist:
+            raise Http404("Project does not exist")
 
         context = {
             "project": project,

@@ -10,7 +10,7 @@ from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import UpdateView
 from django.views.generic.edit import FormView
-from user_logs.Logger import Logger
+from user_logs.logger import Logger
 
 from .forms import (
     PasswordResetRequestForm,
