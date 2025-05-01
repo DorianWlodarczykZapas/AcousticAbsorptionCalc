@@ -1,6 +1,6 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
-from projects_history.Logger import Logger
+from user_logs.Logger import Logger
 
 from .forms import RoomForm
 from .models import Room

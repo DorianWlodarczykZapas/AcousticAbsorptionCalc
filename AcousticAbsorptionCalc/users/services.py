@@ -8,7 +8,7 @@ from django.template.loader import render_to_string
 from django.utils.timezone import now, timedelta
 from django.utils.translation import gettext_lazy as _
 from plans.models import Plan, UserPlan
-from projects_history.Logger import Logger
+from user_logs.Logger import Logger
 
 from .models import PasswordResetToken, User
 from .repositories import UserRepository
