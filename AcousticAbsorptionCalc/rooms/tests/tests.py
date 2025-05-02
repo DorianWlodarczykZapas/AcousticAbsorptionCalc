@@ -131,3 +131,17 @@ class RoomViewsTestCase(TestCase):
         mock_logger.assert_called_once_with(
             user_id=room.pk, changed_by=self.client.session.get("_auth_user_id")
         )
+
+    @patch("rooms.views.Logger.log_room_updated")
+    def test_logger_called_on_update(self, mock_logger):
+        url = reverse("rooms:room_update", kwargs={"pk": self.room1.pk})
+        data = {
+            "name": self.room1.name,
+            "width": self.room1.width,
+            "length": self.room1.length,
+            "height": "3.00",
+        }
+        self.client.post(url, data)
+        mock_logger.assert_called_once_with(
+            user_id=self.room1.pk, changed_by=self.client.session.get("_auth_user_id")
+        )
