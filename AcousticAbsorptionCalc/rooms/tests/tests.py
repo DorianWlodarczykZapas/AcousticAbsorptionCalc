@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.test import TestCase
 from django.urls import reverse
 from projects.factories import ProjectFactory
@@ -114,3 +116,18 @@ class RoomViewsTestCase(TestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, "form", "height", "Wartość musi być dodatnia.")
+
+    @patch("rooms.views.Logger.log_room_created")
+    def test_logger_called_on_create(self, mock_logger):
+        url = reverse("rooms:room_add", kwargs={"project_id": self.project.id})
+        data = {
+            "name": "Nowy pokój",
+            "width": "5.00",
+            "length": "6.00",
+            "height": "2.80",
+        }
+        self.client.post(url, data)
+        room = Room.objects.get(name="Nowy pokój")
+        mock_logger.assert_called_once_with(
+            user_id=room.pk, changed_by=self.client.session.get("_auth_user_id")
+        )
