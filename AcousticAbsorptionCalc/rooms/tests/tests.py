@@ -154,3 +154,15 @@ class RoomViewsTestCase(TestCase):
         mock_logger.assert_called_once_with(
             user_id=room.pk, changed_by=self.client.session.get("_auth_user_id")
         )
+
+    def test_room_create_invalid_length(self):
+        url = reverse("rooms:room_add", kwargs={"project_id": self.project.id})
+        data = {
+            "name": "Pokój",
+            "width": "5.00",
+            "length": "-2.00",
+            "height": "2.50",
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, "form", "length", "Wartość musi być dodatnia.")
