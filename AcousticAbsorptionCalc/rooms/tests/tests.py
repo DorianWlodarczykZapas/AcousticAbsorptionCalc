@@ -172,3 +172,9 @@ class RoomViewsTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Brak pokoi")
+
+    def test_room_update_view_get(self):
+        url = reverse("rooms:room_update", kwargs={"pk": self.room1.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Edytuj pokój")
