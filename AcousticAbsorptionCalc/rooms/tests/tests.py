@@ -178,3 +178,10 @@ class RoomViewsTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Edytuj pokój")
+
+    def test_room_delete_view_get(self):
+        room = RoomFactory(project=self.project)
+        url = reverse("rooms:room_delete", kwargs={"pk": room.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Czy na pewno chcesz usunąć")
