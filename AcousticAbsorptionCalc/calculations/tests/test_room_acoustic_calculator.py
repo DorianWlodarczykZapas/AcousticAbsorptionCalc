@@ -144,3 +144,19 @@ class TestRoomAcousticCalculator(unittest.TestCase):
         self.calc.length = 5.0
         self.calc.width = 4.0
         self.assertEqual(self.calc.volume, 0.0)
+
+    @patch("acoustic.room_acoustic_calculator.Material.objects.get")
+    def test_get_absorption_coefficient_multiple_frequencies(self, mock_get):
+        mock_mat = MagicMock()
+        mock_mat.oz = Decimal("0.5")
+        mock_mat.mid = Decimal("0.3")
+        mock_mat.high = Decimal("0.2")
+        mock_get.return_value = mock_mat
+
+        alpha_oz = self.calc.get_absorption_coefficient(mock_mat, "oz")
+        alpha_mid = self.calc.get_absorption_coefficient(mock_mat, "mid")
+        alpha_high = self.calc.get_absorption_coefficient(mock_mat, "high")
+
+        self.assertEqual(alpha_oz, Decimal("0.5"))
+        self.assertEqual(alpha_mid, Decimal("0.3"))
+        self.assertEqual(alpha_high, Decimal("0.2"))
