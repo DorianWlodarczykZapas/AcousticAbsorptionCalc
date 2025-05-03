@@ -138,3 +138,9 @@ class TestRoomAcousticCalculator(unittest.TestCase):
 
         result = self.calc.save_calculation("oz")
         self.assertEqual(result, mock_calc_obj)
+
+    def test_volume_negative_dimension(self):
+        self.calc.height = -3.0
+        self.calc.length = 5.0
+        self.calc.width = 4.0
+        self.assertEqual(self.calc.volume, 0.0)
