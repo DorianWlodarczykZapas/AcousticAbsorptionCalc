@@ -198,3 +198,23 @@ class TestRoomAcousticCalculator(unittest.TestCase):
 
         expected = Decimal("0.2") * Decimal("50.0")
         self.assertEqual(total, expected)
+
+    @patch("acoustic.room_acoustic_calculator.NormAbsorptionMultiplier.objects.get")
+    @patch("acoustic.room_acoustic_calculator.Material.objects.get")
+    def test_total_absorption_different_norms(
+        self, mock_material_get, mock_multiplier_get
+    ):
+        norm1 = MagicMock()
+        norm1.absorption_multiplier = Decimal("1.2")
+        self.calc.norm = norm1
+        mock_multiplier_get.return_value.absorption_multiplier = Decimal("1.2")
+
+        norm2 = MagicMock()
+        norm2.absorption_multiplier = Decimal("1.5")
+        self.calc.norm = norm2
+        mock_multiplier_get.return_value.absorption_multiplier = Decimal("1.5")
+
+        total_norm1 = self.calc.total_absorption("oz")
+        total_norm2 = self.calc.total_absorption("oz")
+
+        self.assertNotEqual(total_norm1, total_norm2)
