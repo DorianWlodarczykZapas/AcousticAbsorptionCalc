@@ -184,3 +184,17 @@ class TestRoomAcousticCalculator(unittest.TestCase):
 
         rt = self.calc.sabine_reverberation_time("oz")
         self.assertEqual(rt, Decimal("0.0"))
+
+    @patch("acoustic.room_acoustic_calculator.Material.objects.get")
+    def test_total_absorption_negative_area(self, mock_get):
+        self.calc.furnishing = {"Carpet": -10.0}
+        self.calc.construction = {"Concrete": 50.0}
+
+        mock_mat = MagicMock()
+        mock_mat.oz = Decimal("0.2")
+        mock_get.return_value = mock_mat
+
+        total = self.calc.total_absorption("oz")
+
+        expected = Decimal("0.2") * Decimal("50.0")
+        self.assertEqual(total, expected)
