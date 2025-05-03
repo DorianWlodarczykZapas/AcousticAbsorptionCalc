@@ -175,3 +175,12 @@ class TestRoomAcousticCalculator(unittest.TestCase):
 
         total = self.calc.total_absorption("oz")
         self.assertEqual(total, Decimal("0.0"))
+
+    @patch("acoustic.room_acoustic_calculator.Material.objects.get")
+    @patch.object(RoomAcousticCalculator, "total_absorption")
+    def test_sabine_reverberation_time_zero_volume(self, mock_total, mock_get):
+        self.calc.height = 0  # Zero volume
+        mock_total.return_value = Decimal("10.0")
+
+        rt = self.calc.sabine_reverberation_time("oz")
+        self.assertEqual(rt, Decimal("0.0"))
