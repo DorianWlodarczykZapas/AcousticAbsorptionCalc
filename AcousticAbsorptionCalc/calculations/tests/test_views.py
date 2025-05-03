@@ -177,3 +177,8 @@ class AcousticCalculationViewTests(TestCase):
         response = self.client.post(self.url, data=payload, format="json")
         self.assertEqual(response.status_code, 500)
         self.assertIn("error", response.json())
+
+    def test_empty_body_returns_400(self) -> None:
+        response = self.client.post(self.url, data="", content_type="application/json")
+        self.assertEqual(response.status_code, 500)
+        self.assertIn("error", response.json())
