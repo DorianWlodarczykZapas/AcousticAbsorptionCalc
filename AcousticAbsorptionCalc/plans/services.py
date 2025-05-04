@@ -1,30 +1,29 @@
-from datetime import timedelta
+from typing import Any
 
-from django.contrib import settings
-from django.utils.timezone import now
+import stripe
+from django.conf import settings
+from plans.models import Plan
 
-from .models import Plan, UserPlan
 
+class StripeService:
+    def __init__(self) -> None:
+        stripe.api_key = settings.STRIPE_SECRET_KEY
 
-class PlanService:
-    @staticmethod
-    def change_user_plan(
-        user: settings.AUTH_USER_MODEL,
-        new_plan_type: str,
-    ) -> UserPlan:
-        try:
-            new_plan: Plan = Plan.objects.get(type=new_plan_type)
-        except Plan.DoesNotExist:
-            raise Exception(f"Plan '{new_plan_type}' does not exist.")
-
-        user_plan, _ = UserPlan.objects.get_or_create(user=user)
-        user_plan.plan = new_plan
-        user_plan.is_trial = new_plan.type == Plan.PlanType.TRIAL
-        user_plan.start_date = now().date()
-        user_plan.valid_to = (
-            None
-            if new_plan.type != Plan.PlanType.TRIAL
-            else now().date() + timedelta(days=7)
+    def create_checkout_session(self, plan: Plan, user_email: str) -> Any:
+        return stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            mode="payment",
+            line_items=[
+                {
+                    "price_data": {
+                        "currency": "pln",
+                        "product_data": {"name": plan.name},
+                        "unit_amount": int(plan.price * 100),
+                    },
+                    "quantity": 1,
+                }
+            ],
+            customer_email=user_email,
+            success_url="http://localhost:8000/payment/success/",
+            cancel_url="http://localhost:8000/payment/cancel/",
         )
-        user_plan.save(updated_fields=["plan", "is_trail", "start_date", "valid_to"])
-        return user_plan
