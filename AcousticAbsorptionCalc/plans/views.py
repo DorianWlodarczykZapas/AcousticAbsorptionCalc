@@ -1,10 +1,14 @@
+from datetime import timedelta, timezone
+
+import stripe
+from core import settings
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import ListView
 from plans.services import StripeService
 
-from .models import Plan
+from .models import Plan, User, UserPlan
 
 
 class PlanListView(ListView):
@@ -26,3 +30,34 @@ class CreateCheckoutSessionView(View):
         checkout_session = stripe_service.create_checkout_session(plan, user_email)
 
         return redirect(checkout_session.url)
+
+
+class StripeWebhookView(View):
+    def post(self, request: HttpRequest) -> HttpResponse:
+        payload = request.body
+        sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
+        webhook_secret = settings.STRIPE_WEBHOOK_SECRET
+
+        try:
+            event = stripe.Webhook.construct_event(payload, sig_header, webhook_secret)
+        except (ValueError, stripe.error.SignatureVerificationError):
+            return HttpResponse(status=400)
+
+        if event["type"] == "checkout.session.completed":
+            session = event["data"]["object"]
+            customer_email = session.get("customer_email")
+
+            try:
+                user = User.objects.get(email=customer_email)
+                plan = Plan.objects.order_by("price").first()
+                UserPlan.objects.create(
+                    user=user,
+                    plan=plan,
+                    start_date=timezone.now().date(),
+                    valid_to=timezone.now().date() + timedelta(days=30),
+                    is_active=True,
+                )
+            except User.DoesNotExist:
+                pass
+
+        return HttpResponse(status=200)
