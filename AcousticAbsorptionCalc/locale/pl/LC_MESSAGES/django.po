@@ -385,3 +385,12 @@ msgstr "Nie udało się sfinalizować płatności. Spróbuj ponownie."
 
 msgid "Return to plans"
 msgstr "Wróć do planów"
+
+msgid "Payment completed successfully!"
+msgstr "Płatność zakończona sukcesem!"
+
+msgid "Thank you for purchasing a plan. Your account has been updated."
+msgstr "Dziękujemy za zakup planu. Twoje konto zostało zaktualizowane."
+
+msgid "Return to the homepage"
+msgstr "Wróć do strony głównej"
