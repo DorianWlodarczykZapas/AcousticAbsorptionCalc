@@ -65,3 +65,7 @@ class StripeWebhookView(View):
 
 class PaymentSuccessView(TemplateView):
     template_name = "templates/plans/success_payment.html"
+
+
+class PaymentCancelView(TemplateView):
+    template_name = "templates/plans/cancel.html"
