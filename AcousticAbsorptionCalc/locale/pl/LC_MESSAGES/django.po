@@ -376,3 +376,12 @@ msgstr "Token resetowania hasła jest nieprawidłowy lub wygasł."
 #: .\users\views.py:142
 msgid "Your password has been changed. You can now log in."
 msgstr "Twoje hasło zostało zmienione. Możesz teraz się zalogować."
+
+msgid "Payment was cancelled"
+msgstr "Płatność została anulowana"
+
+msgid "The payment could not be completed. Please try again."
+msgstr "Nie udało się sfinalizować płatności. Spróbuj ponownie."
+
+msgid "Return to plans"
+msgstr "Wróć do planów"
