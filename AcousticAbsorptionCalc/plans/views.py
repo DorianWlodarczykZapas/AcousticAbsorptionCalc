@@ -5,7 +5,7 @@ from core import settings
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from plans.services import StripeService
 
 from .models import Plan, User, UserPlan
@@ -61,3 +61,7 @@ class StripeWebhookView(View):
                 pass
 
         return HttpResponse(status=200)
+
+
+class PaymentSuccessView(TemplateView):
+    template_name = "templates/plans/success_payment.html"
