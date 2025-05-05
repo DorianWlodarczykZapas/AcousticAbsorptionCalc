@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block content %}
     <div class="container mt-5 text-center">
-        <h2 class="text-success">✅ Płatność zakończona sukcesem!</h2>
-        <p>Dziękujemy za zakup planu. Twoje konto zostało zaktualizowane.</p>
-        <a href="/" class="btn btn-primary mt-3">Wróć do strony głównej</a>
+        <h2 class="text-success">✅ {% trans "Payment completed successfully!" %}</h2>
+        <p>{% trans "Thank you for purchasing a plan. Your account has been updated." %}</p>
+        <a href="/" class="btn btn-primary mt-3">{% trans "Return to the homepage" %}</a>
     </div>
 {% endblock %}
