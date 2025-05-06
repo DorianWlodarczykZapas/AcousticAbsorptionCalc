@@ -70,6 +70,11 @@ class TestLoginView:
         assert response.status_code == 200
         assert "Invalid username/email or password" in response.content.decode()
 
+    def test_login_missing_credentials(self, client):
+        response = client.post(reverse("login"), data={})
+        assert response.status_code == 200
+        assert "This field is required" in response.content.decode()
+
 
 class TestLogoutView:
     def test_logout_success(self, client, user):
