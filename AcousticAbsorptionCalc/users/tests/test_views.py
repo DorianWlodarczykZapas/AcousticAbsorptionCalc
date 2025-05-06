@@ -24,6 +24,17 @@ class TestRegisterView:
         assert response.status_code == 200
         assert "Username already exists" in response.content.decode()
 
+    def test_register_password_mismatch(self, client):
+        invalid_password_data = {
+            "username": "newuser",
+            "email": "new@example.com",
+            "password1": "password123",
+            "password2": "password456",
+        }
+        response = client.post(reverse("register"), data=invalid_password_data)
+        assert response.status_code == 200
+        assert "Passwords do not match" in response.content.decode()
+
 
 class TestLoginView:
     def test_login_success(self, client, user):
