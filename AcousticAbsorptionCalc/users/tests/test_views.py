@@ -93,3 +93,8 @@ class TestHomeView:
         client.login(username=user.username, password="password123")
         response = client.get(reverse("users:home"))
         assert response.status_code == 200
+
+    def test_home_redirect_when_not_logged_in(self, client):
+        response = client.get(reverse("users:home"))
+        assert response.status_code == 302
+        assert reverse("login") in response.url
