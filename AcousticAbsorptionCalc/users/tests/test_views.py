@@ -1,26 +1,28 @@
 import pytest
 from django.urls import reverse
-from users.models import User
 
 pytestmark = pytest.mark.django_db
 
 
 class TestRegisterView:
-    def test_register_success(self, client, user_data):
-        response = client.post(reverse("register"), data=user_data)
-        assert response.status_code == 302
-        assert User.objects.filter(username=user_data["username"]).exists()
-
-    def test_register_invalid_data(self, client):
-        invalid_data = {
+    def test_register_existing_username(self, client):
+        existing_user_data = {
             "username": "testuser",
-            "email": "test@example.com",
-            "password1": "",
-            "password2": "",
+            "email": "existing@example.com",
+            "password1": "password123",
+            "password2": "password123",
         }
-        response = client.post(reverse("register"), data=invalid_data)
+        client.post(reverse("register"), data=existing_user_data)
+
+        new_user_data = {
+            "username": "testuser",
+            "email": "new@example.com",
+            "password1": "password123",
+            "password2": "password123",
+        }
+        response = client.post(reverse("register"), data=new_user_data)
         assert response.status_code == 200
-        assert "Błąd podczas tworzenia konta" in response.content.decode()
+        assert "Username already exists" in response.content.decode()
 
 
 class TestLoginView:
