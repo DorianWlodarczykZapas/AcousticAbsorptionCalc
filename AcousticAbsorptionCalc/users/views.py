@@ -23,7 +23,7 @@ from .services import AuthService, PasswordResetService, UserService
 
 
 class RegisterView(FormView):
-    template_name = "users/register.html"
+    template_name = "templates/users/register.html"
     form_class = UserRegistrationForm
     success_url = reverse_lazy("users:login")
 
