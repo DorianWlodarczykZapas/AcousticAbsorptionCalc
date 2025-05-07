@@ -1,11 +1,77 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% block title %}
-    {% trans "Home" %}
+    {% trans "Dashboard" %}
 {% endblock %}
 {% block content %}
-    <div style="padding: 2rem;">
-        <h1>{% trans "Welcome to the homepage!" %}</h1>
-        <p>{% trans "Select one of the options from the menu to get started." %}</p>
-    </div>
+    <section class="section mt-5">
+        <div class="container">
+            <h2 class="mb-4 text-center">{% trans "Welcome to your dashboard" %}</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{% trans "Latest Project" %}</h5>
+                            {% if latest_project %}
+                                <p class="card-text">
+                                    <strong>{{ latest_project.name }}</strong>
+                                    <br>
+                                    {{ latest_project.description|truncatechars:100 }}
+                                    <br>
+                                    <a href="{% url 'projects:detail' latest_project.pk %}"
+                                       class="btn btn-sm btn-primary mt-2">{% trans "View Project" %}</a>
+                                </p>
+                            {% else %}
+                                <p class="text-muted">{% trans "You haven't created any projects yet." %}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{% trans "Latest Room" %}</h5>
+                            {% if latest_room %}
+                                <p class="card-text">
+                                    <strong>{{ latest_room.name }}</strong>
+                                    <br>
+                                    {% trans "Size" %}: {{ latest_room.width }} x {{ latest_room.length }} x {{ latest_room.height }}
+                                    <br>
+                                    <a href="{% url 'rooms:detail' latest_room.pk %}"
+                                       class="btn btn-sm btn-primary mt-2">{% trans "View Room" %}</a>
+                                </p>
+                            {% else %}
+                                <p class="text-muted">{% trans "No rooms have been created yet." %}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{% trans "Your Active Plan" %}</h5>
+                            {% if active_user_plan %}
+                                <p class="card-text">
+                                    <strong>{{ active_user_plan.plan.name }}</strong>
+                                    ({{ active_user_plan.plan.get_type_display }})
+                                    <br>
+                                    {% trans "Valid until" %}: {{ active_user_plan.valid_to|date:"Y-m-d" }}
+                                    <br>
+                                    {% if active_user_plan.is_trial %}
+                                        <span class="text-warning">{% blocktrans %}Trial period: {{ active_user_plan.trial_days }} days{% endblocktrans %}</span>
+                                    {% endif %}
+                                </p>
+                            {% else %}
+                                <p class="text-muted">
+                                    {% trans "You are not subscribed to any plan." %}
+                                    <a href="{% url 'plans:available_plans' %}"
+                                       class="btn btn-sm btn-outline-primary ms-2">{% trans "Choose a plan" %}</a>
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
