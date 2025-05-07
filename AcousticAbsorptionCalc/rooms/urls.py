@@ -5,7 +5,7 @@ from .views import RoomCreateView, RoomDeleteView, RoomListView, RoomUpdateView
 app_name = "rooms"
 
 urlpatterns = [
-    path("projects/<int:project_id>/rooms/", RoomListView.as_view(), name="room_list"),
+    path("rooms/", RoomListView.as_view(), name="room_list"),
     path(
         "projects/<int:project_id>/rooms/new/",
         RoomCreateView.as_view(),
