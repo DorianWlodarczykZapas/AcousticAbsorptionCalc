@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Dict
 
 from django.contrib import messages
 from django.contrib.auth import login
@@ -10,6 +10,9 @@ from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import UpdateView
 from django.views.generic.edit import FormView
+from plans.models import UserPlan
+from projects.models import Project
+from rooms.models import Room
 from user_logs.logger import Logger
 
 from .forms import (
@@ -94,8 +97,30 @@ class HomeView(LoginRequiredMixin, View):
     login_url = "login"
     redirect_field_name = "next"
 
-    def get(self, request):
-        return render(request, "users/main_page.html")
+    def get(self, request, *args: Any, **kwargs: Any) -> Any:
+        user = request.user
+
+        latest_project = (
+            Project.objects.filter(user=user).order_by("-created_at").first()
+        )
+
+        latest_room = (
+            Room.objects.filter(project__user=user).order_by("-created_at").first()
+        )
+
+        active_user_plan = (
+            UserPlan.objects.select_related("plan")
+            .filter(user=user, is_active=True)
+            .first()
+        )
+
+        context: Dict[str, Any] = {
+            "latest_project": latest_project,
+            "latest_room": latest_room,
+            "active_user_plan": active_user_plan,
+        }
+
+        return render(request, "users/main_page.html", context)
 
 
 class PasswordResetRequestView(FormView):
