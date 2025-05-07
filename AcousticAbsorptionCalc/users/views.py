@@ -95,7 +95,7 @@ class HomeView(LoginRequiredMixin, View):
     redirect_field_name = "next"
 
     def get(self, request):
-        return render(request, "home.html")
+        return render(request, "users/main_page.html")
 
 
 class PasswordResetRequestView(FormView):
