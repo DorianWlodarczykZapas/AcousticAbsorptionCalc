@@ -394,3 +394,9 @@ msgstr "Dziękujemy za zakup planu. Twoje konto zostało zaktualizowane."
 
 msgid "Return to the homepage"
 msgstr "Wróć do strony głównej"
+
+msgid "Already have an account?"
+msgstr "Masz już konto?"
+
+msgid "Login here"
+msgstr "Zaloguj się tutaj"
