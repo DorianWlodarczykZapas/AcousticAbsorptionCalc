@@ -137,6 +137,12 @@ class ProjectDetailViewTest(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
 
+    def test_detail_view_404_for_missing_project(self) -> None:
+        self.client.force_login(self.user)
+        url = reverse("projects:project_detail", args=[9999])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
 
 class ProjectPDFViewTest(TestCase):
     def setUp(self) -> None:
