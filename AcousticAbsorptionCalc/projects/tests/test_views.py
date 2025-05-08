@@ -107,3 +107,11 @@ class ProjectDetailViewTest(TestCase):
         url = reverse("projects:project_detail", args=[self.project.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 403)
+
+
+class ProjectPDFViewTest(TestCase):
+    def setUp(self) -> None:
+        self.user = UserFactory()
+        self.client = Client()
+        self.project = ProjectFactory(user=self.user)
+        self.client.force_login(self.user)
