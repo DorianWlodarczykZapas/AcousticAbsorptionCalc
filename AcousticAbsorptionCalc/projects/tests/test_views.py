@@ -121,3 +121,8 @@ class ProjectPDFViewTest(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response["Content-Type"], "application/pdf")
+
+    def test_404_if_project_does_not_exist(self) -> None:
+        url = reverse("projects:project_pdf", args=[9999])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
