@@ -60,6 +60,14 @@ class ProjectUpdateViewTest(TestCase):
         response = self.client.post(url, {"name": "Hacked", "description": "Nope"})
         self.assertEqual(response.status_code, 403)
 
+    def test_update_project_invalid_data(self) -> None:
+        self.client.force_login(self.user)
+        url = reverse("projects:project_update", args=[self.project.pk])
+        response = self.client.post(url, {"name": "", "description": ""})
+        self.assertEqual(response.status_code, 200)
+        self.project.refresh_from_db()
+        self.assertNotEqual(self.project.name, "")
+
 
 class ProjectDeleteViewTest(TestCase):
     def setUp(self) -> None:
