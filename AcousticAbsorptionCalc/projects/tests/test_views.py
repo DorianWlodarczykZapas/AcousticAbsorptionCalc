@@ -31,6 +31,11 @@ class ProjectCreateViewTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn("/login", response.url)
 
+    def test_create_project_invalid_data(self) -> None:
+        response = self.client.post(self.url, {"name": ""})
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Project.objects.exists())
+
 
 class ProjectUpdateViewTest(TestCase):
     def setUp(self) -> None:
