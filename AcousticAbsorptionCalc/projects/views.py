@@ -78,7 +78,7 @@ class ProjectListView(LoginRequiredMixin, ListView):
 
         return queryset.filter(
             Q(user=user) | Q(sharedproject__shared_with_user=user)
-        ).disticnt()
+        ).distinct()
 
 
 class ProjectDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
