@@ -142,3 +142,10 @@ class ProjectPDFViewTest(TestCase):
         url = reverse("projects:project_pdf", args=[9999])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
+
+    def test_redirect_if_not_logged_in(self) -> None:
+        self.client.logout()
+        url = reverse("projects:project_pdf", args=[self.project.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/login", response.url)
