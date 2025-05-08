@@ -88,6 +88,15 @@ class ProjectListViewTest(TestCase):
         self.assertIn(self.shared_project, projects)
         self.assertNotIn(self.unrelated_project, projects)
 
+    def test_staff_sees_all_projects(self) -> None:
+        staff_user = UserFactory(is_staff=True)
+        self.client.force_login(staff_user)
+        ProjectFactory.create_batch(3)
+        url = reverse("projects:project_list")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["projects"]), Project.objects.count())
+
 
 class ProjectDetailViewTest(TestCase):
     def setUp(self) -> None:
