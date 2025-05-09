@@ -67,7 +67,7 @@ class ProjectDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class ProjectListView(LoginRequiredMixin, ListView):
     model = Project
-    template_name = "projects/project_list.html"
+    template_name = "projects/projects_list.html"
     context_object_name = "projects"
 
     def get_queryset(self) -> QuerySet[Project]:
