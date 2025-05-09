@@ -422,4 +422,18 @@ msgstr "Twój aktywny plan"
 msgid "Valid until"
 msgstr "Ważny do"
 
+msgid "Your Projects"
+msgstr "Twoje projekty"
+
+msgid "Create New Project"
+msgstr "Utwórz nowy projekt"
+
+msgid "Details"
+msgstr "Szczegóły"
+
+msgid "Delete"
+msgstr "Usuń"
+
+msgid "You haven't created any projects yet."
+msgstr "Nie utworzyłeś jeszcze żadnych projektów."
 
