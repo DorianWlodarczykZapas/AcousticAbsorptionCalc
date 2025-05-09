@@ -20,7 +20,7 @@ from .permissions import can_edit_project, can_view_project
 
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
-    template_name = "projects/project_form.html"
+    template_name = "projects/project_create.html"
     form_class = ProjectForm
     success_url = reverse_lazy("projects:project_list")
 
