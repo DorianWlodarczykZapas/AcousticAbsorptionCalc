@@ -11,7 +11,6 @@ from django.views.generic import (
     View,
 )
 from projects.forms import ProjectForm
-from projects.project_services import ProjectService
 from projects.services import PDFGeneratorService
 from user_logs.logger import Logger
 
@@ -25,12 +24,11 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("projects:project_list")
 
     def form_valid(self, form):
-        project = ProjectService.create_project(
-            user=self.request.user,
-            name=form.cleaned_data["name"],
-            description=form.cleaned_data["description"],
-        )
+        form.instance.user = self.request.user
+        project = form.save()
+
         Logger.log_project_created(user_id=project.pk, changed_by=self.request.user)
+
         return super().form_valid(form)
 
 
