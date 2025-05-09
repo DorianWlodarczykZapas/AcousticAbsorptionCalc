@@ -421,3 +421,5 @@ msgstr "Twój aktywny plan"
 
 msgid "Valid until"
 msgstr "Ważny do"
+
+
