@@ -437,3 +437,18 @@ msgstr "Usuń"
 msgid "You haven't created any projects yet."
 msgstr "Nie utworzyłeś jeszcze żadnych projektów."
 
+msgid "Create a New Project"
+msgstr "Utwórz nowy projekt"
+
+msgid "Project Name"
+msgstr "Nazwa projektu"
+
+msgid "Project Description"
+msgstr "Opis projektu"
+
+msgid "Create Project"
+msgstr "Utwórz projekt"
+
+msgid "Back to Project List"
+msgstr "Powrót do listy projektów"
+
