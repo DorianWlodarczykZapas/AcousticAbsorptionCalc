@@ -400,3 +400,24 @@ msgstr "Masz już konto?"
 
 msgid "Login here"
 msgstr "Zaloguj się tutaj"
+
+msgid "Welcome to your dashboard"
+msgstr "Witamy na Twoim panelu"
+
+msgid "Latest Project"
+msgstr "Najnowszy projekt"
+
+msgid "You haven't created any projects yet."
+msgstr "Nie utworzyłeś jeszcze żadnych projektów."
+
+msgid "Latest Room"
+msgstr "Najnowszy pokój"
+
+msgid "No rooms have been created yet."
+msgstr "Nie utworzono jeszcze żadnych pokoi."
+
+msgid "Your Active Plan"
+msgstr "Twój aktywny plan"
+
+msgid "Valid until"
+msgstr "Ważny do"
