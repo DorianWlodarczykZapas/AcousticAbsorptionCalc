@@ -4,10 +4,18 @@
     {% trans "Add Room" %}
 {% endblock %}
 {% block content %}
-    <h2>{% trans "Add New Room" %}</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">{% trans "Save" %}</button>
-    </form>
+    <div class="container mt-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">{% trans "Add New Room" %}</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">{{ form.as_p }}</div>
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
