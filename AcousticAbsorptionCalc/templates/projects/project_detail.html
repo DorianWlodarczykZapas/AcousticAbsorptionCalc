@@ -7,9 +7,9 @@
                 <h2 class="card-title">{{ project.name }}</h2>
                 <p class="card-text">{{ project.description }}</p>
                 <div class="d-flex gap-3 mb-4">
-                    <a href="{% url 'projects:project_edit' project.pk %}"
+                    <a href="{% url 'projects:project_update' project.pk %}"
                        class="btn btn-warning">{% trans "Edit Project" %}</a>
-                    <a href="{% url 'projects:project_confirm_delete' project.pk %}"
+                    <a href="{% url 'projects:project_delete' project.pk %}"
                        class="btn btn-danger">{% trans "Delete Project" %}</a>
                 </div>
                 <a href="{% url 'projects:project_pdf' project.pk %}"
@@ -32,7 +32,7 @@
                     {% endfor %}
                 </ul>
                 <div class="mt-4">
-                    <a href="{% url 'projects:room_create' project.pk %}"
+                    <a href="{% url 'rooms:room_create' project.pk %}"
                        class="btn btn-success">{% trans "Add Room" %}</a>
                 </div>
             </div>
