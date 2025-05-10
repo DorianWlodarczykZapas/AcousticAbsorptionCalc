@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q, QuerySet
 from django.http import Http404, HttpResponse
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -16,6 +17,7 @@ from user_logs.logger import Logger
 
 from .models import Project
 from .permissions import can_edit_project, can_view_project
+from .project_services import ProjectService
 
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
@@ -24,12 +26,15 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("projects:project_list")
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
-        project = form.save()
+        name = form.cleaned_data["name"]
+        description = form.cleaned_data["description"]
+        project = ProjectService.create_project(
+            user=self.request.user, name=name, description=description
+        )
 
-        Logger.log_project_created(user_id=project.pk, changed_by=self.request.user)
+        Logger.log_project_created(project_id=project.pk, changed_by=self.request.user)
 
-        return super().form_valid(form)
+        return redirect(self.get_success_url())
 
 
 class ProjectUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
