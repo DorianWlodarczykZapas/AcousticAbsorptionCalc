@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title">{{ project.name }}</h2>
+                <p class="card-text">{{ project.description }}</p>
+                <div class="d-flex gap-3 mb-4">
+                    <a href="{% url 'projects:project_edit' project.pk %}"
+                       class="btn btn-warning">{% trans "Edit Project" %}</a>
+                    <a href="{% url 'projects:project_confirm_delete' project.pk %}"
+                       class="btn btn-danger">{% trans "Delete Project" %}</a>
+                </div>
+                <a href="{% url 'projects:project_pdf' project.pk %}"
+                   class="btn btn-primary mt-3">{% trans "Generate PDF" %}</a>
+                <hr>
+                <h3 class="mt-4">{% trans "Rooms" %}</h3>
+                <ul class="list-group">
+                    {% for room in project.rooms.all %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{% url 'projects:room_detail' room.pk %}">{{ room.name }}</a>
+                            <div>
+                                <a href="{% url 'projects:room_edit' room.pk %}"
+                                   class="btn btn-sm btn-warning">{% trans "Edit" %}</a>
+                                <a href="{% url 'projects:room_confirm_delete' room.pk %}"
+                                   class="btn btn-sm btn-danger">{% trans "Delete" %}</a>
+                            </div>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">{% trans "No rooms available" %}</li>
+                    {% endfor %}
+                </ul>
+                <div class="mt-4">
+                    <a href="{% url 'projects:room_create' project.pk %}"
+                       class="btn btn-success">{% trans "Add Room" %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
