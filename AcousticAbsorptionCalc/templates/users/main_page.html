@@ -18,7 +18,7 @@
                                     <br>
                                     {{ latest_project.description|truncatechars:100 }}
                                     <br>
-                                    <a href="{% url 'projects:detail' latest_project.pk %}"
+                                    <a href="{% url 'projects:project_detail' latest_project.pk %}"
                                        class="btn btn-sm btn-primary mt-2">{% trans "View Project" %}</a>
                                 </p>
                             {% else %}
