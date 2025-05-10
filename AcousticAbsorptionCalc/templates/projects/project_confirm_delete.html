@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+    <h2>
+        {% blocktrans with project_name=object.name %}Are you sure you want to delete the project "{{ project_name }}"?{% endblocktrans %}
+    </h2>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">{% trans "Delete" %}</button>
+        <a href="{% url 'projects:project_detail' object.pk %}">{% trans "Cancel" %}</a>
+    </form>
+{% endblock %}
