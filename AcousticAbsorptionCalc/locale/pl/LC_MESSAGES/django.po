@@ -449,6 +449,14 @@ msgstr "Utwórz projekt"
 msgid "Back to Project List"
 msgstr "Powrót do listy projektów"
 
+msgid "Delete"
+msgstr "Usuń"
+
+msgid "Cancel"
+msgstr "Anuluj"
+
+msgid "Are you sure you want to delete the project \"%(project_name)s\"?"
+msgstr "Czy na pewno chcesz usunąć projekt \"%(project_name)s\"?"
 
 
 
