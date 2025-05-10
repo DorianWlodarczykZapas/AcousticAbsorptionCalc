@@ -458,5 +458,7 @@ msgstr "Anuluj"
 msgid "Are you sure you want to delete the project \"%(project_name)s\"?"
 msgstr "Czy na pewno chcesz usunąć projekt \"%(project_name)s\"?"
 
+msgid "This action cannot be undone."
+msgstr "Tej operacji nie można cofnąć."
 
 
