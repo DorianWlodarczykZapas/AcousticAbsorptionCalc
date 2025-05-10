@@ -32,7 +32,7 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
             user=self.request.user, name=name, description=description
         )
 
-        Logger.log_project_created(project_id=project.pk, changed_by=self.request.user)
+        Logger.log_project_created(user_id=project.pk, changed_by=self.request.user)
 
         return redirect(self.get_success_url())
 
