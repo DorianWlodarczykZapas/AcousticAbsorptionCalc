@@ -458,4 +458,36 @@ msgstr "Czy na pewno chcesz usunąć projekt \"%(project_name)s\"?"
 msgid "This action cannot be undone."
 msgstr "Tej operacji nie można cofnąć."
 
+msgid "Room Name"
+msgstr "Nazwa pomieszczenia"
+
+msgid "Width (m)"
+msgstr "Szerokość (m)"
+
+msgid "Length (m)"
+msgstr "Długość (m)"
+
+msgid "Height (m)"
+msgstr "Wysokość (m)"
+
+msgid "Acoustic Norm"
+msgstr "Norma akustyczna"
+
+msgid "Material"
+msgstr "Materiał"
+
+msgid "Area (m²)"
+msgstr "Powierzchnia (m²)"
+
+msgid "Add Room"
+msgstr "Dodaj pokój"
+
+msgid "Add New Room"
+msgstr "Dodaj nowe pomieszczenie"
+
+msgid "Save"
+msgstr "Zapisz"
+
+msgid "Furnishing Materials"
+msgstr "Materiały umeblowania"
 
