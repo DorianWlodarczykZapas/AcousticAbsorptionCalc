@@ -1,4 +1,4 @@
-from calculations.models import Material
+from calculations.models import Material, Norm
 from django.db import models
 from projects.models import Project
 
@@ -9,6 +9,7 @@ class Room(models.Model):
     width = models.DecimalField(max_digits=10, decimal_places=2)
     length = models.DecimalField(max_digits=10, decimal_places=2)
     height = models.DecimalField(max_digits=10, decimal_places=2)
+    norm = models.ForeignKey(Norm, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
