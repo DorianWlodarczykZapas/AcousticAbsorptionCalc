@@ -11,6 +11,22 @@
                 <form method="post">
                     {% csrf_token %}
                     <div class="mb-3">{{ form.as_p }}</div>
+                    <h5 class="mt-4 mb-3">{% trans "Furnishing Materials" %}</h5>
+                    {{ furnishing_formset.management_form }}
+                    {% for form in furnishing_formset %}
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.material.label_tag }}
+                                {{ form.material }}
+                                {% if form.material.errors %}<div class="text-danger">{{ form.material.errors }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form.area.label_tag }}
+                                {{ form.area }}
+                                {% if form.area.errors %}<div class="text-danger">{{ form.area.errors }}</div>{% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
                     <div class="d-flex justify-content-end">
                         <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
                     </div>
