@@ -2,7 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from user_logs.logger import Logger
 
-from .forms import RoomForm
+from .forms import FurnishingFormSet, RoomForm
 from .models import Room
 
 
@@ -20,13 +20,37 @@ class RoomCreateView(CreateView):
     form_class = RoomForm
     template_name = "rooms/room_form.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context["furnishing_formset"] = FurnishingFormSet(self.request.POST)
+        else:
+            context["furnishing_formset"] = FurnishingFormSet()
+        return context
+
     def form_valid(self, form):
-        form.instance.project_id = self.kwargs.get("project_id")
-        response = super().form_valid(form)
+        context = self.get_context_data()
+        formset = context["furnishing_formset"]
 
-        Logger.log_room_created(user_id=self.object.pk, changed_by=self.request.user)
+        if formset.is_valid():
+            form.instance.project_id = self.kwargs.get("project_id")
+            response = super().form_valid(form)
 
-        return response
+            furnishings = {
+                f.cleaned_data["material"].name: f.cleaned_data["area"]
+                for f in formset
+                if f.cleaned_data and not f.cleaned_data.get("DELETE", False)
+            }
+
+            print("Furnishing data:", furnishings)
+
+            Logger.log_room_created(
+                user_id=self.object.pk, changed_by=self.request.user
+            )
+
+            return response
+        else:
+            return self.form_invalid(form)
 
     def get_success_url(self):
         return reverse_lazy(
