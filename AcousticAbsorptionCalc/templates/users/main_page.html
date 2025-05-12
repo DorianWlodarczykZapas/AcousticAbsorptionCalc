@@ -59,7 +59,18 @@
                                     <br>
                                     {% if active_user_plan.is_trial %}
                                         <span class="text-warning">{% blocktrans %}Trial period: {{ active_user_plan.trial_days }} days{% endblocktrans %}</span>
+                                        <br>
                                     {% endif %}
+                                    {% trans "Advanced features" %}:
+                                    {% if plan_data.advanced_features %}
+                                        <span class="text-success">{% trans "Enabled" %}</span>
+                                    {% else %}
+                                        <span class="text-muted">{% trans "Disabled" %}</span>
+                                    {% endif %}
+                                    <br>
+                                    {% trans "Max projects" %}: {{ plan_data.max_projects }}
+                                    <br>
+                                    {% trans "Max rooms per project" %}: {{ plan_data.max_rooms }}
                                 </p>
                             {% else %}
                                 <p class="text-muted">
