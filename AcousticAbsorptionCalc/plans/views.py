@@ -2,11 +2,13 @@ from datetime import timedelta, timezone
 
 import stripe
 from core import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.views.generic import ListView, TemplateView
 from plans.services import StripeService
+from pyexpat.errors import messages
 
 from .models import Plan, User, UserPlan
 
@@ -79,3 +81,29 @@ class PaymentSuccessView(TemplateView):
 
 class PaymentCancelView(TemplateView):
     template_name = "templates/plans/cancel.html"
+
+
+class ChangePlanView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        user_plan = UserPlan.objects.filter(user=request.user, is_active=True).first()
+
+        plans = Plan.objects.all()
+
+        context = {
+            "user_plan": user_plan,
+            "plans": plans,
+        }
+
+        return render(request, "plans/change_plan.html", context)
+
+    def post(self, request, *args, **kwargs):
+        plan_id = request.POST.get("plan_id")
+        new_plan = Plan.objects.get(id=plan_id)
+        user_plan = UserPlan.objects.filter(user=request.user, is_active=True).first()
+
+        if user_plan:
+            user_plan.plan = new_plan
+            user_plan.save()
+            messages.success(request, "Your plan has been successfully updated.")
+
+        return redirect("users:home")
