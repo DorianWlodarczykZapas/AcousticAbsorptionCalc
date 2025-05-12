@@ -491,3 +491,5 @@ msgstr "Zapisz"
 msgid "Furnishing Materials"
 msgstr "Materiały umeblowania"
 
+msgid "Forgot your password?"
+msgstr "Zapomniałeś hasła?"
