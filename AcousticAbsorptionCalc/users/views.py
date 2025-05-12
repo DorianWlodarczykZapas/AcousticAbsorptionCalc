@@ -114,10 +114,22 @@ class HomeView(LoginRequiredMixin, View):
             .first()
         )
 
+        plan_data = None
+        if active_user_plan:
+            plan_data = {
+                "name": active_user_plan.plan.name,
+                "type": active_user_plan.plan.get_type_display(),
+                "valid_to": active_user_plan.valid_to,
+                "advanced_features": active_user_plan.plan.advanced_features_enabled,
+                "max_projects": active_user_plan.plan.max_projects,
+                "max_rooms": active_user_plan.plan.max_rooms_per_project,
+            }
+
         context: Dict[str, Any] = {
             "latest_project": latest_project,
             "latest_room": latest_room,
             "active_user_plan": active_user_plan,
+            "plan_data": plan_data,
         }
 
         return render(request, "users/main_page.html", context)
