@@ -46,16 +46,22 @@ class StripeWebhookView(View):
         if event["type"] == "checkout.session.completed":
             session = event["data"]["object"]
             customer_email = session.get("customer_email")
+            plan_id = session.get("metadata", {}).get("plan_id")
 
             try:
                 user = User.objects.get(email=customer_email)
-                plan = Plan.objects.order_by("price").first()
-                UserPlan.objects.create(
+                plan = get_object_or_404(Plan, id=plan_id)
+
+                UserPlan.objects.update_or_create(
                     user=user,
-                    plan=plan,
-                    start_date=timezone.now().date(),
-                    valid_to=timezone.now().date() + timedelta(days=30),
-                    is_active=True,
+                    defaults={
+                        "plan": plan,
+                        "start_date": timezone.now().date(),
+                        "valid_to": timezone.now().date() + timedelta(days=30),
+                        "is_active": True,
+                        "last_payment_date": timezone.now().date(),
+                        "next_payment_date": timezone.now().date() + timedelta(days=30),
+                    },
                 )
             except User.DoesNotExist:
                 pass

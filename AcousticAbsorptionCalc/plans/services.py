@@ -26,4 +26,5 @@ class StripeService:
             customer_email=user_email,
             success_url="http://localhost:8000/payment/success/",
             cancel_url="http://localhost:8000/payment/cancel/",
+            metadata={"plan_id": str(plan.id)},
         )
