@@ -34,6 +34,7 @@ INSTALLED_EXTENSIONS = [
     "plans",
     "projects",
     "rooms",
+    "project_logs",
 ]
 
 INSTALLED_APPS += INSTALLED_EXTENSIONS
