@@ -38,11 +38,20 @@ class ProjectVersion(models.Model):
     )
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ("project", "name")
 
     def __str__(self):
         return f"{self.project.name} - {self.name}"
+
+    def set_active(self):
+        ProjectVersion.objects.filter(project=self.project).update(is_active=False)
+
+        self.is_active = True
+        self.save()
+
+        self.project.active_version = self
+        self.project.save(update_fields=["active_version"])
