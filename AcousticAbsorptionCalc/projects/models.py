@@ -6,13 +6,17 @@ class Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField()
+    active_version = models.ForeignKey(
+        "ProjectVersion",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="+",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = (
-            "user",
-            "name",
-        )
+        unique_together = ("user", "name")
 
 
 class SharedProject(models.Model):
