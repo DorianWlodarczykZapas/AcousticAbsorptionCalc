@@ -55,3 +55,30 @@ class ProjectVersion(models.Model):
 
         self.project.active_version = self
         self.project.save(update_fields=["active_version"])
+
+
+class ProjectVersionChange(models.Model):
+    class EntityType(models.TextChoices):
+        ROOM = "room", "Room"
+        MATERIAL = "material", "Material"
+        FURNISHING = "furnishing", "Furnishing"
+        OTHER = "other", "Other"
+
+    class ChangeType(models.TextChoices):
+        CREATE = "create", "Created"
+        UPDATE = "update", "Updated"
+        DELETE = "delete", "Deleted"
+
+    project_version = models.ForeignKey(
+        "projects.ProjectVersion", on_delete=models.CASCADE, related_name="changes"
+    )
+    entity_type = models.CharField(max_length=50, choices=EntityType.choices)
+    entity_id = models.IntegerField(null=True, blank=True)
+    change_type = models.CharField(max_length=20, choices=ChangeType.choices)
+    changed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    description = models.TextField(blank=True)
+    data = models.JSONField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.get_change_type_display()} {self.get_entity_type_display()} (ID: {self.entity_id})"
