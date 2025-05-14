@@ -56,8 +56,25 @@ class ProjectUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return can_edit_project(self.request.user, project)
 
     def form_valid(self, form):
+        old_instance = self.get_object()
         response = super().form_valid(form)
+
         Logger.log_project_updated(user_id=self.object.pk, changed_by=self.request.user)
+
+        metadata = {}
+        for field in form.changed_data:
+            metadata[field] = {
+                "old": getattr(old_instance, field),
+                "new": form.cleaned_data.get(field),
+            }
+
+        ProjectLogger.log_edit_dimensions(
+            project=self.object,
+            changed_by=self.request.user,
+            change_description="Project fields updated",
+            metadata=metadata,
+        )
+
         return response
 
 
