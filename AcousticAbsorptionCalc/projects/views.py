@@ -129,11 +129,18 @@ class ProjectDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
 class ProjectPDFView(View):
     def get(self, request, project_id):
-
         try:
             project = Project.objects.prefetch_related("rooms").get(id=project_id)
         except Project.DoesNotExist:
             raise Http404("Project does not exist")
+
+        Logger.log_project_updated(user_id=project.pk, changed_by=request.user)
+
+        ProjectLogger.log_downloaded(
+            project=project,
+            changed_by=request.user,
+            change_description="Project PDF downloaded",
+        )
 
         context = {
             "project": project,
