@@ -1,14 +1,16 @@
-from datetime import timedelta, timezone
+from datetime import timedelta
 
 import stripe
 from core import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 from django.views import View
 from django.views.generic import ListView, TemplateView
 from plans.services import StripeService
 from pyexpat.errors import messages
+from status import HTTPStatus
 
 from .models import Plan, User, UserPlan
 
@@ -49,7 +51,7 @@ class StripeWebhookView(View):
         except stripe.error.SignatureVerificationError:
             return HttpResponse("Invalid signature", status=400)
 
-        if event["type"] == "checkout.session.completed":
+        if event["type"] == "invoice.payment_succeded":
             session = event["data"]["object"]
             customer_email = session.get("customer_email")
             plan_id = session.get("metadata", {}).get("plan_id")
@@ -72,7 +74,7 @@ class StripeWebhookView(View):
             except User.DoesNotExist:
                 pass
 
-        return HttpResponse(status=200)
+        return HttpResponse(status=HTTPStatus.OK)
 
 
 class PaymentSuccessView(TemplateView):
@@ -84,7 +86,7 @@ class PaymentCancelView(TemplateView):
 
 
 class ChangePlanView(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):  # is_staff -> wszystkie plany.
         user_plan = UserPlan.objects.filter(user=request.user, is_active=True).first()
 
         plans = Plan.objects.all()
@@ -98,7 +100,7 @@ class ChangePlanView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         plan_id = request.POST.get("plan_id")
-        new_plan = Plan.objects.get(id=plan_id)
+        new_plan = Plan.objects.get(id=plan_id)  # wyjatek - moze nie byc planu.
         user_plan = UserPlan.objects.filter(user=request.user, is_active=True).first()
 
         if user_plan:
