@@ -4,23 +4,22 @@ from users.models import User
 
 
 class ChangeLog(models.Model):
-    class EntityType(models.TextChoices):
-        USER = "user", _("User")
-        PROJECT = "project", _("Project")
-        DOCUMENT = "document", _("Document")
-        TAG = "tag", _("Tag")
+    class EntityType(models.IntegerChoices):
+        USER = 1, _("User")
+        PROJECT = 2, _("Project")
+        DOCUMENT = 3, _("Document")
+        TAG = 4, _("Tag")
 
-    class ChangeType(models.TextChoices):
-        CREATE = "create", _("Created")
-        UPDATE = "update", _("Updated")
-        DELETE = "delete", _("Deleted")
-        LOGIN = "login", _("Login")
-        LOGOUT = "logout", _("Logout")
-        VIEW = "view", _("View")
-        ACTION = "action", _("Other action")
+    class ChangeType(models.IntegerChoices):
+        CREATE = 1, _("Created")
+        UPDATE = 2, _("Updated")
+        DELETE = 3, _("Deleted")
+        LOGIN = 4, _("Login")
+        LOGOUT = 5, _("Logout")
+        VIEW = 6, _("View")
+        ACTION = 7, _("Other action")
 
-    entity_type = models.CharField(
-        max_length=100,
+    entity_type = models.IntegerField(
         choices=EntityType.choices,
         help_text=_("The entity type to which the action applies"),
     )
@@ -30,8 +29,7 @@ class ChangeLog(models.Model):
     changed_by = models.ForeignKey(
         User, on_delete=models.CASCADE, help_text=_("The user who performed the action")
     )
-    change_type = models.CharField(
-        max_length=50,
+    change_type = models.IntegerField(
         choices=ChangeType.choices,
         help_text=_("The type of change or action"),
     )
