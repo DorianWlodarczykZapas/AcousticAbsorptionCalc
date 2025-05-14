@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from project_logs.projectlogger import ProjectLogger
 from user_logs.logger import Logger
 
 from .forms import FurnishingFormSet, RoomForm
@@ -42,11 +43,18 @@ class RoomCreateView(CreateView):
                 if f.cleaned_data and not f.cleaned_data.get("DELETE", False)
             }
 
-            print("Furnishing data:", furnishings)
-
             Logger.log_room_created(
                 user_id=self.object.pk, changed_by=self.request.user
             )
+
+            ProjectLogger.log_room_created(
+                project=self.object.project,
+                changed_by=self.request.user,
+                change_description=f"Room '{form.cleaned_data['name']}' created",
+                metadata=furnishings,
+            )
+
+            print("Furnishing data:", furnishings)
 
             return response
         else:
