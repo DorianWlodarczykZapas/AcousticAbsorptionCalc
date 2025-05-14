@@ -11,6 +11,7 @@ from django.views.generic import (
     UpdateView,
     View,
 )
+from project_logs.projectlogger import ProjectLogger
 from projects.forms import ProjectForm
 from projects.services import PDFGeneratorService
 from user_logs.logger import Logger
@@ -28,11 +29,18 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         name = form.cleaned_data["name"]
         description = form.cleaned_data["description"]
+
         project = ProjectService.create_project(
             user=self.request.user, name=name, description=description
         )
 
         Logger.log_project_created(user_id=project.pk, changed_by=self.request.user)
+
+        ProjectLogger.log_created(
+            project=project,
+            changed_by=self.request.user,
+            change_description="Project created via form",
+        )
 
         return redirect(self.get_success_url())
 
