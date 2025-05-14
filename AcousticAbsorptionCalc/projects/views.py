@@ -89,7 +89,15 @@ class ProjectDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
+
         Logger.log_project_deleted(user_id=self.object.pk, changed_by=request.user)
+
+        ProjectLogger.log_deleted(
+            project=self.object,
+            changed_by=request.user,
+            change_description="Project deleted by user",
+        )
+
         return super().delete(request, *args, **kwargs)
 
 
