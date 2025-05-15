@@ -6,6 +6,8 @@ from .views import (
     ProjectDetailView,
     ProjectListView,
     ProjectPDFView,
+    ProjectRoomCreateView,
+    ProjectRoomUpdateView,
     ProjectUpdateView,
 )
 
@@ -21,5 +23,15 @@ urlpatterns = [
         "<int:project_id>/download-pdf/",
         ProjectPDFView.as_view(),
         name="project_pdf",
+    ),
+    path(
+        "projects/<int:project_id>/rooms/new/",
+        ProjectRoomCreateView.as_view(),
+        name="room_create",
+    ),
+    path(
+        "projects/rooms/<int:pk>/edit/",
+        ProjectRoomUpdateView.as_view(),
+        name="room_edit",
     ),
 ]
