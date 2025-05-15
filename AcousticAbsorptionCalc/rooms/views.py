@@ -85,6 +85,41 @@ class RoomUpdateView(UpdateView):
         )
 
 
+class ProjectRoomUpdateView(UpdateView):
+    model = Room
+    form_class = RoomForm
+    template_name = "rooms/project_room_form.html"
+    context_object_name = "room"
+
+    def form_valid(self, form):
+        old_name = self.object.name
+        old_area = self.object.area
+
+        response = super().form_valid(form)
+
+        Logger.log_room_updated(user_id=self.object.pk, changed_by=self.request.user)
+
+        ProjectLogger.log_edit_furnishing(
+            project=self.object.project,
+            changed_by=self.request.user,
+            change_description=f"Room '{old_name}' updated in project.",
+            metadata={
+                "room_id": self.object.pk,
+                "old_name": old_name,
+                "new_name": self.object.name,
+                "old_area": old_area,
+                "new_area": self.object.area,
+            },
+        )
+
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "rooms:room_list", kwargs={"project_id": self.object.project_id}
+        )
+
+
 class RoomDeleteView(DeleteView):
     model = Room
     template_name = "rooms/room_confirm_delete.html"
