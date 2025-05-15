@@ -7,6 +7,7 @@ from .views import (
     ProjectListView,
     ProjectPDFView,
     ProjectRoomCreateView,
+    ProjectRoomDeleteView,
     ProjectRoomUpdateView,
     ProjectUpdateView,
 )
@@ -33,5 +34,10 @@ urlpatterns = [
         "projects/rooms/<int:pk>/edit/",
         ProjectRoomUpdateView.as_view(),
         name="room_edit",
+    ),
+    path(
+        "projects/rooms/<int:pk>/delete/",
+        ProjectRoomDeleteView.as_view(),
+        name="room_delete",
     ),
 ]
