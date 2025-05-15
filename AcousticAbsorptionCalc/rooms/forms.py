@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import formset_factory
 from django.utils.translation import gettext_lazy as _
+from projects.models import Project
 
 from .models import Material, Room
 
@@ -39,3 +40,14 @@ class FurnishingForm(forms.Form):
 
 
 FurnishingFormSet = formset_factory(FurnishingForm, extra=1, can_delete=True)
+
+
+class MoveRoomForm(forms.Form):
+    target_project = forms.ModelChoiceField(
+        queryset=None, label="Select target project"
+    )
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["target_project"].queryset = Project.objects.filter(members=user)
