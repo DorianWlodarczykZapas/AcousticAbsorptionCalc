@@ -236,3 +236,31 @@ class ProjectRoomUpdateView(UpdateView):
         return reverse_lazy(
             "rooms:room_list", kwargs={"project_id": self.object.project_id}
         )
+
+
+class ProjectRoomDeleteView(DeleteView):
+    model = Room
+    template_name = "rooms/room_confirm_delete.html"
+    context_object_name = "room"
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        project = self.object.project
+        room_name = self.object.name
+        room_id = self.object.pk
+
+        Logger.log_room_deleted(user_id=room_id, changed_by=request.user)
+
+        ProjectLogger.log_deleted(
+            project=project,
+            changed_by=request.user,
+            change_description=f"Room '{room_name}' deleted",
+            metadata={"room_id": room_id},
+        )
+
+        return super().delete(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "rooms:room_list", kwargs={"project_id": self.object.project_id}
+        )
