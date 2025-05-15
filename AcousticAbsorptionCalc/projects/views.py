@@ -14,6 +14,8 @@ from django.views.generic import (
 from project_logs.projectlogger import ProjectLogger
 from projects.forms import ProjectForm
 from projects.services import PDFGeneratorService
+from rooms.forms import FurnishingFormSet, RoomForm
+from rooms.models import Room
 from user_logs.logger import Logger
 
 from .models import Project
@@ -152,3 +154,50 @@ class ProjectPDFView(View):
         response = HttpResponse(pdf_content, content_type="application/pdf")
         response["Content-Disposition"] = f'inline; filename="project_{project.id}.pdf"'
         return response
+
+
+class ProjectRoomCreateView(CreateView):
+    model = Room
+    form_class = RoomForm
+    template_name = "rooms/room_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context["furnishing_formset"] = FurnishingFormSet(self.request.POST)
+        else:
+            context["furnishing_formset"] = FurnishingFormSet()
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context["furnishing_formset"]
+
+        if formset.is_valid():
+            form.instance.project_id = self.kwargs.get("project_id")
+            response = super().form_valid(form)
+
+            furnishings = {
+                f.cleaned_data["material"].name: f.cleaned_data["area"]
+                for f in formset
+                if f.cleaned_data and not f.cleaned_data.get("DELETE", False)
+            }
+
+            Logger.log_room_created(
+                user_id=self.object.pk, changed_by=self.request.user
+            )
+
+            ProjectLogger.log_created(
+                project=self.object.project,
+                changed_by=self.request.user,
+                change_description=f"Room '{form.cleaned_data['name']}' created",
+                metadata=furnishings,
+            )
+
+            return response
+        return self.form_invalid(form)
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "rooms:room_list", kwargs={"project_id": self.kwargs.get("project_id")}
+        )
