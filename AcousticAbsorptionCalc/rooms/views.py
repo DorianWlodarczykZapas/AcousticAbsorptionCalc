@@ -1,9 +1,9 @@
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.views.generic import CreateView, DeleteView, FormView, ListView, UpdateView
 from project_logs.projectlogger import ProjectLogger
 from user_logs.logger import Logger
 
-from .forms import FurnishingFormSet, RoomForm
+from .forms import FurnishingFormSet, MoveRoomForm, RoomForm
 from .models import Room
 
 
@@ -100,4 +100,46 @@ class RoomDeleteView(DeleteView):
     def get_success_url(self):
         return reverse_lazy(
             "rooms:room_list", kwargs={"project_id": self.object.project_id}
+        )
+
+
+class MoveRoomView(FormView):
+    template_name = "rooms/move_room.html"
+    form_class = MoveRoomForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.room = Room.objects.get(pk=kwargs["pk"])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        old_project = self.room.project
+        new_project = form.cleaned_data["target_project"]
+        if new_project == old_project:
+            form.add_error("target_project", "Room is already in this project.")
+            return self.form_invalid(form)
+
+        self.room.project = new_project
+        self.room.save()
+
+        ProjectLogger.log_edit_furnishing(
+            project=new_project,
+            changed_by=self.request.user,
+            change_description=f"Room '{self.room.name}' moved from project '{old_project.name}'",
+            metadata={
+                "room_id": self.room.pk,
+                "from_project": old_project.pk,
+                "to_project": new_project.pk,
+            },
+        )
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "rooms:room_list", kwargs={"project_id": self.room.project.pk}
         )
