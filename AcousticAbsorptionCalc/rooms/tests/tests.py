@@ -237,3 +237,10 @@ class RoomViewsTestCase(TestCase):
 
         mock_logger.assert_called_once()
         self.assertEqual(mock_logger.call_args[1]["project"], self.other_project)
+
+    def test_room_create_view_context_contains_formset(self):
+        url = reverse("rooms:room_add", kwargs={"project_id": self.project.id})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("furnishing_formset", response.context)
