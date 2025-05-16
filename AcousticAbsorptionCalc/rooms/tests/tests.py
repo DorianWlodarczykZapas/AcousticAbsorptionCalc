@@ -284,3 +284,9 @@ class RoomViewsTestCase(TestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
         self.assertTrue(Room.objects.filter(name="Pokój testowy").exists())
+
+    def test_room_update_view_context(self):
+        url = reverse("rooms:room_update", kwargs={"pk": self.room1.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["room"], self.room1)
