@@ -290,3 +290,17 @@ class RoomViewsTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["room"], self.room1)
+
+    def test_room_update_redirects_to_correct_project_list(self):
+        url = reverse("rooms:room_update", kwargs={"pk": self.room1.pk})
+        data = {
+            "name": self.room1.name,
+            "width": self.room1.width,
+            "length": self.room1.length,
+            "height": "3.50",
+        }
+
+        response = self.client.post(url, data)
+        self.assertRedirects(
+            response, reverse("rooms:room_list", kwargs={"project_id": self.project.id})
+        )
