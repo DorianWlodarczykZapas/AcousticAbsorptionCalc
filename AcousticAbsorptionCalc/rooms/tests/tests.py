@@ -226,3 +226,14 @@ class RoomViewsTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Przenieś pokój")
+
+    @patch("rooms.views.ProjectLogger.log_edit_furnishing")
+    def test_project_logger_called_on_move(self, mock_logger):
+        room = RoomFactory(project=self.project)
+        url = reverse("rooms:room_move", kwargs={"pk": room.pk})
+        data = {"target_project": self.other_project.pk}
+
+        self.client.post(url, data)
+
+        mock_logger.assert_called_once()
+        self.assertEqual(mock_logger.call_args[1]["project"], self.other_project)
