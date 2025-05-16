@@ -206,3 +206,15 @@ class RoomViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         room.refresh_from_db()
         self.assertEqual(room.project, self.other_project)
+
+    def test_move_room_same_project(self):
+        room = RoomFactory(project=self.project)
+        url = reverse("rooms:room_move", kwargs={"pk": room.pk})
+        data = {"target_project": self.project.pk}
+
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(
+            response, "form", "target_project", "Room is already in this project."
+        )
