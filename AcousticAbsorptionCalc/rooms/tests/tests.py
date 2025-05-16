@@ -304,3 +304,8 @@ class RoomViewsTestCase(TestCase):
         self.assertRedirects(
             response, reverse("rooms:room_list", kwargs={"project_id": self.project.id})
         )
+
+    def test_move_nonexistent_room(self):
+        url = reverse("rooms:room_move", kwargs={"pk": 9999})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
