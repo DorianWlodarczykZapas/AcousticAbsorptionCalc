@@ -195,3 +195,14 @@ class RoomViewsTestCase(TestCase):
         url = reverse("rooms:room_delete", kwargs={"pk": 9999})
         response = self.client.post(url)
         self.assertEqual(response.status_code, 404)
+
+    def test_move_room_valid(self):
+        room = RoomFactory(project=self.project)
+        url = reverse("rooms:room_move", kwargs={"pk": room.pk})
+        data = {"target_project": self.other_project.pk}
+
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, 302)
+        room.refresh_from_db()
+        self.assertEqual(room.project, self.other_project)
