@@ -218,3 +218,11 @@ class RoomViewsTestCase(TestCase):
         self.assertFormError(
             response, "form", "target_project", "Room is already in this project."
         )
+
+    def test_move_room_view_get(self):
+        room = RoomFactory(project=self.project)
+        url = reverse("rooms:room_move", kwargs={"pk": room.pk})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Przenieś pokój")
