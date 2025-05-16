@@ -265,3 +265,22 @@ class RoomViewsTestCase(TestCase):
         self.assertFormError(
             response, "furnishing_formset", 0, "material", "To pole jest wymagane."
         )
+
+    def test_room_create_with_valid_formset(self):
+        url = reverse("rooms:room_add", kwargs={"project_id": self.project.id})
+        data = {
+            "name": "Pokój testowy",
+            "width": "5.00",
+            "length": "6.00",
+            "height": "2.80",
+            "furnishing_set-TOTAL_FORMS": "1",
+            "furnishing_set-INITIAL_FORMS": "0",
+            "furnishing_set-MIN_NUM_FORMS": "0",
+            "furnishing_set-MAX_NUM_FORMS": "1000",
+            "furnishing_set-0-material": "1",
+            "furnishing_set-0-area": "12.0",
+        }
+
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(Room.objects.filter(name="Pokój testowy").exists())
