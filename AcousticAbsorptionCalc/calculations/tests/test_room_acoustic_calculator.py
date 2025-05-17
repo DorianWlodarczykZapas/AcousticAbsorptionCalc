@@ -233,3 +233,8 @@ class TestRoomAcousticCalculator(unittest.TestCase):
         mock_rt.assert_called_once_with("oz")
         mock_check.assert_called_once_with(Decimal("0.9"))
         mock_create.assert_called_once()
+
+    def test_get_absorption_coefficient_invalid_frequency(self):
+        mat = MagicMock()
+        with self.assertRaises(AttributeError):
+            self.calc.get_absorption_coefficient(mat, "nonexistent_freq")
