@@ -30,7 +30,7 @@ class TestPlanChangeViewInvalidPlan(TestCase):
 
     def test_change_to_nonexistent_plan(self):
         url = reverse("plans:change")
-        response = self.client.post(url, {"plan_type": "nonexistent"})
+        response = self.client.post(url, {"plan_id": 9999})
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)
         self.assertIn("error", messages[0].tags)
