@@ -1,4 +1,5 @@
 from typing import Any
+from unittest.mock import MagicMock, patch
 
 from calculations.factories import NormFactory
 from calculations.models import Norm
@@ -229,3 +230,29 @@ class AcousticCalculationViewTests(TestCase):
         response = self.client.post(self.url, data=payload, format="json")
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["error"], "Brakuje wymaganych danych.")
+
+    @patch("calculations.views.RoomAcousticCalculator")
+    def test_calculator_methods_are_called(self, mock_calculator_cls) -> None:
+        mock_calculator = MagicMock()
+        mock_calculator.sabine_reverberation_time.return_value = 1.23
+        mock_calculator.check_if_within_norm.return_value = True
+        mock_calculator_cls.return_value = mock_calculator
+
+        norm = NormFactory()
+
+        payload = {
+            "height": 2.5,
+            "length": 5.0,
+            "width": 4.0,
+            "furnishing": {"chair": 2.0},
+            "construction": {"brick": 1.0},
+            "norm_id": norm.id,
+            "frequency": "500",
+        }
+
+        response = self.client.post(self.url, data=payload, format="json")
+
+        self.assertEqual(response.status_code, 200)
+        mock_calculator.sabine_reverberation_time.assert_called_once_with("500")
+        mock_calculator.check_if_within_norm.assert_called_once_with(1.23)
+        mock_calculator.save_calculation.assert_called_once_with("500")
