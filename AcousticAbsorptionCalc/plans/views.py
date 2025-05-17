@@ -102,6 +102,10 @@ class ChangePlanView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         plan_id = request.POST.get("plan_id")
 
+        if not plan_id:
+            messages.error(request, "Nie podano planu.")
+            return redirect("plans:change")
+
         try:
             new_plan = Plan.objects.get(id=plan_id)
         except Plan.DoesNotExist:
