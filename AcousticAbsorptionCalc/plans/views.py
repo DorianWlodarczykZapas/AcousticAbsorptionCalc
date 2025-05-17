@@ -101,7 +101,13 @@ class ChangePlanView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         plan_id = request.POST.get("plan_id")
-        new_plan = Plan.objects.get(id=plan_id)  # wyjatek - moze nie byc planu.
+
+        try:
+            new_plan = Plan.objects.get(id=plan_id)
+        except Plan.DoesNotExist:
+            messages.error(request, "Wybrany plan nie istnieje.")
+            return redirect("plans:change")
+
         user_plan = UserPlan.objects.filter(user=request.user, is_active=True).first()
 
         if user_plan:
