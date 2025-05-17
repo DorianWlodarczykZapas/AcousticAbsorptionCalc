@@ -17,7 +17,8 @@ class TestPlanChangeViewSuccess(TestCase):
 
     def test_change_to_valid_plan(self):
         url = reverse("plans:change")
-        response = self.client.post(url, {"plan_type": self.plan.type})
+        response = self.client.post(url, {"plan_id": self.plan.id})
+
         self.assertRedirects(response, reverse("plans:list"))
 
 
