@@ -218,3 +218,18 @@ class TestRoomAcousticCalculator(unittest.TestCase):
         total_norm2 = self.calc.total_absorption("oz")
 
         self.assertNotEqual(total_norm1, total_norm2)
+
+    @patch.object(RoomAcousticCalculator, "check_if_within_norm")
+    @patch.object(RoomAcousticCalculator, "sabine_reverberation_time")
+    @patch("acoustic.room_acoustic_calculator.Calculation.objects.create")
+    def test_save_calculation_calls_methods_in_order(
+        self, mock_create, mock_rt, mock_check
+    ):
+        mock_rt.return_value = Decimal("0.9")
+        mock_check.return_value = True
+
+        self.calc.save_calculation("oz")
+
+        mock_rt.assert_called_once_with("oz")
+        mock_check.assert_called_once_with(Decimal("0.9"))
+        mock_create.assert_called_once()
