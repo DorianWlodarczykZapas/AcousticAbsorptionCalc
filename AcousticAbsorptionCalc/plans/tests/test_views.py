@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 from plans.factories import PlanFactory, UserPlanFactory
+from plans.models import UserPlan
 from users.factories import UserFactory
 
 User = get_user_model()
@@ -82,3 +83,27 @@ class TestPlanChangeMocked(TestCase):
         url = reverse("plans:change")
         self.client.post(url, {"plan_type": "premium"})
         mock_change.assert_called_once()
+
+
+@patch("stripe.Webhook.construct_event")
+def test_webhook_payment_succeeded_creates_userplan(self, mock_event):
+    plan = PlanFactory()
+    user = UserFactory(email="test@example.com")
+    mock_event.return_value = {
+        "type": "invoice.payment_succeeded",
+        "data": {
+            "object": {
+                "customer_email": user.email,
+                "metadata": {"plan_id": str(plan.id)},
+            }
+        },
+    }
+
+    response = self.client.post(
+        "/stripe/webhook/",
+        data=b"{}",
+        content_type="application/json",
+        HTTP_STRIPE_SIGNATURE="valid_signature",
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertTrue(UserPlan.objects.filter(user=user, plan=plan).exists())
