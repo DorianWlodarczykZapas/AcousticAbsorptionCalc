@@ -51,7 +51,8 @@ class StripeWebhookView(View):
         except stripe.error.SignatureVerificationError:
             return HttpResponse("Invalid signature", status=400)
 
-        if event["type"] == "invoice.payment_succeded":
+        if event["type"] == "invoice.payment_succeeded":
+
             session = event["data"]["object"]
             customer_email = session.get("customer_email")
             plan_id = session.get("metadata", {}).get("plan_id")
