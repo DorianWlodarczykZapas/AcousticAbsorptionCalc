@@ -238,3 +238,14 @@ class TestRoomAcousticCalculator(unittest.TestCase):
         mat = MagicMock()
         with self.assertRaises(AttributeError):
             self.calc.get_absorption_coefficient(mat, "nonexistent_freq")
+
+    def test_init_with_empty_materials(self):
+        calc = RoomAcousticCalculator(
+            height=3.0,
+            length=4.0,
+            width=5.0,
+            furnishing={},
+            construction={},
+            norm=self.norm,
+        )
+        self.assertEqual(calc.all_materials, {})
