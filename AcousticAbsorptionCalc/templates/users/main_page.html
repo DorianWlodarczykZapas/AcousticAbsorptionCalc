@@ -58,31 +58,34 @@
                                     {% trans "Valid until" %}: {{ active_user_plan.valid_to|date:"Y-m-d" }}
                                     <br>
                                     {% if active_user_plan.is_trial %}
-                                        <span class="text-warning">{% blocktrans %}Trial period: {{ active_user_plan.trial_days }} days{% endblocktrans %}</span>
-                                        <br>
-                                    {% endif %}
-                                    {% trans "Advanced features" %}:
-                                    {% if plan_data.advanced_features %}
-                                        <span class="text-success">{% trans "Enabled" %}</span>
-                                    {% else %}
-                                        <span class="text-muted">{% trans "Disabled" %}</span>
-                                    {% endif %}
+                                        <span class="text-warning">{% blocktrans with days=active_user_plan.trial_days %}
+    Trial period: {{ days }} days
+{% endblocktrans %}
+                                    </span>
                                     <br>
-                                    {% trans "Max projects" %}: {{ plan_data.max_projects }}
-                                    <br>
-                                    {% trans "Max rooms per project" %}: {{ plan_data.max_rooms }}
-                                </p>
-                            {% else %}
-                                <p class="text-muted">
-                                    {% trans "You are not subscribed to any plan." %}
-                                    <a href="{% url 'plans:available_plans' %}"
-                                       class="btn btn-sm btn-outline-primary ms-2">{% trans "Choose a plan" %}</a>
-                                </p>
-                            {% endif %}
-                        </div>
+                                {% endif %}
+                                {% trans "Advanced features" %}:
+                                {% if plan_data.advanced_features %}
+                                    <span class="text-success">{% trans "Enabled" %}</span>
+                                {% else %}
+                                    <span class="text-muted">{% trans "Disabled" %}</span>
+                                {% endif %}
+                                <br>
+                                {% trans "Max projects" %}: {{ plan_data.max_projects }}
+                                <br>
+                                {% trans "Max rooms per project" %}: {{ plan_data.max_rooms }}
+                            </p>
+                        {% else %}
+                            <p class="text-muted">
+                                {% trans "You are not subscribed to any plan." %}
+                                <a href="{% url 'plans:available_plans' %}"
+                                   class="btn btn-sm btn-outline-primary ms-2">{% trans "Choose a plan" %}</a>
+                            </p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 {% endblock %}
