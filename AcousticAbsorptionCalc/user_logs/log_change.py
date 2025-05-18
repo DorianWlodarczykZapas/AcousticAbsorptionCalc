@@ -7,7 +7,7 @@ from .models import ChangeLog
 
 
 def log_change(
-    entity_type: str, change_type: str
+    entity_type: int, change_type: int
 ) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     """
     Decorator that logs a change in the system by creating a ChangeLog entry.
