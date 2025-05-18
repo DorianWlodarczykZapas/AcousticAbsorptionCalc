@@ -10,16 +10,24 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("plans", "0001_initial"),
+        ("project_logs", "0001_initial"),
+        ("projects", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="userplan",
-            name="user",
-            field=models.OneToOneField(
+            model_name="projectchangelog",
+            name="changed_by",
+            field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
+        ),
+        migrations.AddField(
+            model_name="projectchangelog",
+            name="project",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="projects.project"
             ),
         ),
     ]

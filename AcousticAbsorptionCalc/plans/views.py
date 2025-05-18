@@ -1,4 +1,5 @@
 from datetime import timedelta
+from http import HTTPStatus
 
 import stripe
 from core import settings
@@ -10,7 +11,6 @@ from django.views import View
 from django.views.generic import ListView, TemplateView
 from plans.services import StripeService
 from pyexpat.errors import messages
-from status import HTTPStatus
 
 from .models import Plan, User, UserPlan
 
