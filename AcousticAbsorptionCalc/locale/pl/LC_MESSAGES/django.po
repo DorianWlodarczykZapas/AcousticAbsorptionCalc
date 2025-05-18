@@ -490,3 +490,5 @@ msgstr "Zapomniałeś hasła?"
 msgid "Trial period: %(days)s days"
 msgstr "Okres próbny: %(days)s dni"
 
+msgid "Advanced features"
+msgstr "Zaawansowane funkcje"
