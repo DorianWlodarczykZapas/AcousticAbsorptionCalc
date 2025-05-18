@@ -476,17 +476,10 @@ msgstr "Norma akustyczna"
 msgid "Material"
 msgstr "Materiał"
 
-msgid "Area (m²)"
-msgstr "Powierzchnia (m²)"
 
-msgid "Add Room"
-msgstr "Dodaj pokój"
 
-msgid "Add New Room"
-msgstr "Dodaj nowe pomieszczenie"
 
-msgid "Save"
-msgstr "Zapisz"
+
 
 msgid "Furnishing Materials"
 msgstr "Materiały umeblowania"
@@ -496,3 +489,4 @@ msgstr "Zapomniałeś hasła?"
 
 msgid "Trial period: %(days)s days"
 msgstr "Okres próbny: %(days)s dni"
+
