@@ -492,3 +492,9 @@ msgstr "Okres próbny: %(days)s dni"
 
 msgid "Advanced features"
 msgstr "Zaawansowane funkcje"
+
+msgid "Max projects"
+msgstr "Maksymalna liczba projektów"
+
+msgid "Max rooms per project"
+msgstr "Maksymalna liczba pomieszczeń na projekt"
