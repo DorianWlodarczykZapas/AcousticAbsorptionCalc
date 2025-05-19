@@ -1,0 +1,35 @@
+{% extends "basic.html" %}
+{% load i18n %}
+{% block content %}
+    <section class="section mt-5">
+        <div class="container">
+            <h1 class="mb-4 text-center">{% trans "Change Log for Project:" %} {{ project.name }}</h1>
+            {% if changes %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>{% trans "Date" %}</th>
+                                <th>{% trans "User" %}</th>
+                                <th>{% trans "Change Type" %}</th>
+                                <th>{% trans "Description" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for change in changes %}
+                                <tr>
+                                    <td>{{ change.timestamp|date:"d.m.Y H:i" }}</td>
+                                    <td>{{ change.changed_by.get_full_name|default:change.changed_by.username }}</td>
+                                    <td>{{ change.get_change_type_display }}</td>
+                                    <td>{{ change.change_description|linebreaksbr }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center">{% trans "No changes have been recorded for this project." %}</div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
