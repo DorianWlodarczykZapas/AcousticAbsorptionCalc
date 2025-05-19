@@ -60,3 +60,14 @@ class Calculation(models.Model):
     norm = models.ForeignKey(Norm, on_delete=models.CASCADE)
     is_within_norm = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+    room_height = models.DecimalField(
+        max_digits=6, decimal_places=2, null=True, blank=True
+    )
+    room_volume = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True
+    )
+    sti = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+
+    def __str__(self):
+        return f"Calculation at {self.created_at}"
