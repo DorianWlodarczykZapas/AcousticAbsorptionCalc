@@ -11,6 +11,9 @@ class Material(models.Model):
     _2000 = models.DecimalField(max_digits=22, decimal_places=2)
     _4000 = models.DecimalField(max_digits=22, decimal_places=2)
 
+    def __str__(self):
+        return f"{self.type} - {self.name}"
+
 
 class Norm(models.Model):
     name = models.TextField()
