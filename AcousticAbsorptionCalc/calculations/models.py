@@ -32,7 +32,27 @@ class NormCategory(models.TextChoices):
 
 class NormAbsorptionMultiplier(models.Model):
     norm = models.ForeignKey(Norm, on_delete=models.CASCADE)
+    category = models.CharField(
+        max_length=50, choices=NormCategory.choices, default=NormCategory.NONE
+    )
+    height_min = models.DecimalField(
+        max_digits=6, decimal_places=2, null=True, blank=True
+    )
+    height_max = models.DecimalField(
+        max_digits=6, decimal_places=2, null=True, blank=True
+    )
+    volume_min = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True
+    )
+    volume_max = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True
+    )
+    sti_min = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    sti_max = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     absorption_multiplier = models.DecimalField(max_digits=22, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.norm} ({self.category})"
 
 
 class Calculation(models.Model):
