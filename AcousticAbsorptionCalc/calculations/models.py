@@ -23,6 +23,13 @@ class Norm(models.Model):
         return self.name
 
 
+class NormCategory(models.TextChoices):
+    HEIGHT = "height", "Height-dependent"
+    VOLUME = "volume", "Volume-dependent"
+    STI = "sti", "Speech Transmission Index"
+    NONE = "none", "No dependency"
+
+
 class NormAbsorptionMultiplier(models.Model):
     norm = models.ForeignKey(Norm, on_delete=models.CASCADE)
     absorption_multiplier = models.DecimalField(max_digits=22, decimal_places=2)
