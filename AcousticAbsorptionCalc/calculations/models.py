@@ -24,10 +24,10 @@ class Norm(models.Model):
 
 
 class NormCategory(models.TextChoices):
-    HEIGHT = "height", "Height-dependent"
-    VOLUME = "volume", "Volume-dependent"
-    STI = "sti", "Speech Transmission Index"
-    NONE = "none", "No dependency"
+    HEIGHT = "1", "Height-dependent"
+    VOLUME = "2", "Volume-dependent"
+    STI = "3", "Speech Transmission Index"
+    NONE = "4", "No dependency"
 
 
 class NormAbsorptionMultiplier(models.Model):
