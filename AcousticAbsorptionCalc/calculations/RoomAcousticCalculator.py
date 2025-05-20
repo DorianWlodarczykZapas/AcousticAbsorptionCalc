@@ -154,3 +154,9 @@ class RoomAcousticCalculator:
                 return False
 
         return False
+
+    def calculate_all_frequencies(self) -> Dict[str, Decimal]:
+        results = {}
+        for freq in ["_250", "_500", "_1000", "_2000", "_4000"]:
+            results[freq] = self.sabine_reverberation_time(freq)
+        return results
