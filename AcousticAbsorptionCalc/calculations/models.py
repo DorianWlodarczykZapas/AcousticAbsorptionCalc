@@ -15,19 +15,24 @@ class Material(models.Model):
         return f"{self.type} - {self.name}"
 
 
-class Norm(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-
-    def __str__(self):
-        return self.name
-
-
 class NormCalculationType(models.TextChoices):
     HEIGHT = "1", "Height-dependent"
     NONE = "2", "No dependency"
     VOLUME = "3", "Volume-dependent"
     STI = "4", "Speech Transmission Index"
+
+
+class Norm(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    application_type = models.CharField(
+        max_length=2,
+        choices=NormCalculationType.choices,
+        default=NormCalculationType.NONE,
+    )
+
+    def __str__(self):
+        return self.name
 
 
 class NormCategory(models.TextChoices):
