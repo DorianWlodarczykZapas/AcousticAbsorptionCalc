@@ -1,7 +1,7 @@
 from decimal import Decimal
 from typing import Dict
 
-from .models import Calculation, Material, Norm, NormAbsorptionMultiplier
+from .models import Calculation, Material, Norm, NormAbsorptionMultiplier, NormCategory
 
 
 class RoomAcousticCalculator:
@@ -51,12 +51,35 @@ class RoomAcousticCalculator:
         return getattr(material, frequency)
 
     def get_absorption_multiplier(self) -> Decimal:
-        """Returns the multiplier based on the norm."""
-        try:
-            multiplier = NormAbsorptionMultiplier.objects.get(norm=self.norm)
-            return multiplier.absorption_multiplier
-        except NormAbsorptionMultiplier.DoesNotExist:
-            return Decimal("1.0")
+        """Selects the appropriate absorption multiplier based on norm category and room parameters."""
+
+        multipliers = NormAbsorptionMultiplier.objects.filter(norm=self.norm)
+
+        for m in multipliers:
+            if m.category == NormCategory.HEIGHT:
+                if (m.height_min is None or self.height >= m.height_min) and (
+                    m.height_max is None or self.height <= m.height_max
+                ):
+                    return m.absorption_multiplier
+
+            elif m.category == NormCategory.VOLUME:
+                if (m.volume_min is None or self.volume >= m.volume_min) and (
+                    m.volume_max is None or self.volume <= m.volume_max
+                ):
+                    return m.absorption_multiplier
+
+            elif m.category == NormCategory.STI:
+                if self.sti is None:
+                    continue
+                if (m.sti_min is None or self.sti >= m.sti_min) and (
+                    m.sti_max is None or self.sti <= m.sti_max
+                ):
+                    return m.absorption_multiplier
+
+            elif m.category == NormCategory.NONE:
+                return m.absorption_multiplier
+
+        return Decimal("1.0")
 
     def total_absorption(self, frequency: str) -> Decimal:
         """Calculates total sound absorption at a given frequency."""
