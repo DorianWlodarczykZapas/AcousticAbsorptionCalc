@@ -117,5 +117,40 @@ class RoomAcousticCalculator:
         )
 
     def check_if_within_norm(self, rt: Decimal) -> bool:
-        """Checks if a given reverberation time is within norm limits."""
-        return Decimal("0.3") <= rt <= Decimal("1.2")
+        from .models import NormCalculationType
+
+        if self.norm.application_type == NormCalculationType.HEIGHT:
+            try:
+                req = self.norm.norms_reverb_time_height_req
+                if self.height < 4:
+                    limit = req.h_less_4
+                elif 4 <= self.height <= 16:
+                    limit = req.h_between_4_16
+                else:
+                    limit = req.h_more_16
+                return rt <= Decimal(limit)
+            except AttributeError:
+                return False
+
+        elif self.norm.application_type == NormCalculationType.VOLUME:
+            try:
+                req = self.norm.norms_reverb_time_volume_req
+                v = self.volume
+                if v < 120:
+                    return rt <= Decimal(req.less_120)
+                elif v < 250:
+                    return rt <= Decimal(req.between_120_250)
+            except AttributeError:
+                return False
+
+        elif self.norm.application_type == NormCalculationType.STI:
+            return self.sti and self.sti >= Decimal("0.6")
+
+        elif self.norm.application_type == NormCalculationType.NONE:
+            try:
+                req = self.norm.norms_reverb_time_no_req
+                return rt <= Decimal(req.no_cubature_req)
+            except AttributeError:
+                return False
+
+        return False
