@@ -28,6 +28,7 @@ class RoomAcousticCalculator:
         furnishing: Dict[str, float],
         construction: Dict[str, float],
         norm: Norm,
+        sti=None,
     ):
         self.height: float = height
         self.length: float = length
@@ -35,6 +36,7 @@ class RoomAcousticCalculator:
         self.furnishing: Dict[str, float] = furnishing
         self.construction: Dict[str, float] = construction
         self.norm: Norm = norm
+        self.sti: float = sti
 
     @property
     def volume(self) -> float:
