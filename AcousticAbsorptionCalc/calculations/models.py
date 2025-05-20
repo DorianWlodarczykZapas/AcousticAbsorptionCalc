@@ -23,6 +23,13 @@ class Norm(models.Model):
         return self.name
 
 
+class NormCalculationType(models.TextChoices):
+    HEIGHT = "1", "Height-dependent"
+    NONE = "2", "No dependency"
+    VOLUME = "3", "Volume-dependent"
+    STI = "4", "Speech Transmission Index"
+
+
 class NormCategory(models.TextChoices):
     HEIGHT = "1", "Height-dependent"
     VOLUME = "2", "Volume-dependent"
