@@ -1,3 +1,6 @@
+from datetime import timezone
+from decimal import Decimal
+
 import factory
 
 from .models import (
@@ -46,8 +49,10 @@ class CalculationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Calculation
 
-    reverberation_time = factory.Faker(
-        "pydecimal", left_digits=2, right_digits=2, positive=True
-    )
+    reverberation_time = Decimal("1.23")
     norm = factory.SubFactory(NormFactory)
-    is_within_norm = factory.Faker("boolean")
+    is_within_norm = True
+    created_at = factory.LazyFunction(timezone.now)
+    room_height = Decimal("2.5")
+    room_volume = Decimal("50.0")
+    sti = Decimal("0.75")
