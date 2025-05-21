@@ -27,12 +27,12 @@ class MaterialFactory(factory.django.DjangoModelFactory):
 
     type = factory.Faker("word")
     name = factory.Faker("word")
-    freq_120 = factory.Faker("pydecimal", left_digits=2, right_digits=2, positive=True)
-    _250 = factory.Faker("pydecimal", left_digits=2, right_digits=2, positive=True)
-    _500 = factory.Faker("pydecimal", left_digits=2, right_digits=2, positive=True)
-    _1000 = factory.Faker("pydecimal", left_digits=2, right_digits=2, positive=True)
-    _2000 = factory.Faker("pydecimal", left_digits=2, right_digits=2, positive=True)
-    _4000 = factory.Faker("pydecimal", left_digits=2, right_digits=2, positive=True)
+    freq_120 = Decimal("0.5")
+    _250 = Decimal("0.6")
+    _500 = Decimal("0.7")
+    _1000 = Decimal("0.8")
+    _2000 = Decimal("0.9")
+    _4000 = Decimal("1.0")
 
 
 class NormAbsorptionMultiplierFactory(factory.django.DjangoModelFactory):
