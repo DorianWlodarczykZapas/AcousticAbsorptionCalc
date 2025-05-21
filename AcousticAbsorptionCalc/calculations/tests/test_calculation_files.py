@@ -22,3 +22,7 @@ class RoomAcousticCalculatorTestCase(TestCase):
             norm=self.norm,
             sti=self.sti,
         )
+
+    def test_volume_property(self):
+        expected_volume = self.height * self.length * self.width
+        self.assertAlmostEqual(self.calc.volume, expected_volume)
