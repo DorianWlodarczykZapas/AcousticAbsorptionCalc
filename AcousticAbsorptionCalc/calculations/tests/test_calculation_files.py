@@ -58,3 +58,19 @@ class RoomAcousticCalculatorTestCase(TestCase):
         mock_reverb_instance.compute_rt.assert_called_once_with(frequency)
 
         self.assertEqual(result, Decimal("0.56"))
+
+    @patch("")
+    def test_is_within_norm(self, mock_norm_checker):
+        mock_checker_instance = MagicMock()
+        mock_checker_instance.is_within.return_value = True
+        mock_norm_checker.return_value = mock_checker_instance
+
+        rt = Decimal("1.5")
+        result = self.calc.is_within_norm(rt)
+
+        mock_norm_checker.assert_called_once_with(
+            self.norm, self.height, self.calc.volume, self.sti
+        )
+        mock_checker_instance.is_within.assert_called_once_with(rt)
+
+        self.assertTrue(result)
