@@ -3,6 +3,7 @@ from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
 from calculations.factories import NormFactory
+from calculations.models import Calculation
 from calculations.RoomAcousticCalculator import RoomAcousticCalculator
 
 
@@ -85,3 +86,23 @@ class RoomAcousticCalculatorTestCase(TestCase):
         self.assertEqual(set(result.keys()), set(expected_frequencies))
         self.assertTrue(all(isinstance(v, Decimal) for v in result.values()))
         self.assertEqual(mock_calc_rt_for.call_count, len(expected_frequencies))
+
+    @patch.object(
+        RoomAcousticCalculator, "calculate_rt_for", return_value=Decimal("1.0")
+    )
+    @patch.object(RoomAcousticCalculator, "is_within_norm", return_value=True)
+    def test_save_calculation(self, mock_is_within_norm, mock_calculate_rt_for):
+        frequency = "_1000"
+        calculation = self.calc.save_calculation(frequency)
+
+        mock_calculate_rt_for.assert_called_once_with(frequency)
+        mock_is_within_norm.assert_called_once_with(Decimal("1.0"))
+
+        self.assertEqual(calculation.reverberation_time, Decimal("1.0"))
+        self.assertEqual(calculation.norm, self.norm)
+        self.assertTrue(calculation.is_within_norm)
+        self.assertEqual(calculation.room_height, self.height)
+        self.assertEqual(calculation.room_volume, self.calc.volume)
+        self.assertEqual(calculation.sti, self.sti)
+
+        self.assertEqual(Calculation.objects.count(), 1)
