@@ -1,4 +1,6 @@
+from decimal import Decimal
 from unittest import TestCase
+from unittest.mock import MagicMock, patch
 
 from calculations.factories import NormFactory
 from calculations.RoomAcousticCalculator import RoomAcousticCalculator
@@ -30,3 +32,29 @@ class RoomAcousticCalculatorTestCase(TestCase):
     def test_all_materials_property(self):
         combined = {**self.furnishing, **self.construction}
         self.assertEqual(self.calc.all_materials, combined)
+
+    @patch("")
+    @patch("")
+    def test_calculate_rt_for(self, mock_reverb_calc, mock_multiplier_resolver):
+        mock_multiplier_instance = MagicMock()
+        mock_multiplier_instance.resolve.return_value = Decimal("1.23")
+        mock_multiplier_resolver.return_value = mock_multiplier_instance
+
+        mock_reverb_instance = MagicMock()
+        mock_reverb_instance.compute_rt.return_value = Decimal("0.56")
+        mock_reverb_calc.return_value = mock_reverb_instance
+
+        frequency = "_500"
+        result = self.calc.calculate_rt_for(frequency)
+
+        mock_multiplier_resolver.assert_called_once_with(
+            self.norm, self.height, self.calc.volume, self.sti
+        )
+        mock_multiplier_instance.resolve.assert_called_once()
+
+        mock_reverb_calc.assert_called_once_with(
+            self.calc.all_materials, Decimal("1.23"), self.calc.volume
+        )
+        mock_reverb_instance.compute_rt.assert_called_once_with(frequency)
+
+        self.assertEqual(result, Decimal("0.56"))
