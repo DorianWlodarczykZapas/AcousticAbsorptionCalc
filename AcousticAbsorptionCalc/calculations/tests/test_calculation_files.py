@@ -26,3 +26,7 @@ class RoomAcousticCalculatorTestCase(TestCase):
     def test_volume_property(self):
         expected_volume = self.height * self.length * self.width
         self.assertAlmostEqual(self.calc.volume, expected_volume)
+
+    def test_all_materials_property(self):
+        combined = {**self.furnishing, **self.construction}
+        self.assertEqual(self.calc.all_materials, combined)
