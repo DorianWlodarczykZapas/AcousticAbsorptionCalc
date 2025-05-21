@@ -74,3 +74,14 @@ class RoomAcousticCalculatorTestCase(TestCase):
         mock_checker_instance.is_within.assert_called_once_with(rt)
 
         self.assertTrue(result)
+
+    @patch.object(
+        RoomAcousticCalculator, "calculate_rt_for", return_value=Decimal("1.1")
+    )
+    def test_calculate_all_frequencies(self, mock_calc_rt_for):
+        expected_frequencies = ["_250", "_500", "_1000", "_2000", "_4000"]
+        result = self.calc.calculate_all_frequencies()
+
+        self.assertEqual(set(result.keys()), set(expected_frequencies))
+        self.assertTrue(all(isinstance(v, Decimal) for v in result.values()))
+        self.assertEqual(mock_calc_rt_for.call_count, len(expected_frequencies))
