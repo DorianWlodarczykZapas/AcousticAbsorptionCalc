@@ -1,13 +1,21 @@
 import factory
 
-from .models import Calculation, Material, Norm, NormAbsorptionMultiplier
+from .models import (
+    Calculation,
+    Material,
+    Norm,
+    NormAbsorptionMultiplier,
+    NormCalculationType,
+)
 
 
 class NormFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Norm
 
-    name = factory.Faker("word")
+    name = factory.Faker("sentence", nb_words=3)
+    description = factory.Faker("text")
+    application_type = NormCalculationType.NONE
 
 
 class MaterialFactory(factory.django.DjangoModelFactory):
