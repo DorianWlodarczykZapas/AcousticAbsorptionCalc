@@ -34,8 +34,8 @@ class RoomAcousticCalculatorTestCase(TestCase):
         combined = {**self.furnishing, **self.construction}
         self.assertEqual(self.calc.all_materials, combined)
 
-    @patch("")
-    @patch("")
+    @patch("calculations.room_acoustic_calculator.AbsorptionMultiplierResolver")
+    @patch("calculations.room_acoustic_calculator.ReverberationCalculator")
     def test_calculate_rt_for(self, mock_reverb_calc, mock_multiplier_resolver):
         mock_multiplier_instance = MagicMock()
         mock_multiplier_instance.resolve.return_value = Decimal("1.23")
@@ -60,7 +60,7 @@ class RoomAcousticCalculatorTestCase(TestCase):
 
         self.assertEqual(result, Decimal("0.56"))
 
-    @patch("")
+    @patch("calculations.room_acoustic_calculator.NormComplianceChecker")
     def test_is_within_norm(self, mock_norm_checker):
         mock_checker_instance = MagicMock()
         mock_checker_instance.is_within.return_value = True
