@@ -122,3 +122,12 @@ class RoomAcousticCalculatorTestCase(TestCase):
 
         result = self.calc.calculate_rt_for("_1000")
         self.assertEqual(result, Decimal("0.0"))
+
+    @patch("calculations.room_acoustic_calculator.NormComplianceChecker")
+    def test_is_within_norm_false_case(self, mock_norm_checker):
+        mock_checker_instance = MagicMock()
+        mock_checker_instance.is_within.return_value = False
+        mock_norm_checker.return_value = mock_checker_instance
+
+        result = self.calc.is_within_norm(Decimal("2.0"))
+        self.assertFalse(result)
