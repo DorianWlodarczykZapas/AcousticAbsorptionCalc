@@ -43,11 +43,19 @@ class NormCategory(models.TextChoices):
 
 
 class NormAbsorptionMultiplier(models.Model):
-    norm = models.OneToOneField(Norm, on_delete=models.CASCADE)
+    norm = models.ForeignKey(Norm, on_delete=models.CASCADE)
     multiplier = models.DecimalField(max_digits=22, decimal_places=2)
+    category = models.CharField(max_length=10, choices=NormCategory.choices)
+
+    height_min = models.FloatField(null=True, blank=True)
+    height_max = models.FloatField(null=True, blank=True)
+    volume_min = models.FloatField(null=True, blank=True)
+    volume_max = models.FloatField(null=True, blank=True)
+    sti_min = models.FloatField(null=True, blank=True)
+    sti_max = models.FloatField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.norm.name} – x{self.multiplier}"
+        return f"{self.norm.name} – x{self.multiplier} ({self.get_category_display()})"
 
 
 class Calculation(models.Model):
