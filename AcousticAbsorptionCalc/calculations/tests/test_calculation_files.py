@@ -2,13 +2,9 @@ from decimal import Decimal
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from calculations.factories import NormFactory
-from calculations.models import (
-    Calculation,
-    Norm,
-    NormAbsorptionMultiplier,
-    NormCategory,
-)
+from calculations.factories import NormAbsorptionMultiplierFactory, NormFactory
+from calculations.models import Calculation, NormCategory
+from calculations.multiplier_resolver import AbsorptionMultiplierResolver
 from calculations.RoomAcousticCalculator import RoomAcousticCalculator
 
 
@@ -162,13 +158,15 @@ class RoomAcousticCalculatorTestCase(TestCase):
 
 class AbsorptionMultiplierResolverTest(TestCase):
     def setUp(self):
-        self.norm = Norm.objects.create(name="Test Norm")
+        self.norm = NormFactory()
 
-    def test_resolves_height_match(self):
-        NormAbsorptionMultiplier.objects.create(
+    def test_returns_multiplier_for_height(self):
+        NormAbsorptionMultiplierFactory(
             norm=self.norm,
-            absorption_multiplier=Decimal("1.2"),
             category=NormCategory.HEIGHT,
+            multiplier=Decimal("1.2"),
             height_min=2.0,
             height_max=4.0,
         )
+        resolver = AbsorptionMultiplierResolver(self.norm, height=3.0, volume=100.0)
+        self.assertEqual(resolver.resolve(), Decimal("1.2"))
