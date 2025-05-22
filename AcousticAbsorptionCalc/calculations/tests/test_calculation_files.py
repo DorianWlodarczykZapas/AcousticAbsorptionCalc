@@ -131,3 +131,16 @@ class RoomAcousticCalculatorTestCase(TestCase):
 
         result = self.calc.is_within_norm(Decimal("2.0"))
         self.assertFalse(result)
+
+    @patch.object(RoomAcousticCalculator, "calculate_rt_for")
+    def test_calculate_all_frequencies_with_failure(self, mock_calc_rt_for):
+        mock_calc_rt_for.side_effect = [
+            Decimal("1.0"),
+            Decimal("1.1"),
+            Exception("Calculation error"),
+            Decimal("1.2"),
+            Decimal("1.3"),
+        ]
+
+        with self.assertRaises(Exception):
+            self.calc.calculate_all_frequencies()
