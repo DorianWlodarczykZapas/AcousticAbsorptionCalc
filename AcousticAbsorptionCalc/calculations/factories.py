@@ -9,6 +9,7 @@ from .models import (
     Norm,
     NormAbsorptionMultiplier,
     NormCalculationType,
+    NormCategory,
 )
 
 
@@ -40,9 +41,15 @@ class NormAbsorptionMultiplierFactory(factory.django.DjangoModelFactory):
         model = NormAbsorptionMultiplier
 
     norm = factory.SubFactory(NormFactory)
-    absorption_multiplier = factory.Faker(
-        "pydecimal", left_digits=2, right_digits=2, positive=True
-    )
+    multiplier = Decimal("1.0")
+    category = NormCategory.NONE
+
+    height_min = None
+    height_max = None
+    volume_min = None
+    volume_max = None
+    sti_min = None
+    sti_max = None
 
 
 class CalculationFactory(factory.django.DjangoModelFactory):
