@@ -106,3 +106,19 @@ class RoomAcousticCalculatorTestCase(TestCase):
         self.assertEqual(calculation.sti, self.sti)
 
         self.assertEqual(Calculation.objects.count(), 1)
+
+    @patch("calculations.room_acoustic_calculator.AbsorptionMultiplierResolver")
+    @patch("calculations.room_acoustic_calculator.ReverberationCalculator")
+    def test_calculate_rt_for_returns_zero_when_calculation_fails(
+        self, mock_reverb_calc, mock_multiplier_resolver
+    ):
+        mock_multiplier_instance = MagicMock()
+        mock_multiplier_instance.resolve.return_value = Decimal("1.0")
+        mock_multiplier_resolver.return_value = mock_multiplier_instance
+
+        mock_reverb_instance = MagicMock()
+        mock_reverb_instance.compute_rt.return_value = Decimal("0.0")
+        mock_reverb_calc.return_value = mock_reverb_instance
+
+        result = self.calc.calculate_rt_for("_1000")
+        self.assertEqual(result, Decimal("0.0"))
