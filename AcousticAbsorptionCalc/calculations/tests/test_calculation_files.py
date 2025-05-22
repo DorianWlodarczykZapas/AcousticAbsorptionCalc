@@ -181,3 +181,16 @@ class AbsorptionMultiplierResolverTest(TestCase):
         )
         resolver = AbsorptionMultiplierResolver(self.norm, height=2.5, volume=150.0)
         self.assertEqual(resolver.resolve(), Decimal("1.5"))
+
+    def test_returns_multiplier_for_sti(self):
+        NormAbsorptionMultiplierFactory(
+            norm=self.norm,
+            category=NormCategory.STI,
+            multiplier=Decimal("1.3"),
+            sti_min=0.6,
+            sti_max=0.8,
+        )
+        resolver = AbsorptionMultiplierResolver(
+            self.norm, height=3.0, volume=80.0, sti=0.7
+        )
+        self.assertEqual(resolver.resolve(), Decimal("1.3"))
