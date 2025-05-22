@@ -144,3 +144,12 @@ class RoomAcousticCalculatorTestCase(TestCase):
 
         with self.assertRaises(Exception):
             self.calc.calculate_all_frequencies()
+
+    @patch.object(
+        RoomAcousticCalculator, "calculate_rt_for", side_effect=Exception("Failed")
+    )
+    def test_save_calculation_fails_gracefully(self, mock_calc_rt_for):
+        with self.assertRaises(Exception):
+            self.calc.save_calculation("_1000")
+
+        self.assertEqual(Calculation.objects.count(), 0)
