@@ -223,3 +223,9 @@ class NormComplianceCheckerTests(TestCase):
         checker = NormComplianceChecker(norm, height=3.0, volume=100.0, sti=0.7)
 
         self.assertTrue(checker.is_within(Decimal("1.0")))
+
+    def test_sti_type_invalid(self):
+        norm = NormFactory(application_type=NormCalculationType.STI)
+        checker = NormComplianceChecker(norm, height=3.0, volume=100.0, sti=0.4)
+
+        self.assertFalse(checker.is_within(Decimal("1.0")))
