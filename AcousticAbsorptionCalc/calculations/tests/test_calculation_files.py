@@ -277,3 +277,8 @@ class ReverberationCalculatorTest(TestCase):
         calc = ReverberationCalculator({"Unknown": 100.0}, self.multiplier, self.volume)
         absorption = calc.total_absorption("_500")
         self.assertEqual(absorption, Decimal("0.0"))
+
+    def test_get_alpha_invalid_frequency(self):
+        calc = ReverberationCalculator(self.materials, self.multiplier, self.volume)
+        with self.assertRaises(ValueError):
+            calc.get_alpha(self.material, "invalid_freq")
