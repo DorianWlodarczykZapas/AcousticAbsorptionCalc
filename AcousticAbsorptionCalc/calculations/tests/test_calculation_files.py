@@ -247,3 +247,9 @@ class NormComplianceCheckerTests(TestCase):
         checker = NormComplianceChecker(norm, height=3.0, volume=100.0)
         self.assertTrue(checker.is_within(Decimal("1.0")))
         self.assertFalse(checker.is_within(Decimal("1.2")))
+
+    def test_attribute_error_returns_false(self):
+        norm = NormFactory(application_type=NormCalculationType.NONE)
+        checker = NormComplianceChecker(norm, height=3.0, volume=100.0)
+
+        self.assertFalse(checker.is_within(Decimal("1.0")))
