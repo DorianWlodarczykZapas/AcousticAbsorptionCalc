@@ -282,3 +282,10 @@ class ReverberationCalculatorTest(TestCase):
         calc = ReverberationCalculator(self.materials, self.multiplier, self.volume)
         with self.assertRaises(ValueError):
             calc.get_alpha(self.material, "invalid_freq")
+
+    def test_compute_rt_valid(self):
+        calc = ReverberationCalculator(self.materials, self.multiplier, self.volume)
+        rt = calc.compute_rt("_500")
+        expected_absorption = Decimal("50.0") * Decimal("0.30") * Decimal("1.0")
+        expected_rt = Decimal("0.161") * Decimal(str(self.volume)) / expected_absorption
+        self.assertEqual(rt, expected_rt)
