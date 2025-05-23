@@ -272,3 +272,8 @@ class ReverberationCalculatorTest(TestCase):
         absorption = calc.total_absorption("_500")
         expected = Decimal("50.0") * Decimal("0.30") * Decimal("1.0")
         self.assertEqual(absorption, expected)
+
+    def test_total_absorption_skips_missing_material(self):
+        calc = ReverberationCalculator({"Unknown": 100.0}, self.multiplier, self.volume)
+        absorption = calc.total_absorption("_500")
+        self.assertEqual(absorption, Decimal("0.0"))
