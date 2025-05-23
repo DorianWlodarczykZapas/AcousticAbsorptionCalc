@@ -2,7 +2,11 @@ from decimal import Decimal
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from calculations.factories import NormAbsorptionMultiplierFactory, NormFactory
+from calculations.factories import (
+    MaterialFactory,
+    NormAbsorptionMultiplierFactory,
+    NormFactory,
+)
 from calculations.models import Calculation, NormCalculationType, NormCategory
 from calculations.multiplier_resolver import AbsorptionMultiplierResolver
 from calculations.norm_checker import NormComplianceChecker
@@ -253,3 +257,11 @@ class NormComplianceCheckerTests(TestCase):
         checker = NormComplianceChecker(norm, height=3.0, volume=100.0)
 
         self.assertFalse(checker.is_within(Decimal("1.0")))
+
+
+class ReverberationCalculatorTest(TestCase):
+    def setUp(self):
+        self.material = MaterialFactory(name="Concrete", _500=Decimal("0.30"))
+        self.materials = {"Concrete": 50.0}
+        self.multiplier = Decimal("1.0")
+        self.volume = 200.0
