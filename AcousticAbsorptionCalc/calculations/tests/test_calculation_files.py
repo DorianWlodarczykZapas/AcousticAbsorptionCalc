@@ -3,8 +3,9 @@ from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
 from calculations.factories import NormAbsorptionMultiplierFactory, NormFactory
-from calculations.models import Calculation, NormCategory
+from calculations.models import Calculation, NormCalculationType, NormCategory
 from calculations.multiplier_resolver import AbsorptionMultiplierResolver
+from calculations.norm_checker import NormComplianceChecker
 from calculations.RoomAcousticCalculator import RoomAcousticCalculator
 
 
@@ -214,3 +215,11 @@ class AbsorptionMultiplierResolverTest(TestCase):
         )
         resolver = AbsorptionMultiplierResolver(self.norm, height=3.0, volume=20.0)
         self.assertEqual(resolver.resolve(), Decimal("1.0"))
+
+
+class NormComplianceCheckerTests(TestCase):
+    def test_sti_type_valid(self):
+        norm = NormFactory(application_type=NormCalculationType.STI)
+        checker = NormComplianceChecker(norm, height=3.0, volume=100.0, sti=0.7)
+
+        self.assertTrue(checker.is_within(Decimal("1.0")))
