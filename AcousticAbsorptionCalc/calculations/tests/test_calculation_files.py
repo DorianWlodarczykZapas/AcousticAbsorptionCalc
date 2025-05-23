@@ -235,3 +235,15 @@ class NormComplianceCheckerTests(TestCase):
         checker = NormComplianceChecker(norm, height=3.0, volume=100.0, sti=None)
 
         self.assertFalse(checker.is_within(Decimal("1.0")))
+
+    def test_none_type_valid(self):
+        norm = NormFactory(application_type=NormCalculationType.NONE)
+
+        class Dummy:
+            no_cubature_req = "1.1"
+
+        norm.norms_reverb_time_no_req = Dummy()
+
+        checker = NormComplianceChecker(norm, height=3.0, volume=100.0)
+        self.assertTrue(checker.is_within(Decimal("1.0")))
+        self.assertFalse(checker.is_within(Decimal("1.2")))
