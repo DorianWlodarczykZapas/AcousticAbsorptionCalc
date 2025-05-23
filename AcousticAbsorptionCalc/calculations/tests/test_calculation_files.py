@@ -11,6 +11,7 @@ from calculations.models import Calculation, NormCalculationType, NormCategory
 from calculations.multiplier_resolver import AbsorptionMultiplierResolver
 from calculations.norm_checker import NormComplianceChecker
 from calculations.RoomAcousticCalculator import RoomAcousticCalculator
+from calculations.sabine_calculator import ReverberationCalculator
 
 
 class RoomAcousticCalculatorTestCase(TestCase):
@@ -265,3 +266,9 @@ class ReverberationCalculatorTest(TestCase):
         self.materials = {"Concrete": 50.0}
         self.multiplier = Decimal("1.0")
         self.volume = 200.0
+
+    def test_total_absorption(self):
+        calc = ReverberationCalculator(self.materials, self.multiplier, self.volume)
+        absorption = calc.total_absorption("_500")
+        expected = Decimal("50.0") * Decimal("0.30") * Decimal("1.0")
+        self.assertEqual(absorption, expected)
