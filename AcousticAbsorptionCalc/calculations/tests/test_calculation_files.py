@@ -299,3 +299,9 @@ class ReverberationCalculatorTest(TestCase):
         result = self.calc.calculate_all_frequencies()
         for key in result.keys():
             self.assertTrue(key.startswith("_"))
+
+    def test_total_absorption_invalid_material_type(self):
+        with self.assertRaises(TypeError):
+            ReverberationCalculator(
+                {123: 100}, self.multiplier, self.volume
+            ).total_absorption("_500")
