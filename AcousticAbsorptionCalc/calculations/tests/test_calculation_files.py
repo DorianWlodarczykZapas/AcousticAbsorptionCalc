@@ -294,3 +294,8 @@ class ReverberationCalculatorTest(TestCase):
         calc = ReverberationCalculator({}, self.multiplier, self.volume)
         absorption = calc.total_absorption("_500")
         self.assertEqual(absorption, Decimal("0.0"))
+
+    def test_calculate_all_frequencies_keys_format(self):
+        result = self.calc.calculate_all_frequencies()
+        for key in result.keys():
+            self.assertTrue(key.startswith("_"))
