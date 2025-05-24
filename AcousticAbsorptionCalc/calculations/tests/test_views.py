@@ -317,3 +317,7 @@ class AcousticCalculationViewTests(TestCase):
 
         response = self.client.post(self.url, data=payload, format="json")
         self.assertEqual(response.status_code, 200)
+
+    def test_get_method_not_allowed(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 405)
