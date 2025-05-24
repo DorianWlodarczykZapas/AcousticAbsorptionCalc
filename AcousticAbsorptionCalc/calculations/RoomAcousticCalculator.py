@@ -26,6 +26,9 @@ class RoomAcousticCalculator:
         self.norm = norm
         self.sti = sti
 
+    def __str__(self):
+        return f"RoomAcousticCalculator(volume={self.volume}, sti={self.sti})"
+
     @property
     def volume(self) -> float:
         return self.height * self.length * self.width
