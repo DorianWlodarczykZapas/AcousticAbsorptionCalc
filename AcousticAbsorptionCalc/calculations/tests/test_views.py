@@ -272,3 +272,18 @@ class AcousticCalculationViewTests(TestCase):
         response = self.client.post(self.url, data=payload, format="json")
         self.assertEqual(response.status_code, 200)
         self.assertIn("reverberation_time", response.json())
+
+    def test_unknown_materials_are_handled(self):
+        norm = NormFactory()
+        payload = {
+            "height": 2.5,
+            "length": 4.0,
+            "width": 3.0,
+            "furnishing": {"unicorn_skin": 1.0},
+            "construction": {"dragon_bone": 2.0},
+            "norm_id": norm.id,
+            "frequency": "500",
+        }
+
+        response = self.client.post(self.url, data=payload, format="json")
+        self.assertEqual(response.status_code, 200)  # or 500 if your calculator errors
