@@ -302,3 +302,18 @@ class AcousticCalculationViewTests(TestCase):
 
         response = self.client.post(self.url, data=payload, format="json")
         self.assertIn(response.status_code, [200, 500])
+
+    def test_none_furnishing_and_construction_are_treated_as_empty(self):
+        norm = NormFactory()
+        payload = {
+            "height": 2.5,
+            "length": 5.0,
+            "width": 4.0,
+            "furnishing": None,
+            "construction": None,
+            "norm_id": norm.id,
+            "frequency": "500",
+        }
+
+        response = self.client.post(self.url, data=payload, format="json")
+        self.assertEqual(response.status_code, 200)
