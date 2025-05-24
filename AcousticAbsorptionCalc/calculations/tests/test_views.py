@@ -321,3 +321,18 @@ class AcousticCalculationViewTests(TestCase):
     def test_get_method_not_allowed(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 405)
+
+    def test_multiple_frequencies_not_supported_yet(self):
+        norm = NormFactory()
+        payload = {
+            "height": 2.5,
+            "length": 5.0,
+            "width": 4.0,
+            "furnishing": {"chair": 2.0},
+            "construction": {"brick": 1.0},
+            "norm_id": norm.id,
+            "frequency": ["500", "1000"],
+        }
+
+        response = self.client.post(self.url, data=payload, format="json")
+        self.assertEqual(response.status_code, 500)
