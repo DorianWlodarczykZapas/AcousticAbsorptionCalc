@@ -161,6 +161,9 @@ class RoomAcousticCalculatorTestCase(TestCase):
 
         self.assertEqual(Calculation.objects.count(), 0)
 
+    def test_str_method(self):
+        self.assertIn("volume", str(self.calc))
+
 
 class AbsorptionMultiplierResolverTest(TestCase):
     def setUp(self):
