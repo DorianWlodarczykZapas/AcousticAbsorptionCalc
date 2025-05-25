@@ -24,7 +24,7 @@ class Norm(models.Model):
         decimal_places=2,
         null=True,
         blank=True,
-        help_text="Maksymalny czas pogłosu w sekundach",
+        help_text="Maximum allowed reverberation time in seconds (T ≤ ...)",
     )
 
     sti_min = models.DecimalField(
@@ -32,7 +32,7 @@ class Norm(models.Model):
         decimal_places=2,
         null=True,
         blank=True,
-        help_text="Minimalna wartość wskaźnika STI",
+        help_text="Minimum allowed STI value (STI ≥ ...)",
     )
 
     absorption_min_factor = models.DecimalField(
@@ -40,11 +40,8 @@ class Norm(models.Model):
         decimal_places=2,
         null=True,
         blank=True,
-        help_text="Minimalna chłonność akustyczna jako iloczyn powierzchni (A ≥ x × S)",
+        help_text="Minimum required sound absorption as a factor of surface area (A ≥ x × S)",
     )
-
-    def __str__(self):
-        return self.name
 
     slug = models.SlugField(unique=True, blank=True)
 
@@ -52,3 +49,6 @@ class Norm(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
