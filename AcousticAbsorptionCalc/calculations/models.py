@@ -1,3 +1,4 @@
+from calculations.guidelines import NORM_GUIDELINES
 from django.db import models
 from django.utils.text import slugify
 
@@ -50,5 +51,32 @@ class Norm(models.Model):
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
+    def get_guidelines(self):
+        return NORM_GUIDELINES.get(self.slug, "")
+
     def __str__(self):
         return self.name
+
+
+class SurfaceElement(models.Model):
+    calculation = models.ForeignKey(
+        "Calculation", on_delete=models.CASCADE, related_name="surfaces"
+    )
+    material = models.ForeignKey("Material", on_delete=models.PROTECT)
+    area_m2 = models.DecimalField(
+        max_digits=10, decimal_places=2, help_text="Surface area of the element in m²"
+    )
+    location = models.CharField(
+        max_length=100,
+        help_text="Where this surface is located (e.g., ceiling, wall A)",
+    )
+
+    def absorption(self, freq_band: str = "_500"):
+        """
+        Returns absorption in sabins for a given frequency band.
+        """
+        alpha = getattr(self.material, freq_band)
+        return float(alpha) * float(self.area_m2)
+
+    def __str__(self):
+        return f"{self.location} – {self.material.name} ({self.area_m2} m²)"
