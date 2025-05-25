@@ -80,3 +80,59 @@ class SurfaceElement(models.Model):
 
     def __str__(self):
         return f"{self.location} – {self.material.name} ({self.area_m2} m²)"
+
+
+class Calculation(models.Model):
+    norm = models.ForeignKey("Norm", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    room_height = models.DecimalField(
+        max_digits=6, decimal_places=2, null=True, blank=True
+    )
+    room_volume = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True
+    )
+    room_surface_area = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True
+    )
+
+    reverberation_time = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True
+    )
+    sti = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+
+    required_absorption = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True
+    )
+    achieved_absorption = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True
+    )
+    is_within_norm = models.BooleanField(null=True)
+
+    def check_absorption(self, freq_band: str = "_500") -> bool:
+        """
+        Calculates total absorption and compares it to required norm absorption.
+        Returns True if within norm, False otherwise.
+        """
+        total_absorption = sum(
+            [surface.absorption(freq_band) for surface in self.surfaces.all()]
+        )
+        self.achieved_absorption = total_absorption
+
+        if self.norm and self.norm.absorption_min_factor and self.room_surface_area:
+            self.required_absorption = float(self.norm.absorption_min_factor) * float(
+                self.room_surface_area
+            )
+            self.is_within_norm = total_absorption >= self.required_absorption
+            self.save(
+                update_fields=[
+                    "achieved_absorption",
+                    "required_absorption",
+                    "is_within_norm",
+                ]
+            )
+            return self.is_within_norm
+        return False
+
+    def __str__(self):
+        return f"Calculation ({self.created_at.date()}) – Norm: {self.norm.name}"
