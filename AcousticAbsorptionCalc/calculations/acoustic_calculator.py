@@ -86,3 +86,22 @@ class AcousticCalculator:
             total_absorption += alpha * area
 
         return round(total_absorption, 3)
+
+    def calculate_rt(self) -> float:
+        """
+        Calculates the reverberation time (RT60) in seconds
+        using the Sabine formula: T = 0.161 * V / A.
+
+        Returns:
+            RT60 value in seconds.
+        """
+        if self.room_volume == 0 or self.room_surface_area == 0:
+            self.calculate_room_geometry()
+
+        absorption = self.calculate_absorption()
+
+        if absorption > 0:
+            rt = 0.161 * self.room_volume / absorption
+            return round(rt, 3)
+
+        return 0.0
