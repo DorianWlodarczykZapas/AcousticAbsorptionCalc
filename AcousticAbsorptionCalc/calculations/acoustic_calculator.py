@@ -124,3 +124,33 @@ class AcousticCalculator:
             return round(required, 3)
 
         return 0.0
+
+    def is_within_norm(self, estimated_sti: float = None) -> bool:
+        """
+        Checks whether the room meets the norm requirements for:
+        - Absorption A
+        - Reverberation Time (RT)
+        - STI (estimated or provided)
+
+        Returns:
+            True if all applicable criteria are met, False otherwise.
+        """
+        a_actual = self.calculate_absorption()
+        a_required = self.calculate_required_absorption()
+        rt = self.calculate_rt()
+
+        absorption_ok = a_actual >= a_required
+        rt_ok = True
+        sti_ok = True
+
+        if self.norm.rt_max is not None:
+            rt_ok = rt <= float(self.norm.rt_max)
+
+        if self.norm.sti_min is not None:
+            if estimated_sti is not None:
+                sti_ok = estimated_sti >= float(self.norm.sti_min)
+            else:
+                estimated_sti = round(0.75 - rt * 0.2, 2)
+                sti_ok = estimated_sti >= float(self.norm.sti_min)
+
+        return absorption_ok and rt_ok and sti_ok
