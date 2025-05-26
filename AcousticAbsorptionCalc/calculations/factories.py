@@ -27,13 +27,13 @@ class MaterialFactory(factory.django.DjangoModelFactory):
         model = Material
 
     type = factory.Faker("word")
-    name = factory.Faker("word")
-    freq_120 = Decimal("0.5")
-    _250 = Decimal("0.6")
-    _500 = Decimal("0.7")
-    _1000 = Decimal("0.8")
-    _2000 = Decimal("0.9")
-    _4000 = Decimal("1.0")
+    name = factory.Sequence(lambda n: f"Material-{n}")
+    freq_125 = Decimal("0.50")
+    freq_250 = Decimal("0.60")
+    freq_500 = Decimal("0.70")
+    freq_1000 = Decimal("0.80")
+    freq_2000 = Decimal("0.90")
+    freq_4000 = Decimal("1.00")
 
 
 class NormAbsorptionMultiplierFactory(factory.django.DjangoModelFactory):
