@@ -105,3 +105,22 @@ class AcousticCalculator:
             return round(rt, 3)
 
         return 0.0
+
+    def calculate_required_absorption(self) -> float:
+        """
+        Calculates the minimum required absorption (A) based on the norm:
+        A_required = absorption_min_factor × surface_area
+
+        Returns:
+            Required absorption in m² sabins.
+        """
+        if self.room_surface_area == 0:
+            self.calculate_room_geometry()
+
+        factor = self.norm.absorption_min_factor
+
+        if factor is not None:
+            required = float(factor) * self.room_surface_area
+            return round(required, 3)
+
+        return 0.0
