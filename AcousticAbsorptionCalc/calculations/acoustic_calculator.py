@@ -67,3 +67,22 @@ class AcousticCalculator:
         self.room_surface_area = surface_area
 
         return volume, surface_area
+
+    def calculate_absorption(self) -> float:
+        """
+        Calculates the total sound absorption A [m²] in the specified frequency band.
+        Based on all construction and furnishing surfaces.
+
+        Returns:
+            Total absorption (A) in sabins.
+        """
+        total_absorption = 0.0
+
+        for element in self.construction_surfaces + self.furnishing_elements:
+            material = element["material"]
+            area = float(element["area_m2"])
+            alpha = material.get_alpha(self.freq_band)
+
+            total_absorption += alpha * area
+
+        return round(total_absorption, 3)
