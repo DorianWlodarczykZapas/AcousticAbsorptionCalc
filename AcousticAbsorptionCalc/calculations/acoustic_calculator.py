@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 from .models import Norm
 
@@ -44,3 +44,26 @@ class AcousticCalculator:
 
         self.room_volume: float = 0.0
         self.room_surface_area: float = 0.0
+
+    def calculate_room_geometry(self) -> Tuple[float, float]:
+        """
+        Calculates and stores the room's volume (m³) and total interior surface area (m²),
+        including ceiling, floor, and four walls.
+
+        Returns:
+            (volume_m3, surface_area_m2)
+        """
+        width = self.width
+        length = self.length
+        height = self.height
+
+        volume = width * length * height
+
+        wall_area = 2 * height * (width + length)
+        floor_ceiling_area = 2 * (width * length)
+        surface_area = wall_area + floor_ceiling_area
+
+        self.room_volume = volume
+        self.room_surface_area = surface_area
+
+        return volume, surface_area
