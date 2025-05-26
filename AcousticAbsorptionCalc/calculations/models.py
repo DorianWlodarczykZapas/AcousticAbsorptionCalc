@@ -136,3 +136,29 @@ class Calculation(models.Model):
 
     def __str__(self):
         return f"Calculation ({self.created_at.date()}) – Norm: {self.norm.name}"
+
+
+class Material(models.Model):
+    type = models.CharField(
+        max_length=100,
+        help_text="Material category (e.g., ceiling panel, wall absorber)",
+    )
+    name = models.CharField(max_length=100, unique=True)
+
+    freq_125 = models.DecimalField(max_digits=4, decimal_places=2)
+    freq_250 = models.DecimalField(max_digits=4, decimal_places=2)
+    freq_500 = models.DecimalField(max_digits=4, decimal_places=2)
+    freq_1000 = models.DecimalField(max_digits=4, decimal_places=2)
+    freq_2000 = models.DecimalField(max_digits=4, decimal_places=2)
+    freq_4000 = models.DecimalField(max_digits=4, decimal_places=2)
+
+    def get_alpha(self, freq_band: str) -> float:
+        """
+        Returns the absorption coefficient for the given frequency band.
+        freq_band should be one of: '125', '250', '500', '1000', '2000', '4000'
+        """
+        band_field = f"freq_{freq_band}"
+        return float(getattr(self, band_field, 0))
+
+    def __str__(self):
+        return f"{self.type} – {self.name}"
