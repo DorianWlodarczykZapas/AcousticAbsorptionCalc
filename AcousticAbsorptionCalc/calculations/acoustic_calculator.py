@@ -178,3 +178,36 @@ class AcousticCalculator:
             "estimated_sti": estimated_sti,
             "norm_passed": within_norm,
         }
+
+    def validate_surface_match(
+        self, tolerance: float = 0.05
+    ) -> Dict[str, float | bool]:
+        """
+        Validates whether the user-provided construction surface areas
+        match the expected total surface area from geometry.
+
+        Args:
+            tolerance: Acceptable percentage deviation (e.g., 0.05 = 5%)
+
+        Returns:
+            Dict with keys:
+            - 'valid' (bool)
+            - 'expected_area' (float)
+            - 'provided_area' (float)
+            - 'difference' (float)
+            - 'within_tolerance' (bool)
+        """
+        expected_area = self.calculate_room_geometry()[1]
+        provided_area = sum(float(e["area_m2"]) for e in self.construction_surfaces)
+
+        difference = abs(expected_area - provided_area)
+        relative_diff = difference / expected_area if expected_area else 1.0
+        within_tolerance = relative_diff <= tolerance
+
+        return {
+            "valid": within_tolerance,
+            "expected_area": round(expected_area, 2),
+            "provided_area": round(provided_area, 2),
+            "difference": round(difference, 2),
+            "within_tolerance": within_tolerance,
+        }
