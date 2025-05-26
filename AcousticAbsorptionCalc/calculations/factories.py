@@ -3,23 +3,20 @@ from decimal import Decimal
 
 import factory
 
-from .models import (
-    Calculation,
-    Material,
-    Norm,
-    NormAbsorptionMultiplier,
-    NormCalculationType,
-    NormCategory,
-)
+from .models import Calculation, Material, Norm, NormCalculationType, SurfaceElement
 
 
 class NormFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Norm
 
-    name = factory.Faker("sentence", nb_words=3)
+    name = factory.Sequence(lambda n: f"Norm {n}")
     description = factory.Faker("text")
     application_type = NormCalculationType.NONE
+    rt_max = Decimal("0.6")
+    sti_min = Decimal("0.6")
+    absorption_min_factor = Decimal("0.9")
+    slug = factory.LazyAttribute(lambda o: o.name.lower().replace(" ", "-"))
 
 
 class MaterialFactory(factory.django.DjangoModelFactory):
@@ -36,22 +33,6 @@ class MaterialFactory(factory.django.DjangoModelFactory):
     freq_4000 = Decimal("1.00")
 
 
-class NormAbsorptionMultiplierFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = NormAbsorptionMultiplier
-
-    norm = factory.SubFactory(NormFactory)
-    multiplier = Decimal("1.0")
-    category = NormCategory.NONE
-
-    height_min = None
-    height_max = None
-    volume_min = None
-    volume_max = None
-    sti_min = None
-    sti_max = None
-
-
 class CalculationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Calculation
@@ -62,4 +43,26 @@ class CalculationFactory(factory.django.DjangoModelFactory):
     created_at = factory.LazyFunction(timezone.now)
     room_height = Decimal("2.5")
     room_volume = Decimal("50.0")
+    room_surface_area = Decimal("80.0")
     sti = Decimal("0.75")
+
+    @factory.post_generation
+    def surfaces(self, create, extracted, **kwargs):
+        if not create:
+            return
+        if extracted:
+            for surface in extracted:
+                surface.calculation = self
+                surface.save()
+        else:
+            SurfaceElementFactory.create_batch(3, calculation=self)
+
+
+class SurfaceElementFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = SurfaceElement
+
+    calculation = factory.SubFactory(CalculationFactory)
+    material = factory.SubFactory(MaterialFactory)
+    area_m2 = Decimal("10.0")
+    location = factory.Iterator(["ceiling", "wall A", "wall B", "floor"])
