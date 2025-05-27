@@ -53,3 +53,11 @@ class TestAcousticCalculator(unittest.TestCase):
         volume, surface = self.calculator.calculate_room_geometry()
         self.assertEqual(round(volume, 2), 90.0)
         self.assertEqual(round(surface, 2), 186.0)
+
+    def test_total_absorption(self):
+        absorption = self.calculator.calculate_absorption()
+        expected = sum(
+            e["area_m2"] * self.material.freq_500
+            for e in self.construction_surfaces + self.furnishings
+        )
+        self.assertAlmostEqual(absorption, float(expected), places=2)
