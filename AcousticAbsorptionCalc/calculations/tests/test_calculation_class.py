@@ -66,3 +66,11 @@ class TestAcousticCalculator(unittest.TestCase):
         rt = self.calculator.calculate_rt()
         self.assertGreater(rt, 0)
         self.assertLessEqual(rt, 10.0)
+
+    def test_required_absorption(self):
+        required = self.calculator.calculate_required_absorption()
+        expected = (
+            float(self.norm.absorption_min_factor)
+            * self.calculator.calculate_room_geometry()[1]
+        )
+        self.assertAlmostEqual(required, expected, places=2)
