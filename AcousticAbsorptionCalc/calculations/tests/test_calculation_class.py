@@ -106,3 +106,11 @@ class TestAcousticCalculator(unittest.TestCase):
         calc = AcousticCalculator(self.norm, self.default_room, surfaces, [])
         absorption = calc.calculate_absorption()
         self.assertLess(absorption, 0)
+
+    def test_material_with_zero_alpha(self):
+        zero_material = MaterialFactory(freq_500=Decimal("0.0"))
+        surfaces = [{"area_m2": 50.0, "material": zero_material}]
+        calc = AcousticCalculator(self.norm, self.default_room, surfaces, [])
+        self.assertEqual(calc.calculate_absorption(), 0.0)
+        self.assertEqual(calc.calculate_rt(), 0.0)
+        self.assertFalse(calc.is_within_norm())
