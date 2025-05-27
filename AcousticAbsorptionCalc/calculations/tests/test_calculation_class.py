@@ -48,3 +48,8 @@ class TestAcousticCalculator(unittest.TestCase):
             furnishing_elements=self.furnishings,
             freq_band="500",
         )
+
+    def test_room_geometry(self):
+        volume, surface = self.calculator.calculate_room_geometry()
+        self.assertEqual(round(volume, 2), 90.0)
+        self.assertEqual(round(surface, 2), 186.0)
