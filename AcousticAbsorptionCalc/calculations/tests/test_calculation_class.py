@@ -74,3 +74,6 @@ class TestAcousticCalculator(unittest.TestCase):
             * self.calculator.calculate_room_geometry()[1]
         )
         self.assertAlmostEqual(required, expected, places=2)
+
+    def test_is_within_norm(self):
+        self.assertTrue(self.calculator.is_within_norm())
