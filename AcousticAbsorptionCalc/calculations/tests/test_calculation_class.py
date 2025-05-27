@@ -77,3 +77,12 @@ class TestAcousticCalculator(unittest.TestCase):
 
     def test_is_within_norm(self):
         self.assertTrue(self.calculator.is_within_norm())
+
+    def test_result_keys(self):
+        result = self.calculator.result()
+        self.assertIn("volume_m3", result)
+        self.assertIn("surface_area_m2", result)
+        self.assertIn("absorption_achieved", result)
+        self.assertIn("reverberation_time_s", result)
+        self.assertIn("estimated_sti", result)
+        self.assertIn("norm_passed", result)
