@@ -61,3 +61,8 @@ class TestAcousticCalculator(unittest.TestCase):
             for e in self.construction_surfaces + self.furnishings
         )
         self.assertAlmostEqual(absorption, float(expected), places=2)
+
+    def test_reverberation_time(self):
+        rt = self.calculator.calculate_rt()
+        self.assertGreater(rt, 0)
+        self.assertLessEqual(rt, 10.0)
