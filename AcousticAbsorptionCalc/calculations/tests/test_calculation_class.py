@@ -86,3 +86,10 @@ class TestAcousticCalculator(unittest.TestCase):
         self.assertIn("reverberation_time_s", result)
         self.assertIn("estimated_sti", result)
         self.assertIn("norm_passed", result)
+
+    def test_no_surfaces(self):
+        calc = AcousticCalculator(self.norm, self.default_room, [], [])
+        result = calc.result()
+        self.assertEqual(result["absorption_achieved"], 0.0)
+        self.assertEqual(result["reverberation_time_s"], 0.0)
+        self.assertFalse(result["norm_passed"])
