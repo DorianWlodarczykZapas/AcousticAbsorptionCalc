@@ -100,3 +100,9 @@ class TestAcousticCalculator(unittest.TestCase):
         result = calc.result()
         self.assertEqual(result["absorption_achieved"], 0.0)
         self.assertFalse(result["norm_passed"])
+
+    def test_negative_area_surface(self):
+        surfaces = [{"area_m2": -5.0, "material": self.material}]
+        calc = AcousticCalculator(self.norm, self.default_room, surfaces, [])
+        absorption = calc.calculate_absorption()
+        self.assertLess(absorption, 0)
