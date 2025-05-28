@@ -498,3 +498,15 @@ msgstr "Maksymalna liczba projektów"
 
 msgid "Max rooms per project"
 msgstr "Maksymalna liczba pomieszczeń na projekt"
+
+msgid "Calculation completed successfully."
+msgstr "Obliczenia zakończone pomyślnie."
+
+msgid "Missing required data."
+msgstr "Brakuje wymaganych danych."
+
+msgid "One or more materials not found."
+msgstr "Nie znaleziono jednego lub więcej materiałów."
+
+msgid "Norm not found."
+msgstr "Nie znaleziono normy."
