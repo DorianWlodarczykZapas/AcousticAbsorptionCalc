@@ -130,3 +130,10 @@ class TestAcousticCalculator(unittest.TestCase):
         sti = round(0.75 - calc.calculate_rt() * 0.2, 2)
         self.assertLess(sti, 0.6)
         self.assertFalse(calc.is_within_norm())
+
+    def test_rt_division_by_zero(self):
+        zero_material = MaterialFactory(freq_500=Decimal("0.0"))
+        surfaces = [{"area_m2": 100.0, "material": zero_material}]
+        calc = AcousticCalculator(self.norm, self.default_room, surfaces, [])
+        rt = calc.calculate_rt()
+        self.assertEqual(rt, 0.0)
