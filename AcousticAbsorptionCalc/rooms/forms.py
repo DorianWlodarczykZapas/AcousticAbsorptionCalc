@@ -7,6 +7,43 @@ from .models import Material, Room
 
 
 class RoomForm(forms.ModelForm):
+    floor_material = forms.ModelChoiceField(
+        queryset=Material.objects.all(),
+        label=_("Floor material"),
+        widget=forms.Select(attrs={"class": "form-control"}),
+        required=False,
+    )
+    ceiling_material = forms.ModelChoiceField(
+        queryset=Material.objects.all(),
+        label=_("Ceiling material"),
+        widget=forms.Select(attrs={"class": "form-control"}),
+        required=False,
+    )
+    wall_a_material = forms.ModelChoiceField(
+        queryset=Material.objects.all(),
+        label=_("Wall A material"),
+        widget=forms.Select(attrs={"class": "form-control"}),
+        required=False,
+    )
+    wall_b_material = forms.ModelChoiceField(
+        queryset=Material.objects.all(),
+        label=_("Wall B material"),
+        widget=forms.Select(attrs={"class": "form-control"}),
+        required=False,
+    )
+    wall_c_material = forms.ModelChoiceField(
+        queryset=Material.objects.all(),
+        label=_("Wall C material"),
+        widget=forms.Select(attrs={"class": "form-control"}),
+        required=False,
+    )
+    wall_d_material = forms.ModelChoiceField(
+        queryset=Material.objects.all(),
+        label=_("Wall D material"),
+        widget=forms.Select(attrs={"class": "form-control"}),
+        required=False,
+    )
+
     class Meta:
         model = Room
         fields = ["name", "width", "length", "height", "norm"]
