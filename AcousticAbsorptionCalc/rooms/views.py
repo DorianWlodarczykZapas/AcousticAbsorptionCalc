@@ -95,6 +95,16 @@ class RoomCreateView(CreateView):
                 freq_band="500",
             )
 
+            validation_result = calculator.validate_surface_match()
+
+            if not validation_result["valid"]:
+                print(
+                    "[WARNING] Provided construction surface area does not match geometry: "
+                    f"expected={validation_result['expected_area']} m², "
+                    f"provided={validation_result['provided_area']} m², "
+                    f"difference={validation_result['difference']} m²"
+                )
+
             rt = calculator.calculate_rt()
             sti = round(0.75 - rt * 0.2, 2)
             is_within = calculator.is_within_norm(rt)
