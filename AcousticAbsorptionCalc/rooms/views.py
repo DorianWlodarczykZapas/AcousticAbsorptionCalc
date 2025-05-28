@@ -15,7 +15,9 @@ class RoomListView(ListView):
     context_object_name = "rooms"
 
     def get_queryset(self):
-        return Room.objects.filter(project__id=self.kwargs.get("project_id"))
+        return Room.objects.select_related("project").filter(
+            project__id=self.kwargs.get("project_id")
+        )
 
 
 class RoomCreateView(CreateView):
