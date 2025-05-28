@@ -114,3 +114,11 @@ class TestAcousticCalculator(unittest.TestCase):
         self.assertEqual(calc.calculate_absorption(), 0.0)
         self.assertEqual(calc.calculate_rt(), 0.0)
         self.assertFalse(calc.is_within_norm())
+
+    def test_missing_norm_values(self):
+        incomplete_norm = NormFactory(
+            rt_max=None, sti_min=None, absorption_min_factor=None
+        )
+        surfaces = [{"area_m2": 50.0, "material": self.material}]
+        calc = AcousticCalculator(incomplete_norm, self.default_room, surfaces, [])
+        self.assertTrue(calc.is_within_norm())
