@@ -1,10 +1,12 @@
+from calculations.acoustic_calculator import AcousticCalculator
+from calculations.models import Calculation
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, FormView, ListView, UpdateView
 from project_logs.projectlogger import ProjectLogger
 from user_logs.logger import Logger
 
 from .forms import FurnishingFormSet, MoveRoomForm, RoomForm
-from .models import Room, RoomMaterial
+from .models import Furnishing, Room, RoomMaterial
 
 
 class RoomListView(ListView):
@@ -46,6 +48,7 @@ class RoomCreateView(CreateView):
                 "wall D": form.cleaned_data.get("wall_d_material"),
             }
 
+            construction_data = []
             for location, material in construction_mapping.items():
                 if material:
                     RoomMaterial.objects.create(
@@ -53,25 +56,70 @@ class RoomCreateView(CreateView):
                         material=material,
                         location=location,
                     )
+                    area = self._estimate_surface_area(self.object, location)
+                    construction_data.append(
+                        {
+                            "material": material,
+                            "area_m2": area,
+                        }
+                    )
 
-            furnishings = {
-                f.cleaned_data["material"].name: f.cleaned_data["area"]
-                for f in formset
-                if f.cleaned_data and not f.cleaned_data.get("DELETE", False)
-            }
+            furnishing_data = []
+            for f in formset:
+                if f.cleaned_data and not f.cleaned_data.get("DELETE", False):
+                    Furnishing.objects.create(
+                        room=self.object,
+                        name=f.cleaned_data["material"].name,
+                        material=f.cleaned_data["material"],
+                        quantity=1,
+                    )
+                    furnishing_data.append(
+                        {
+                            "material": f.cleaned_data["material"],
+                            "area_m2": f.cleaned_data["area"],
+                        }
+                    )
+
+            norm = self.object.norm
+            calculator = AcousticCalculator(
+                norm=norm,
+                room_dimensions={
+                    "height": float(self.object.height),
+                    "length": float(self.object.length),
+                    "width": float(self.object.width),
+                },
+                construction_surfaces=construction_data,
+                furnishing_elements=furnishing_data,
+                freq_band="500",
+            )
+
+            rt = calculator.calculate_rt()
+            sti = round(0.75 - rt * 0.2, 2)
+            is_within = calculator.is_within_norm(rt)
+
+            Calculation.objects.create(
+                norm=norm,
+                room_height=self.object.height,
+                room_volume=calculator.room_volume,
+                room_surface_area=calculator.room_surface_area,
+                reverberation_time=rt,
+                sti=sti,
+                required_absorption=calculator.calculate_required_absorption(),
+                achieved_absorption=calculator.calculate_absorption(),
+                is_within_norm=is_within,
+            )
 
             Logger.log_room_created(
                 user_id=self.object.pk, changed_by=self.request.user
             )
-
             ProjectLogger.log_room_created(
                 project=self.object.project,
                 changed_by=self.request.user,
-                change_description=f"Room '{form.cleaned_data['name']}' created",
-                metadata=furnishings,
+                change_description=("Room '{name}' created").format(
+                    name=form.cleaned_data["name"]
+                ),
+                metadata={f["material"].name: f["area_m2"] for f in furnishing_data},
             )
-
-            print("Furnishing data:", furnishings)
 
             return response
         else:
@@ -81,6 +129,20 @@ class RoomCreateView(CreateView):
         return reverse_lazy(
             "rooms:room_list", kwargs={"project_id": self.kwargs.get("project_id")}
         )
+
+    @staticmethod
+    def _estimate_surface_area(room, location: str) -> float:
+        width = float(room.width)
+        length = float(room.length)
+        height = float(room.height)
+
+        if location in ["wall A", "wall C"]:
+            return height * length
+        elif location in ["wall B", "wall D"]:
+            return height * width
+        elif location in ["floor", "ceiling"]:
+            return width * length
+        return 0.0
 
 
 class RoomUpdateView(UpdateView):
