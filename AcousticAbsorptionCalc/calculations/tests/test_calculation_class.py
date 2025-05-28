@@ -122,3 +122,11 @@ class TestAcousticCalculator(unittest.TestCase):
         surfaces = [{"area_m2": 50.0, "material": self.material}]
         calc = AcousticCalculator(incomplete_norm, self.default_room, surfaces, [])
         self.assertTrue(calc.is_within_norm())
+
+    def test_sti_below_minimum(self):
+        norm = NormFactory(sti_min=Decimal("0.6"))
+        surfaces = [{"area_m2": 10.0, "material": self.material}]
+        calc = AcousticCalculator(norm, self.default_room, surfaces, [])
+        sti = round(0.75 - calc.calculate_rt() * 0.2, 2)
+        self.assertLess(sti, 0.6)
+        self.assertFalse(calc.is_within_norm())
