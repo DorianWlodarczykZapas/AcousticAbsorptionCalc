@@ -4,7 +4,7 @@ from project_logs.projectlogger import ProjectLogger
 from user_logs.logger import Logger
 
 from .forms import FurnishingFormSet, MoveRoomForm, RoomForm
-from .models import Room
+from .models import Room, RoomMaterial
 
 
 class RoomListView(ListView):
@@ -36,6 +36,23 @@ class RoomCreateView(CreateView):
         if formset.is_valid():
             form.instance.project_id = self.kwargs.get("project_id")
             response = super().form_valid(form)
+
+            construction_mapping = {
+                "floor": form.cleaned_data.get("floor_material"),
+                "ceiling": form.cleaned_data.get("ceiling_material"),
+                "wall A": form.cleaned_data.get("wall_a_material"),
+                "wall B": form.cleaned_data.get("wall_b_material"),
+                "wall C": form.cleaned_data.get("wall_c_material"),
+                "wall D": form.cleaned_data.get("wall_d_material"),
+            }
+
+            for location, material in construction_mapping.items():
+                if material:
+                    RoomMaterial.objects.create(
+                        room=self.object,
+                        material=material,
+                        location=location,
+                    )
 
             furnishings = {
                 f.cleaned_data["material"].name: f.cleaned_data["area"]
