@@ -1,13 +1,13 @@
 import json
 from typing import Any
 
-from calculations.RoomAcousticCalculator import RoomAcousticCalculator
+from acoustic_calculator import AcousticCalculator
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 from django.views import View
 
-from .models import Norm
+from .models import Material, Norm
 
 
 class AcousticCalculationView(View):
@@ -15,38 +15,64 @@ class AcousticCalculationView(View):
         try:
             data: dict[str, Any] = json.loads(request.body)
 
-            height: float | None = data.get("height")
-            length: float | None = data.get("length")
-            width: float | None = data.get("width")
-            furnishing: dict[str, float] = data.get("furnishing", {})
-            construction: dict[str, float] = data.get("construction", {})
-            norm_id: int | None = data.get("norm_id")
-            frequency: str | None = data.get("frequency")
+            height = data.get("height")
+            length = data.get("length")
+            width = data.get("width")
+            norm_id = data.get("norm_id")
+            frequency = data.get("frequency", "500")
 
-            if not all([height, length, width, norm_id, frequency]):
+            construction_data = data.get("construction", [])
+            furnishing_data = data.get("furnishing", [])
+
+            if not all([height, length, width, norm_id]):
                 return JsonResponse({"error": _("Missing required data.")}, status=400)
 
-            norm: Norm = get_object_or_404(Norm, id=norm_id)
+            norm = get_object_or_404(Norm, id=norm_id)
 
-            calculator = RoomAcousticCalculator(
-                height=height,
-                length=length,
-                width=width,
-                furnishing=furnishing,
-                construction=construction,
+            def parse_surfaces(
+                surface_data: list[dict[str, Any]]
+            ) -> list[dict[str, Any]]:
+                surfaces = []
+                for entry in surface_data:
+                    material_id = entry.get("material_id")
+                    area = entry.get("area_m2")
+                    if material_id is None or area is None:
+                        continue
+                    material = get_object_or_404(Material, id=material_id)
+                    surfaces.append({"material": material, "area_m2": area})
+                return surfaces
+
+            construction_surfaces = parse_surfaces(construction_data)
+            furnishing_elements = parse_surfaces(furnishing_data)
+
+            calculator = AcousticCalculator(
                 norm=norm,
+                room_dimensions={"width": width, "length": length, "height": height},
+                construction_surfaces=construction_surfaces,
+                furnishing_elements=furnishing_elements,
+                freq_band=frequency,
             )
-            rt = calculator.sabine_reverberation_time(frequency)
-            is_within = calculator.check_if_within_norm(rt)
-            calculator.save_calculation(frequency)
+
+            results = calculator.result()
 
             return JsonResponse(
                 {
-                    "reverberation_time": float(rt),
-                    "is_within_norm": is_within,
-                    "message": _("Measurement completed successfully."),
+                    "volume_m3": results["volume_m3"],
+                    "surface_area_m2": results["surface_area_m2"],
+                    "absorption_achieved": results["absorption_achieved"],
+                    "absorption_required": results["absorption_required"],
+                    "reverberation_time_s": results["reverberation_time_s"],
+                    "estimated_sti": results["estimated_sti"],
+                    "norm_passed": results["norm_passed"],
+                    "message": _("Calculation completed successfully."),
                 }
             )
 
+        except Material.DoesNotExist:
+            return JsonResponse(
+                {"error": _("One or more materials not found.")}, status=404
+            )
+        except Norm.DoesNotExist:
+            return JsonResponse({"error": _("Norm not found.")}, status=404)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
