@@ -166,8 +166,40 @@ class RoomUpdateView(UpdateView):
     def form_valid(self, form):
         response = super().form_valid(form)
 
-        Logger.log_room_updated(user_id=self.object.pk, changed_by=self.request.user)
+        RoomMaterial.objects.filter(room=self.object).delete()
 
+        construction_mapping = {
+            "floor": form.cleaned_data.get("floor_material"),
+            "ceiling": form.cleaned_data.get("ceiling_material"),
+            "wall A": form.cleaned_data.get("wall_a_material"),
+            "wall B": form.cleaned_data.get("wall_b_material"),
+            "wall C": form.cleaned_data.get("wall_c_material"),
+            "wall D": form.cleaned_data.get("wall_d_material"),
+        }
+
+        for location, material in construction_mapping.items():
+            if material:
+                RoomMaterial.objects.create(
+                    room=self.object,
+                    material=material,
+                    location=location,
+                )
+
+        Furnishing.objects.filter(room=self.object).delete()
+
+        if self.request.POST:
+            formset = FurnishingFormSet(self.request.POST)
+            if formset.is_valid():
+                for f in formset:
+                    if f.cleaned_data and not f.cleaned_data.get("DELETE", False):
+                        Furnishing.objects.create(
+                            room=self.object,
+                            name=f.cleaned_data["material"].name,
+                            material=f.cleaned_data["material"],
+                            quantity=1,
+                        )
+
+        Logger.log_room_updated(user_id=self.object.pk, changed_by=self.request.user)
         return response
 
     def get_success_url(self):
