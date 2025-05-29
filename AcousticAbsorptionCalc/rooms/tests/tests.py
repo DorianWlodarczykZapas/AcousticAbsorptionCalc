@@ -134,7 +134,7 @@ class RoomViewsTestCase(TestCase):
             user_id=room.pk, changed_by=self.client.session.get("_auth_user_id")
         )
 
-    @patch("rooms.views.Logger.log_room_updated")
+    @patch("user_logs.logger.Logger.log_room_updated")
     def test_logger_called_on_update(self, mock_logger):
         url = reverse("rooms:room_update", kwargs={"pk": self.room1.pk})
         data = {
