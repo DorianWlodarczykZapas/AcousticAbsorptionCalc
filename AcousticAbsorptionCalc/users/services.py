@@ -28,12 +28,18 @@ class UserService:
     def register_user(form) -> User:
         user = form.save()
 
-        try:
-            trial_plan = Plan.objects.get(type=Plan.PlanType.TRIAL)
-        except Plan.DoesNotExist:
-            raise Exception(
-                _("Trial plan was not found. Make sure it exists in the database.")
-            )
+        trial_plan, _ = Plan.objects.get_or_create(
+            type=Plan.PlanType.TRIAL,
+            defaults={
+                "name": "Trial Plan",
+                "description": ("Default trial plan"),
+                "price": 0.00,
+                "billing_period": "7 days",
+                "max_projects": 1,
+                "max_rooms_per_project": 5,
+                "advanced_features_enabled": False,
+            },
+        )
 
         UserPlan.objects.create(
             user=user,
