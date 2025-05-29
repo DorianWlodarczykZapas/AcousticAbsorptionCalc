@@ -163,11 +163,30 @@ class RoomUpdateView(UpdateView):
     template_name = "rooms/room_form.html"
     context_object_name = "room"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.POST:
+            context["furnishing_formset"] = FurnishingFormSet(self.request.POST)
+        else:
+            furnishings = Furnishing.objects.filter(room=self.object)
+            initial_data = [
+                {"material": f.material, "area": f.quantity} for f in furnishings
+            ]
+            context["furnishing_formset"] = FurnishingFormSet(initial=initial_data)
+
+        return context
+
     def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context["furnishing_formset"]
+
+        if not formset.is_valid():
+            return self.form_invalid(form)
+
         response = super().form_valid(form)
 
         RoomMaterial.objects.filter(room=self.object).delete()
-
         construction_mapping = {
             "floor": form.cleaned_data.get("floor_material"),
             "ceiling": form.cleaned_data.get("ceiling_material"),
@@ -176,28 +195,21 @@ class RoomUpdateView(UpdateView):
             "wall C": form.cleaned_data.get("wall_c_material"),
             "wall D": form.cleaned_data.get("wall_d_material"),
         }
-
         for location, material in construction_mapping.items():
             if material:
                 RoomMaterial.objects.create(
-                    room=self.object,
-                    material=material,
-                    location=location,
+                    room=self.object, material=material, location=location
                 )
 
         Furnishing.objects.filter(room=self.object).delete()
-
-        if self.request.POST:
-            formset = FurnishingFormSet(self.request.POST)
-            if formset.is_valid():
-                for f in formset:
-                    if f.cleaned_data and not f.cleaned_data.get("DELETE", False):
-                        Furnishing.objects.create(
-                            room=self.object,
-                            name=f.cleaned_data["material"].name,
-                            material=f.cleaned_data["material"],
-                            quantity=1,
-                        )
+        for f in formset:
+            if f.cleaned_data and not f.cleaned_data.get("DELETE", False):
+                Furnishing.objects.create(
+                    room=self.object,
+                    name=f.cleaned_data["material"].name,
+                    material=f.cleaned_data["material"],
+                    quantity=1,
+                )
 
         Logger.log_room_updated(user_id=self.object.pk, changed_by=self.request.user)
         return response
