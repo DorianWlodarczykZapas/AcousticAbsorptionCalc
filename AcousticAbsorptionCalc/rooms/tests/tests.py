@@ -229,7 +229,7 @@ class RoomViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Przenieś pokój")
 
-    @patch("rooms.views.ProjectLogger.log_edit_furnishing")
+    @patch("project_logs.ProjectLogger.log_edit_furnishing")
     def test_project_logger_called_on_move(self, mock_logger):
         room = RoomFactory(project=self.project)
         url = reverse("rooms:room_move", kwargs={"pk": room.pk})
