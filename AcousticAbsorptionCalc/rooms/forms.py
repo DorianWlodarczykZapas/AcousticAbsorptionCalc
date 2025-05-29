@@ -1,9 +1,9 @@
 from django import forms
-from django.forms import formset_factory
+from django.forms import formset_factory, modelformset_factory
 from django.utils.translation import gettext_lazy as _
 from projects.models import Project
 
-from .models import Material, Room
+from .models import Material, Room, RoomMaterial
 
 
 class RoomForm(forms.ModelForm):
@@ -88,3 +88,21 @@ class MoveRoomForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.fields["target_project"].queryset = Project.objects.filter(members=user)
+
+
+class RoomMaterialForm(forms.ModelForm):
+    class Meta:
+        model = RoomMaterial
+        fields = ["material", "location"]
+        widgets = {
+            "material": forms.Select(attrs={"class": "form-control"}),
+            "location": forms.TextInput(attrs={"class": "form-control"}),
+        }
+
+
+RoomMaterialFormSet = modelformset_factory(
+    RoomMaterial,
+    form=RoomMaterialForm,
+    extra=1,
+    can_delete=True,
+)
