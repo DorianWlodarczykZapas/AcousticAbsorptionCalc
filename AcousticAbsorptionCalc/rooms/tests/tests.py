@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
-from calculations.models import Material
+from calculations.acoustic_calculator import AcousticCalculator
+from calculations.models import Material, Norm
 from django.test import TestCase
 from django.urls import reverse
 from projects.factories import ProjectFactory
@@ -358,3 +359,29 @@ class RoomViewsTestCase(TestCase):
 
         self.assertEqual(RoomMaterial.objects.filter(room=self.room1).count(), 2)
         self.assertEqual(Furnishing.objects.filter(room=self.room1).count(), 1)
+
+    def test_surface_validation_tolerance(self):
+        norm = Norm.objects.create(name="Norma X")
+        material = Material.objects.create(
+            name="Mat3",
+            type="Test",
+            freq_125=0.1,
+            freq_250=0.2,
+            freq_500=0.3,
+            freq_1000=0.4,
+            freq_2000=0.5,
+            freq_4000=0.6,
+        )
+
+        calculator = AcousticCalculator(
+            norm=norm,
+            room_dimensions={"width": 5.0, "length": 6.0, "height": 3.0},
+            construction_surfaces=[
+                {"material": material, "area_m2": 90.0},
+            ],
+            furnishing_elements=[],
+        )
+
+        result = calculator.validate_surface_match(tolerance=0.3)
+        self.assertFalse(result["valid"])
+        self.assertTrue(result["difference"] > 0)
