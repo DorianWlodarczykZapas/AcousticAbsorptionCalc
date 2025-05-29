@@ -119,7 +119,7 @@ class RoomViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, "form", "height", "Wartość musi być dodatnia.")
 
-    @patch("rooms.views.Logger.log_room_created")
+    @patch("user_logs.logger.Logger.log_room_created")
     def test_logger_called_on_create(self, mock_logger):
         url = reverse("rooms:room_add", kwargs={"project_id": self.project.id})
         data = {
