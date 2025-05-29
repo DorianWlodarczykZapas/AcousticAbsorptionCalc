@@ -148,7 +148,7 @@ class RoomViewsTestCase(TestCase):
             user_id=self.room1.pk, changed_by=self.client.session.get("_auth_user_id")
         )
 
-    @patch("rooms.views.Logger.log_room_deleted")
+    @patch("user_logs.logger.Logger.log_room_deleted")
     def test_logger_called_on_delete(self, mock_logger):
         room = RoomFactory(project=self.project)
         url = reverse("rooms:room_delete", kwargs={"pk": room.pk})
