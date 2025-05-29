@@ -1,10 +1,11 @@
 from unittest.mock import patch
 
+from calculations.models import Material
 from django.test import TestCase
 from django.urls import reverse
 from projects.factories import ProjectFactory
 from rooms.factories import RoomFactory
-from rooms.models import Room
+from rooms.models import Furnishing, Room, RoomMaterial
 
 
 class RoomViewsTestCase(TestCase):
@@ -309,3 +310,51 @@ class RoomViewsTestCase(TestCase):
         url = reverse("rooms:room_move", kwargs={"pk": 9999})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
+
+    def test_room_update_updates_materials_and_furnishings(self):
+        material1 = Material.objects.create(
+            name="Mat1",
+            type="Test",
+            freq_125=0.1,
+            freq_250=0.2,
+            freq_500=0.3,
+            freq_1000=0.4,
+            freq_2000=0.5,
+            freq_4000=0.6,
+        )
+        material2 = Material.objects.create(
+            name="Mat2",
+            type="Test",
+            freq_125=0.1,
+            freq_250=0.2,
+            freq_500=0.3,
+            freq_1000=0.4,
+            freq_2000=0.5,
+            freq_4000=0.6,
+        )
+
+        url = reverse("rooms:room_update", kwargs={"pk": self.room1.pk})
+        data = {
+            "name": self.room1.name,
+            "width": self.room1.width,
+            "length": self.room1.length,
+            "height": self.room1.height,
+            "floor_material": material1.pk,
+            "ceiling_material": material2.pk,
+            "wall_a_material": "",
+            "wall_b_material": "",
+            "wall_c_material": "",
+            "wall_d_material": "",
+            "furnishing_set-TOTAL_FORMS": "1",
+            "furnishing_set-INITIAL_FORMS": "0",
+            "furnishing_set-MIN_NUM_FORMS": "0",
+            "furnishing_set-MAX_NUM_FORMS": "1000",
+            "furnishing_set-0-material": material1.pk,
+            "furnishing_set-0-area": "10.0",
+        }
+
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+
+        self.assertEqual(RoomMaterial.objects.filter(room=self.room1).count(), 2)
+        self.assertEqual(Furnishing.objects.filter(room=self.room1).count(), 1)
