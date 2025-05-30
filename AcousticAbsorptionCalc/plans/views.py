@@ -80,11 +80,11 @@ class StripeWebhookView(View):
 
 
 class PaymentSuccessView(TemplateView):
-    template_name = "templates/plans/success_payment.html"
+    template_name = "plans/success_payment.html"
 
 
 class PaymentCancelView(TemplateView):
-    template_name = "templates/plans/cancel.html"
+    template_name = "plans/cancel.html"
 
 
 class ChangePlanView(LoginRequiredMixin, View):
