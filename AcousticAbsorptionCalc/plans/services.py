@@ -24,7 +24,7 @@ class StripeService:
                 }
             ],
             customer_email=user_email,
-            success_url="http://localhost:8000/payment/success/",
-            cancel_url="http://localhost:8000/payment/cancel/",
+            success_url=settings.STRIPE_SUCCESS_URL,
+            cancel_url=settings.STRIPE_CANCEL_URL,
             metadata={"plan_id": str(plan.id)},
         )
