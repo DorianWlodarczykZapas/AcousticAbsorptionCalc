@@ -4,6 +4,16 @@
     <div class="container mt-5 text-center">
         <h2 class="text-success">✅ {% trans "Payment completed successfully!" %}</h2>
         <p>{% trans "Thank you for purchasing a plan. Your account has been updated." %}</p>
+        {% if plan_name %}
+            <p>
+                {% trans "Plan:" %} <strong>{{ plan_name }}</strong>
+            </p>
+        {% endif %}
+        {% if valid_to %}
+            <p>
+                {% trans "Valid until:" %} <strong>{{ valid_to }}</strong>
+            </p>
+        {% endif %}
         <a href="/" class="btn btn-primary mt-3">{% trans "Return to the homepage" %}</a>
     </div>
 {% endblock %}
