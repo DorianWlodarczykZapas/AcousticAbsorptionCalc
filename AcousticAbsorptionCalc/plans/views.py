@@ -60,16 +60,18 @@ class StripeWebhookView(View):
                 user = User.objects.get(email=customer_email)
                 plan = get_object_or_404(Plan, id=plan_id)
 
-                UserPlan.objects.update_or_create(
+                UserPlan.objects.filter(user=user, is_active=True).update(
+                    is_active=False
+                )
+
+                UserPlan.objects.create(
                     user=user,
-                    defaults={
-                        "plan": plan,
-                        "start_date": timezone.now().date(),
-                        "valid_to": timezone.now().date() + timedelta(days=30),
-                        "is_active": True,
-                        "last_payment_date": timezone.now().date(),
-                        "next_payment_date": timezone.now().date() + timedelta(days=30),
-                    },
+                    plan=plan,
+                    start_date=timezone.now().date(),
+                    valid_to=timezone.now().date() + timedelta(days=30),
+                    is_active=True,
+                    last_payment_date=timezone.now().date(),
+                    next_payment_date=timezone.now().date() + timedelta(days=30),
                 )
             except User.DoesNotExist:
                 pass
