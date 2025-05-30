@@ -20,6 +20,7 @@ class Plan(models.Model):
     advanced_features_enabled = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    trial_days = models.IntegerField(default=0)
 
 
 class UserPlan(models.Model):
