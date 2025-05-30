@@ -510,3 +510,6 @@ msgstr "Nie znaleziono jednego lub więcej materiałów."
 
 msgid "Norm not found."
 msgstr "Nie znaleziono normy."
+
+msgid "Successfully imported %(count)d materials."
+msgstr "Pomyślnie zaimportowano %(count)d materiałów."
