@@ -82,6 +82,34 @@ class StripeWebhookView(View):
 class PaymentSuccessView(TemplateView):
     template_name = "plans/success_payment.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        session_id = self.request.GET.get("session_id")
+
+        if session_id:
+            stripe.api_key = settings.STRIPE_SECRET_KEY
+            session = stripe.checkout.Session.retrieve(session_id)
+            customer_email = session.get("customer_email")
+            plan_id = session.get("metadata", {}).get("plan_id")
+
+            context["customer_email"] = customer_email
+            context["plan_name"] = None
+            context["valid_to"] = None
+
+            from plans.models import Plan, User, UserPlan
+
+            try:
+                user = User.objects.get(email=customer_email)
+                plan = Plan.objects.get(id=plan_id)
+                user_plan = UserPlan.objects.get(user=user, plan=plan, is_active=True)
+
+                context["plan_name"] = plan.name
+                context["valid_to"] = user_plan.valid_to
+            except (User.DoesNotExist, Plan.DoesNotExist, UserPlan.DoesNotExist):
+                pass
+
+        return context
+
 
 class PaymentCancelView(TemplateView):
     template_name = "plans/cancel.html"
