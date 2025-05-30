@@ -24,7 +24,7 @@ class StripeService:
                 }
             ],
             customer_email=user_email,
-            success_url=settings.STRIPE_SUCCESS_URL,
+            success_url=f"{settings.STRIPE_SUCCESS_URL}?session_id={{CHECKOUT_SESSION_ID}}",
             cancel_url=settings.STRIPE_CANCEL_URL,
             metadata={"plan_id": str(plan.id)},
         )
