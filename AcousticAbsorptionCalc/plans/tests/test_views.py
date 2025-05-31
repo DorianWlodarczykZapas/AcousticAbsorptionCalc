@@ -19,6 +19,13 @@ class TestPlanListView(TestCase):
         self.assertEqual(len(response.context["plans"]), 3)
 
 
+class TestCreateCheckoutSessionView(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.plan = PlanFactory()
+        self.client.force_login(self.user)
+
+
 class TestPlanChangeViewSuccess(TestCase):
     def setUp(self):
         self.user = UserFactory()
