@@ -10,6 +10,15 @@ from users.factories import UserFactory
 User = get_user_model()
 
 
+class TestPlanListView(TestCase):
+    def test_get_plan_list(self):
+        PlanFactory.create_batch(3)
+        response = self.client.get(reverse("plans:list"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "plans/plan_list.html")
+        self.assertEqual(len(response.context["plans"]), 3)
+
+
 class TestPlanChangeViewSuccess(TestCase):
     def setUp(self):
         self.user = UserFactory()
