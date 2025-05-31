@@ -25,6 +25,17 @@ class TestCreateCheckoutSessionView(TestCase):
         self.plan = PlanFactory()
         self.client.force_login(self.user)
 
+    @patch("plans.services.StripeService.create_checkout_session")
+    def test_create_checkout_session_success(self, mock_checkout_session):
+        mock_checkout_session.return_value.url = "https://stripe-session-url.com"
+
+        response = self.client.post(
+            reverse("plans:create_checkout_session"), {"plan_id": self.plan.id}
+        )
+
+        self.assertRedirects(response, "https://stripe-session-url.com")
+        mock_checkout_session.assert_called_once()
+
 
 class TestPlanChangeViewSuccess(TestCase):
     def setUp(self):
