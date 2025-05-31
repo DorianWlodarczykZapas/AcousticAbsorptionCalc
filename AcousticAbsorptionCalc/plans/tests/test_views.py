@@ -130,3 +130,12 @@ class TestPaymentSuccessView(TestCase):
         self.assertTemplateUsed(response, "plans/success_payment.html")
         self.assertEqual(response.context["plan_name"], self.plan.name)
         self.assertEqual(response.context["valid_to"], self.user_plan.valid_to)
+
+    def test_payment_success_view_without_session(self):
+        url = reverse("plans:payment_success")
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "plans/success_payment.html")
+        self.assertIsNone(response.context.get("plan_name"))
+        self.assertIsNone(response.context.get("valid_to"))
