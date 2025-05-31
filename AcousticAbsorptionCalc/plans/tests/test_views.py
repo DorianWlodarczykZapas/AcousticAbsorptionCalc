@@ -47,6 +47,33 @@ class TestStripeWebhookView(TestCase):
         self.user = UserFactory(email="test@example.com")
         self.plan = PlanFactory()
 
+    @patch("stripe.Webhook.construct_event")
+    def test_webhook_creates_userplan(self, mock_construct_event):
+        # Arrange
+        mock_construct_event.return_value = {
+            "type": "checkout.session.completed",
+            "data": {
+                "object": {
+                    "customer_email": self.user.email,
+                    "metadata": {"plan_id": str(self.plan.id)},
+                }
+            },
+        }
+
+        response = self.client.post(
+            reverse("plans:stripe_webhook"),
+            data=b"{}",
+            content_type="application/json",
+            HTTP_STRIPE_SIGNATURE="valid_signature",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(
+            UserPlan.objects.filter(
+                user=self.user, plan=self.plan, is_active=True
+            ).exists()
+        )
+
 
 class TestPlanChangeViewSuccess(TestCase):
     def setUp(self):
