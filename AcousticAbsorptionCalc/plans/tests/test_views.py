@@ -74,6 +74,29 @@ class TestStripeWebhookView(TestCase):
             ).exists()
         )
 
+    @patch("stripe.Webhook.construct_event")
+    def test_webhook_invalid_user(self, mock_construct_event):
+        # Arrange
+        mock_construct_event.return_value = {
+            "type": "checkout.session.completed",
+            "data": {
+                "object": {
+                    "customer_email": "nonexistent@example.com",
+                    "metadata": {"plan_id": str(self.plan.id)},
+                }
+            },
+        }
+
+        response = self.client.post(
+            reverse("plans:stripe_webhook"),
+            data=b"{}",
+            content_type="application/json",
+            HTTP_STRIPE_SIGNATURE="valid_signature",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(UserPlan.objects.filter(plan=self.plan).exists())
+
 
 class TestPlanChangeViewSuccess(TestCase):
     def setUp(self):
