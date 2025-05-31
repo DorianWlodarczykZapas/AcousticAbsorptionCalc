@@ -36,6 +36,11 @@ class TestCreateCheckoutSessionView(TestCase):
         self.assertRedirects(response, "https://stripe-session-url.com")
         mock_checkout_session.assert_called_once()
 
+    def test_create_checkout_session_without_plan_id(self):
+        response = self.client.post(reverse("plans:create_checkout_session"))
+
+        self.assertEqual(response.status_code, 404)
+
 
 class TestPlanChangeViewSuccess(TestCase):
     def setUp(self):
