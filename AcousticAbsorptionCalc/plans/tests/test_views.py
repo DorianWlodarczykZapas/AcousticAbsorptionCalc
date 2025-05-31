@@ -42,6 +42,12 @@ class TestCreateCheckoutSessionView(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
+class TestStripeWebhookView(TestCase):
+    def setUp(self):
+        self.user = UserFactory(email="test@example.com")
+        self.plan = PlanFactory()
+
+
 class TestPlanChangeViewSuccess(TestCase):
     def setUp(self):
         self.user = UserFactory()
