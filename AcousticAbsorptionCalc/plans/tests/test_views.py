@@ -117,3 +117,16 @@ class TestPaymentSuccessView(TestCase):
         self.plan = PlanFactory()
         self.user_plan = UserPlanFactory(user=self.user, plan=self.plan, is_active=True)
         self.client.force_login(self.user)
+
+    @patch("stripe.checkout.Session.retrieve")
+    def test_payment_success_view_with_session(self, mock_session_retrieve):
+        mock_session_retrieve.return_value.customer_email = self.user.email
+        mock_session_retrieve.return_value.metadata = {"plan_id": str(self.plan.id)}
+
+        url = reverse("plans:payment_success") + "?session_id=fake_session_id"
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "plans/success_payment.html")
+        self.assertEqual(response.context["plan_name"], self.plan.name)
+        self.assertEqual(response.context["valid_to"], self.user_plan.valid_to)
