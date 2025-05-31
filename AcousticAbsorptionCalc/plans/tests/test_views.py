@@ -97,6 +97,19 @@ class TestStripeWebhookView(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(UserPlan.objects.filter(plan=self.plan).exists())
 
+    @patch("stripe.Webhook.construct_event")
+    def test_webhook_invalid_signature(self, mock_construct_event):
+        mock_construct_event.side_effect = Exception("Invalid signature")
+
+        response = self.client.post(
+            reverse("plans:stripe_webhook"),
+            data=b"{}",
+            content_type="application/json",
+            HTTP_STRIPE_SIGNATURE="invalid_signature",
+        )
+
+        self.assertEqual(response.status_code, 400)
+
 
 class TestPlanChangeViewSuccess(TestCase):
     def setUp(self):
