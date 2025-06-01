@@ -1,12 +1,12 @@
 import json
 from typing import Any
 
-from acoustic_calculator import AcousticCalculator
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 from django.views import View
 
+from .acoustic_calculator import AcousticCalculator
 from .models import Material, Norm
 
 
