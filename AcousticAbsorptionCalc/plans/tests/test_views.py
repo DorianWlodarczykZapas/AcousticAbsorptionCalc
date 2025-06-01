@@ -191,3 +191,11 @@ class TestChangePlanView(TestCase):
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)
         self.assertTrue(any("error" in m.tags for m in messages))
+
+    def test_redirect_if_not_logged_in(self):
+        self.client.logout()
+
+        response = self.client.get(reverse("plans:change"))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/login", response.url)
