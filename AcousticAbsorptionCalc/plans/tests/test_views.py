@@ -139,3 +139,13 @@ class TestPaymentSuccessView(TestCase):
         self.assertTemplateUsed(response, "plans/success_payment.html")
         self.assertIsNone(response.context.get("plan_name"))
         self.assertIsNone(response.context.get("valid_to"))
+
+
+class TestPaymentCancelView(TestCase):
+    def test_payment_cancel_view_renders_correct_template(self):
+        # Act
+        response = self.client.get(reverse("plans:payment_cancel"))
+
+        # Assert
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "plans/cancel.html")
