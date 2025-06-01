@@ -159,3 +159,10 @@ class TestChangePlanView(TestCase):
             user=self.user, plan=self.old_plan, is_active=True
         )
         self.client.force_login(self.user)
+
+    def test_get_change_plan_page(self):
+        response = self.client.get(reverse("plans:change"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "plans/change_plan.html")
+        self.assertEqual(response.context["user_plan"], self.user_plan)
