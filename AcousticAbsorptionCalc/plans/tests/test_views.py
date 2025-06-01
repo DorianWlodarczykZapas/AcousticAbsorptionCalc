@@ -166,3 +166,13 @@ class TestChangePlanView(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "plans/change_plan.html")
         self.assertEqual(response.context["user_plan"], self.user_plan)
+
+    def test_post_change_plan_success(self):
+
+        response = self.client.post(
+            reverse("plans:change"), {"plan_id": self.new_plan.id}
+        )
+
+        self.user_plan.refresh_from_db()
+        self.assertEqual(self.user_plan.plan, self.new_plan)
+        self.assertRedirects(response, reverse("users:home"))
