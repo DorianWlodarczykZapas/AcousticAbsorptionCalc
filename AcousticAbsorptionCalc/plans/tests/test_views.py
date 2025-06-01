@@ -143,9 +143,19 @@ class TestPaymentSuccessView(TestCase):
 
 class TestPaymentCancelView(TestCase):
     def test_payment_cancel_view_renders_correct_template(self):
-        # Act
+
         response = self.client.get(reverse("plans:payment_cancel"))
 
-        # Assert
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "plans/cancel.html")
+
+
+class TestChangePlanView(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.old_plan = PlanFactory()
+        self.new_plan = PlanFactory()
+        self.user_plan = UserPlanFactory(
+            user=self.user, plan=self.old_plan, is_active=True
+        )
+        self.client.force_login(self.user)
