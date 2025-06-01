@@ -183,3 +183,11 @@ class TestChangePlanView(TestCase):
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)
         self.assertTrue(any("error" in m.tags for m in messages))
+
+    def test_post_change_plan_invalid_plan_id(self):
+
+        response = self.client.post(reverse("plans:change"), {"plan_id": 99999})
+
+        messages = list(response.wsgi_request._messages)
+        self.assertEqual(len(messages), 1)
+        self.assertTrue(any("error" in m.tags for m in messages))
