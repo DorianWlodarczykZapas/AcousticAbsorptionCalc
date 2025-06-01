@@ -176,3 +176,10 @@ class TestChangePlanView(TestCase):
         self.user_plan.refresh_from_db()
         self.assertEqual(self.user_plan.plan, self.new_plan)
         self.assertRedirects(response, reverse("users:home"))
+
+    def test_post_change_plan_missing_plan_id(self):
+        response = self.client.post(reverse("plans:change"), {})
+
+        messages = list(response.wsgi_request._messages)
+        self.assertEqual(len(messages), 1)
+        self.assertTrue(any("error" in m.tags for m in messages))
