@@ -17,44 +17,46 @@
     </head>
     <body>
         {% block header %}
-            <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-                <div class="container">
-                    <a class="navbar-brand" href="{% url 'users:home' %}">AcousticAbsorptionCalculator</a>
-                    <button class="navbar-toggler"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#navbarNav"
-                            aria-controls="navbarNav"
-                            aria-expanded="false"
-                            aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav me-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'projects:project_list' %}">Projekty</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'plans:plan_list' %}">Plany</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'rooms:room_list' %}">Pokoje</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'users:edit_profile' %}">Ustawienia konta</a>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
-                                <form action="{% url 'users:logout' %}" method="post" class="d-inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-danger">Wyloguj się</button>
-                                </form>
-                            </li>
-                        </ul>
+            {% if not hide_navbar %}
+                <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+                    <div class="container">
+                        <a class="navbar-brand" href="{% url 'users:home' %}">AcousticAbsorptionCalculator</a>
+                        <button class="navbar-toggler"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#navbarNav"
+                                aria-controls="navbarNav"
+                                aria-expanded="false"
+                                aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav me-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'projects:project_list' %}">Projekty</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'plans:plan_list' %}">Plany</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'rooms:room_list' %}">Pokoje</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'users:edit_profile' %}">Ustawienia konta</a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav ms-auto">
+                                <li class="nav-item">
+                                    <form action="{% url 'users:logout' %}" method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger">Wyloguj się</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </nav>
+                </nav>
+            {% endif %}
         {% endblock %}
         <main id="main">
             {% block content %}{% endblock %}
