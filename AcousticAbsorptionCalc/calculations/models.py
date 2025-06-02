@@ -160,5 +160,5 @@ class Material(models.Model):
         band_field = f"freq_{freq_band}"
         return float(getattr(self, band_field, 0))
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.type} – {self.name}"
