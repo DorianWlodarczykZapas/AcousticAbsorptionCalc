@@ -69,7 +69,7 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserProfileForm
     template_name = "users/edit_profile.html"
-    success_url = reverse_lazy("profile_success")
+    success_url = reverse_lazy("home")
 
     def get_object(self, queryset=None) -> User:
         return self.request.user
