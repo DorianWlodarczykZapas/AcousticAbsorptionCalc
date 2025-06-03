@@ -9,7 +9,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", HomeView.as_view(), name="home"),
     path("users/", include("users.urls", namespace="users")),
-    path("user_logs/", include("user_logs.urls")),
+    path("user_logs/", include("user_logs.urls", namespace="user-logs")),
     path("projects/", include("projects.urls")),
     path("rooms/", include("rooms.urls")),
     path("calculations/", include("calculations.urls")),
