@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}
+    {% trans "Rooms" %}
+{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+    <section class="section mt-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <h2 class="mb-4 text-center">{% trans "Rooms List" %}</h2>
+                    {% if rooms %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">{% trans "Name" %}</th>
+                                        <th scope="col">{% trans "Length (m)" %}</th>
+                                        <th scope="col">{% trans "Width (m)" %}</th>
+                                        <th scope="col">{% trans "Height (m)" %}</th>
+                                        <th scope="col">{% trans "Project" %}</th>
+                                        <th scope="col">{% trans "Actions" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for room in rooms %}
+                                        <tr>
+                                            <td>{{ room.name }}</td>
+                                            <td>{{ room.length }}</td>
+                                            <td>{{ room.width }}</td>
+                                            <td>{{ room.height }}</td>
+                                            <td>
+                                                {% if room.project %}
+                                                    {{ room.project.name }}
+                                                {% else %}
+                                                    <em>{% trans "No project assigned" %}</em>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'rooms:room_delete' pk=room.pk %}"
+                                                   class="btn btn-danger btn-sm">{% trans "Delete" %}</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-center">{% trans "No rooms available." %}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
