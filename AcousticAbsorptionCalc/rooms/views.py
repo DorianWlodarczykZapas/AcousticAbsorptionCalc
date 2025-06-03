@@ -16,9 +16,7 @@ class RoomListView(LoginRequiredMixin, ListView):
     context_object_name = "rooms"
 
     def get_queryset(self):
-        return Room.objects.select_related("project").filter(
-            project__id=self.kwargs.get("project_id")
-        )
+        return Room.objects.select_related("project").all()
 
 
 class RoomCreateView(LoginRequiredMixin, CreateView):
