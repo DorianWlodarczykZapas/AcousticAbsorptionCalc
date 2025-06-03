@@ -5,7 +5,7 @@ from .services import ChangeLogService
 
 
 class UserChangeLogListView(LoginRequiredMixin, ListView):
-    template_name = "changelog/user_logs.html"
+    template_name = "user_logs/user_logs.html"
     context_object_name = "logs"
     paginate_by = 25
 
