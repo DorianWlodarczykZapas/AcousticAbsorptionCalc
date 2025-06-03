@@ -1,5 +1,6 @@
 from calculations.acoustic_calculator import AcousticCalculator
 from calculations.models import Calculation
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, FormView, ListView, UpdateView
 from project_logs.projectlogger import ProjectLogger
@@ -9,7 +10,7 @@ from .forms import FurnishingFormSet, MoveRoomForm, RoomForm
 from .models import Furnishing, Room, RoomMaterial
 
 
-class RoomListView(ListView):
+class RoomListView(LoginRequiredMixin, ListView):
     model = Room
     template_name = "rooms/room_list.html"
     context_object_name = "rooms"
@@ -20,7 +21,7 @@ class RoomListView(ListView):
         )
 
 
-class RoomCreateView(CreateView):
+class RoomCreateView(LoginRequiredMixin, CreateView):
     model = Room
     form_class = RoomForm
     template_name = "rooms/room_form.html"
@@ -157,7 +158,7 @@ class RoomCreateView(CreateView):
         return 0.0
 
 
-class RoomUpdateView(UpdateView):
+class RoomUpdateView(LoginRequiredMixin, UpdateView):
     model = Room
     form_class = RoomForm
     template_name = "rooms/room_form.html"
@@ -220,7 +221,7 @@ class RoomUpdateView(UpdateView):
         )
 
 
-class RoomDeleteView(DeleteView):
+class RoomDeleteView(LoginRequiredMixin, DeleteView):
     model = Room
     template_name = "rooms/room_confirm_delete.html"
     context_object_name = "room"
@@ -238,7 +239,7 @@ class RoomDeleteView(DeleteView):
         )
 
 
-class MoveRoomView(FormView):
+class MoveRoomView(LoginRequiredMixin, FormView):
     template_name = "rooms/move_room.html"
     form_class = MoveRoomForm
 
