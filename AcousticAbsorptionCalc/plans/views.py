@@ -20,8 +20,18 @@ class PlanListView(ListView):
     template_name = "plans/plan_list.html"
     context_object_name = "plans"
 
-    def get(self, request: HttpRequest, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        if self.request.user.is_authenticated:
+            has_trial = UserPlan.objects.filter(
+                user=self.request.user, is_active=True, plan__type=Plan.PlanType.TRIAL
+            ).exists()
+
+            if has_trial:
+                queryset = queryset.exclude(type=Plan.PlanType.TRIAL)
+
+        return queryset
 
 
 class CreateCheckoutSessionView(View):
