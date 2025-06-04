@@ -502,8 +502,7 @@ msgstr "Maksymalna liczba pomieszczeń na projekt"
 msgid "Calculation completed successfully."
 msgstr "Obliczenia zakończone pomyślnie."
 
-msgid "Missing required data."
-msgstr "Brakuje wymaganych danych."
+
 
 msgid "One or more materials not found."
 msgstr "Nie znaleziono jednego lub więcej materiałów."
@@ -513,3 +512,15 @@ msgstr "Nie znaleziono normy."
 
 msgid "Successfully imported %(count)d materials."
 msgstr "Pomyślnie zaimportowano %(count)d materiałów."
+
+msgid "Projects"
+msgstr "Projekty"
+
+msgid "Plans"
+msgstr "Plany"
+
+msgid "Account History"
+msgstr "Historia konta"
+
+msgid "Account Settings"
+msgstr "Ustawienia konta"
