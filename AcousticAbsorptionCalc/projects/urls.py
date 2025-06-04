@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import (
     ProjectCreateView,
+    ProjectCSVView,
     ProjectDeleteView,
     ProjectDetailView,
     ProjectListView,
@@ -39,5 +40,10 @@ urlpatterns = [
         "projects/rooms/<int:pk>/delete/",
         ProjectRoomDeleteView.as_view(),
         name="room_delete",
+    ),
+    path(
+        "<int:project_id>/download-csv/",
+        ProjectCSVView.as_view(),
+        name="project_csv",
     ),
 ]
