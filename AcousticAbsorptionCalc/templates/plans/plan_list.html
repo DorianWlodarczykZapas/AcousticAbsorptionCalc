@@ -11,16 +11,25 @@
                 <div class="col-md-4">
                     <div class="card mb-4 shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">{{ plan.name }}</h5>
+                            <h5 class="card-title">
+                                {{ plan.name }}
+                                {% if user.is_authenticated and user.userplan.plan.id == plan.id %}
+                                    <span class="badge bg-success">{% trans "Current Plan" %}</span>
+                                {% endif %}
+                            </h5>
                             <p class="card-text">{{ plan.description }}</p>
                             <p class="card-text">
                                 <strong>{{ plan.price }} PLN / {{ plan.billing_period }}</strong>
                             </p>
-                            <form action="{% url 'plans:create_checkout_session' %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="plan_id" value="{{ plan.id }}">
-                                <button type="submit" class="btn btn-primary">{% trans "Buy" %}</button>
-                            </form>
+                            {% if user.is_authenticated and user.userplan.plan.id == plan.id %}
+                                <p class="text-muted">{% trans "You are currently subscribed to this plan." %}</p>
+                            {% else %}
+                                <form action="{% url 'plans:create_checkout_session' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="plan_id" value="{{ plan.id }}">
+                                    <button type="submit" class="btn btn-primary">{% trans "Buy" %}</button>
+                                </form>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
