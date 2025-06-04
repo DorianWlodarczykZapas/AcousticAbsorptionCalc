@@ -11,7 +11,7 @@ from .views import (
 app_name = "plans"
 
 urlpatterns = [
-    path("plans/", PlanListView.as_view(), name="plan_list"),
+    path("", PlanListView.as_view(), name="plan_list"),
     path(
         "create-checkout-session/",
         CreateCheckoutSessionView.as_view(),
