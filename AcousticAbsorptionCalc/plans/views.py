@@ -70,19 +70,20 @@ class StripeWebhookView(View):
                 user = User.objects.get(email=customer_email)
                 plan = get_object_or_404(Plan, id=plan_id)
 
-                UserPlan.objects.filter(user=user, is_active=True).update(
-                    is_active=False
-                )
+                user_plan, created = UserPlan.objects.get_or_create(user=user)
 
-                UserPlan.objects.create(
-                    user=user,
-                    plan=plan,
-                    start_date=timezone.now().date(),
-                    valid_to=timezone.now().date() + timedelta(days=30),
-                    is_active=True,
-                    last_payment_date=timezone.now().date(),
-                    next_payment_date=timezone.now().date() + timedelta(days=30),
-                )
+                if user_plan.plan.type == Plan.PlanType.TRIAL:
+                    user_plan.is_trial = False
+                    user_plan.trial_days = None
+
+                user_plan.plan = plan
+                user_plan.start_date = timezone.now().date()
+                user_plan.valid_to = timezone.now().date() + timedelta(days=30)
+                user_plan.is_active = True
+                user_plan.last_payment_date = timezone.now().date()
+                user_plan.next_payment_date = timezone.now().date() + timedelta(days=30)
+                user_plan.save()
+
             except User.DoesNotExist:
                 pass
 
@@ -126,7 +127,7 @@ class PaymentCancelView(TemplateView):
 
 
 class ChangePlanView(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):  # is_staff -> wszystkie plany.
+    def get(self, request, *args, **kwargs):
         user_plan = UserPlan.objects.filter(user=request.user, is_active=True).first()
 
         plans = Plan.objects.all()
