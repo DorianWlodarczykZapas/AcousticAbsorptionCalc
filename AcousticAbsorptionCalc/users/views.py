@@ -90,7 +90,7 @@ class LogoutView(View):
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         UserService.logout_user(request)
         messages.success(request, _("You have been successfully logged out."))
-        return redirect(reverse_lazy("login"))
+        return redirect(reverse_lazy("users:login"))
 
 
 class HomeView(LoginRequiredMixin, View):
