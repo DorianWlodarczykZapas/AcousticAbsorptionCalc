@@ -12,8 +12,13 @@
                     <a href="{% url 'projects:project_delete' project.pk %}"
                        class="btn btn-danger">{% trans "Delete Project" %}</a>
                 </div>
-                <a href="{% url 'projects:project_pdf' project.pk %}"
-                   class="btn btn-primary mt-3">{% trans "Generate PDF" %}</a>
+                <!-- Section for PDF and CSV downloads -->
+                <div class="d-flex gap-3 mb-4">
+                    <a href="{% url 'projects:project_pdf' project.pk %}"
+                       class="btn btn-primary">{% trans "Generate PDF" %}</a>
+                    <a href="{% url 'projects:project_csv' project.pk %}"
+                       class="btn btn-secondary">{% trans "Download CSV" %}</a>
+                </div>
                 <hr>
                 <h3 class="mt-4">{% trans "Rooms" %}</h3>
                 <ul class="list-group">
