@@ -33,19 +33,24 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav me-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'projects:project_list' %}">{% trans "Projects" %}</a>
+                                <a class="nav-link {% if request.resolver_match.url_name == 'project_list' %}active{% endif %}"
+                                   href="{% url 'projects:project_list' %}">{% trans "Projects" %}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'plans:plan_list' %}">{% trans "Plans" %}</a>
+                                <a class="nav-link {% if request.resolver_match.url_name == 'plan_list' %}active{% endif %}"
+                                   href="{% url 'plans:plan_list' %}">{% trans "Plans" %}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'rooms:room_list' %}">{% trans "Rooms" %}</a>
+                                <a class="nav-link {% if request.resolver_match.url_name == 'room_list' %}active{% endif %}"
+                                   href="{% url 'rooms:room_list' %}">{% trans "Rooms" %}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'user-logs:user-logs' %}">{% trans "Account History" %}</a>
+                                <a class="nav-link {% if request.resolver_match.url_name == 'user-logs' %}active{% endif %}"
+                                   href="{% url 'user-logs:user-logs' %}">{% trans "Account History" %}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'users:edit_profile' %}">{% trans "Account Settings" %}</a>
+                                <a class="nav-link {% if request.resolver_match.url_name == 'edit_profile' %}active{% endif %}"
+                                   href="{% url 'users:edit_profile' %}">{% trans "Account Settings" %}</a>
                             </li>
                         </ul>
                         <ul class="navbar-nav ms-auto">

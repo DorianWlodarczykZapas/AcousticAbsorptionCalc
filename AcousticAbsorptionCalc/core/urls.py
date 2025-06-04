@@ -13,7 +13,7 @@ urlpatterns = [
     path("projects/", include("projects.urls")),
     path("rooms/", include("rooms.urls")),
     path("calculations/", include("calculations.urls")),
-    path("plans/", include("plans.urls")),
+    path("plans/", include("plans.urls", namespace="plans")),
     path("project_logs/", include("project_logs.urls")),
 ]
 
