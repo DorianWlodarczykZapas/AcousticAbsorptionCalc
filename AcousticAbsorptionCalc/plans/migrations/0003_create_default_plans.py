@@ -7,7 +7,7 @@ def create_default_plans(apps, schema_editor):
     plans = [
         {
             "name": "Base Plan",
-            "type": Plan.PlanType.BASE,
+            "type": 1,
             "description": "Basic features for individuals.",
             "price": 49.99,
             "billing_period": "30 days",
@@ -17,7 +17,7 @@ def create_default_plans(apps, schema_editor):
         },
         {
             "name": "Premium Plan",
-            "type": Plan.PlanType.PREMIUM,
+            "type": 2,
             "description": "Premium features for professionals.",
             "price": 99.99,
             "billing_period": "30 days",
@@ -37,7 +37,7 @@ def create_default_plans(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("plans", "0001_initial"),
+        ("plans", "0002_initial"),
     ]
 
     operations = [
