@@ -3,6 +3,7 @@ from django.db.models import Q, QuerySet
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -13,7 +14,7 @@ from django.views.generic import (
 )
 from project_logs.projectlogger import ProjectLogger
 from projects.forms import ProjectForm
-from projects.services import PDFGeneratorService
+from projects.services import CSVExportService, PDFGeneratorService
 from rooms.forms import FurnishingFormSet, RoomForm
 from rooms.models import Room
 from user_logs.logger import Logger
@@ -264,3 +265,13 @@ class ProjectRoomDeleteView(DeleteView):
         return reverse_lazy(
             "rooms:room_list", kwargs={"project_id": self.object.project_id}
         )
+
+
+class ProjectCSVView(View):
+    def get(self, request, project_id):
+        try:
+            project = Project.objects.prefetch_related("rooms").get(id=project_id)
+        except Project.DoesNotExist:
+            raise Http404(_("Project does not exist"))
+
+        return CSVExportService.generate_project_csv(project)
