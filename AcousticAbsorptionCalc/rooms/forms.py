@@ -3,56 +3,20 @@ from django.forms import formset_factory, modelformset_factory
 from django.utils.translation import gettext_lazy as _
 from projects.models import Project
 
-from .models import Material, Room, RoomMaterial
+from .models import Material, Room, RoomMaterial, RoomSurface
 
 
 class RoomForm(forms.ModelForm):
-    floor_material = forms.ModelChoiceField(
-        queryset=Material.objects.all(),
-        label=_("Floor material"),
-        widget=forms.Select(attrs={"class": "form-control"}),
-        required=False,
-    )
-    ceiling_material = forms.ModelChoiceField(
-        queryset=Material.objects.all(),
-        label=_("Ceiling material"),
-        widget=forms.Select(attrs={"class": "form-control"}),
-        required=False,
-    )
-    wall_a_material = forms.ModelChoiceField(
-        queryset=Material.objects.all(),
-        label=_("Wall A material"),
-        widget=forms.Select(attrs={"class": "form-control"}),
-        required=False,
-    )
-    wall_b_material = forms.ModelChoiceField(
-        queryset=Material.objects.all(),
-        label=_("Wall B material"),
-        widget=forms.Select(attrs={"class": "form-control"}),
-        required=False,
-    )
-    wall_c_material = forms.ModelChoiceField(
-        queryset=Material.objects.all(),
-        label=_("Wall C material"),
-        widget=forms.Select(attrs={"class": "form-control"}),
-        required=False,
-    )
-    wall_d_material = forms.ModelChoiceField(
-        queryset=Material.objects.all(),
-        label=_("Wall D material"),
-        widget=forms.Select(attrs={"class": "form-control"}),
-        required=False,
-    )
-
     class Meta:
         model = Room
-        fields = ["name", "width", "length", "height", "norm"]
+        fields = ["name", "width", "length", "height", "norm", "project"]
         labels = {
             "name": _("Room Name"),
             "width": _("Width (m)"),
             "length": _("Length (m)"),
             "height": _("Height (m)"),
             "norm": _("Acoustic Norm"),
+            "project": _("Project"),
         }
         widgets = {
             "name": forms.TextInput(attrs={"class": "form-control"}),
@@ -60,7 +24,29 @@ class RoomForm(forms.ModelForm):
             "length": forms.NumberInput(attrs={"class": "form-control"}),
             "height": forms.NumberInput(attrs={"class": "form-control"}),
             "norm": forms.Select(attrs={"class": "form-control"}),
+            "project": forms.Select(attrs={"class": "form-control"}),
         }
+
+
+class RoomSurfaceForm(forms.ModelForm):
+    class Meta:
+        model = RoomSurface
+        fields = ["material", "area", "surface_type"]
+        labels = {
+            "material": _("Material"),
+            "area": _("Area (m²)"),
+            "surface_type": _("Surface Type"),
+        }
+        widgets = {
+            "material": forms.Select(attrs={"class": "form-control"}),
+            "area": forms.NumberInput(attrs={"class": "form-control"}),
+            "surface_type": forms.Select(attrs={"class": "form-control"}),
+        }
+
+
+RoomSurfaceFormSet = modelformset_factory(
+    RoomSurface, form=RoomSurfaceForm, extra=0, can_delete=True
+)
 
 
 class FurnishingForm(forms.Form):
