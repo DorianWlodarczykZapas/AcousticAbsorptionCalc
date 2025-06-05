@@ -26,17 +26,23 @@ class Furnishing(models.Model):
 
 
 class RoomSurface(models.Model):
+    SURFACE_TYPES = [
+        (1, "Floor"),
+        (2, "Ceiling"),
+        (3, "Wall A"),
+        (4, "Wall B"),
+        (5, "Wall C"),
+        (6, "Wall D"),
+    ]
+
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="surfaces")
     material = models.ForeignKey(Material, on_delete=models.PROTECT)
-    area = models.DecimalField(max_digits=10, decimal_places=2)
-    surface_type = models.CharField(
-        max_length=50,
-        choices=[
-            ("floor", "Floor"),
-            ("ceiling", "Ceiling"),
-            ("wall_a", "Wall A"),
-            ("wall_b", "Wall B"),
-            ("wall_c", "Wall C"),
-            ("wall_d", "Wall D"),
-        ],
+    area = models.DecimalField(
+        max_digits=10, decimal_places=2, help_text="Area of material in m²"
     )
+    surface_type = models.PositiveSmallIntegerField(choices=SURFACE_TYPES)
+
+    def __str__(self):
+        return (
+            f"{self.get_surface_type_display()} – {self.material.name} ({self.area} m²)"
+        )
