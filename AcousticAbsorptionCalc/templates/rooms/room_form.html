@@ -10,7 +10,36 @@
                 <h2 class="card-title text-center mb-4">{% trans "Add New Room" %}</h2>
                 <form method="post">
                     {% csrf_token %}
-                    <div class="mb-3">{{ form.as_p }}</div>
+                    <div class="mb-3">
+                        {{ form.name.label_tag }}
+                        {{ form.name }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.length.label_tag }}
+                        {{ form.length }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.width.label_tag }}
+                        {{ form.width }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.height.label_tag }}
+                        {{ form.height }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.project.label_tag }}
+                        {{ form.project }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.norm.label_tag }}
+                        <select name="{{ form.norm.name }}"
+                                id="{{ form.norm.id_for_label }}"
+                                class="form-control">
+                            {% for norm in form.fields.norm.queryset %}
+                                <option value="{{ norm.id }}">{{ norm.translated_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                     <h5 class="mt-4 mb-3">{% trans "Furnishing Materials" %}</h5>
                     {{ furnishing_formset.management_form }}
                     {% for form in furnishing_formset %}
