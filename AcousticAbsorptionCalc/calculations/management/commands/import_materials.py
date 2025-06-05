@@ -24,14 +24,14 @@ class Command(BaseCommand):
 
             for line in materials_data:
                 fields = line.split("\t")
-                if len(fields) != 8:
+                if len(fields) != 9:
                     continue
 
                 (
                     _,
                     material_type,
                     name,
-                    freq_125,
+                    freq_120,
                     freq_250,
                     freq_500,
                     freq_1000,
@@ -42,7 +42,7 @@ class Command(BaseCommand):
                 material = Material(
                     type=material_type.strip(),
                     name=name.strip(),
-                    freq_125=Decimal(freq_125),
+                    freq_125=Decimal(freq_120),
                     freq_250=Decimal(freq_250),
                     freq_500=Decimal(freq_500),
                     freq_1000=Decimal(freq_1000),
@@ -52,10 +52,10 @@ class Command(BaseCommand):
 
                 materials_to_create.append(material)
 
-        Material.objects.bulk_create(materials_to_create)
+        Material.objects.bulk_create(materials_to_create, ignore_conflicts=True)
 
         self.stdout.write(
             self.style.SUCCESS(
-                f"Successfully imported {len(materials_to_create)} materials."
+                f"Successfully imported {len(materials_to_create)} materials (ignoring duplicates)."
             )
         )
