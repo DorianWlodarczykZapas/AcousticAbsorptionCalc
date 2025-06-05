@@ -27,10 +27,11 @@ class RoomCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.POST:
-            context["furnishing_formset"] = FurnishingFormSet(self.request.POST)
+            context["furnishing_formset"] = FurnishingFormSet(
+                self.request.POST, prefix="furnishing"
+            )
         else:
-            context["furnishing_formset"] = FurnishingFormSet()
-        return context
+            context["furnishing_formset"] = FurnishingFormSet(prefix="furnishing")
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -166,13 +167,17 @@ class RoomUpdateView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
 
         if self.request.POST:
-            context["furnishing_formset"] = FurnishingFormSet(self.request.POST)
+            context["furnishing_formset"] = FurnishingFormSet(
+                self.request.POST, prefix="furnishing"
+            )
         else:
             furnishings = Furnishing.objects.filter(room=self.object)
             initial_data = [
                 {"material": f.material, "area": f.quantity} for f in furnishings
             ]
-            context["furnishing_formset"] = FurnishingFormSet(initial=initial_data)
+            context["furnishing_formset"] = FurnishingFormSet(
+                initial=initial_data, prefix="furnishing"
+            )
 
         return context
 

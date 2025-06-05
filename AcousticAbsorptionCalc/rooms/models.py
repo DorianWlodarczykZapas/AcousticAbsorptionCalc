@@ -24,3 +24,20 @@ class Furnishing(models.Model):
     name = models.CharField(max_length=255)
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
     quantity = models.IntegerField()
+
+
+class RoomSurface(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="surfaces")
+    material = models.ForeignKey(Material, on_delete=models.PROTECT)
+    area = models.DecimalField(max_digits=10, decimal_places=2)
+    surface_type = models.CharField(
+        max_length=50,
+        choices=[
+            ("floor", "Floor"),
+            ("ceiling", "Ceiling"),
+            ("wall_a", "Wall A"),
+            ("wall_b", "Wall B"),
+            ("wall_c", "Wall C"),
+            ("wall_d", "Wall D"),
+        ],
+    )

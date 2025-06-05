@@ -76,17 +76,16 @@ class FurnishingForm(forms.Form):
     )
 
 
-FurnishingFormSet = formset_factory(FurnishingForm, extra=1, can_delete=True)
+FurnishingFormSet = formset_factory(FurnishingForm, extra=0, can_delete=True)
 
 
 class MoveRoomForm(forms.Form):
     target_project = forms.ModelChoiceField(
-        queryset=None, label="Select target project"
+        queryset=None, label=_("Select target project")
     )
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.fields["target_project"].queryset = Project.objects.filter(members=user)
 
 
@@ -94,6 +93,10 @@ class RoomMaterialForm(forms.ModelForm):
     class Meta:
         model = RoomMaterial
         fields = ["material", "location"]
+        labels = {
+            "material": _("Material"),
+            "location": _("Location"),
+        }
         widgets = {
             "material": forms.Select(attrs={"class": "form-control"}),
             "location": forms.TextInput(attrs={"class": "form-control"}),

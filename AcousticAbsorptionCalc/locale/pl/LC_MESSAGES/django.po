@@ -530,3 +530,32 @@ msgstr "Lista pomieszczeń"
 
 msgid "No rooms available."
 msgstr "Brak utworzonych pomieszczeń."
+
+
+
+msgid "Floor material"
+msgstr "Materiał podłogi"
+
+msgid "Wall A material"
+msgstr "Materiał ściany A"
+
+msgid "Select target project"
+msgstr "Wybierz docelowy projekt"
+
+msgid "Ceiling material"
+msgstr "Materiał sufitu"
+
+msgid "Wall B material"
+msgstr "Materiał ściany B"
+
+msgid "Wall C material"
+msgstr "Materiał ściany C"
+
+msgid "Wall D material"
+msgstr "Materiał ściany D"
+
+msgid "Add More Materials"
+msgstr "Dodaj więcej materiałów"
+
+msgid "Remove"
+msgstr "Usuń"
