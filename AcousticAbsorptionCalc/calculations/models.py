@@ -162,3 +162,66 @@ class Material(models.Model):
 
     def __str__(self) -> str:
         return f"{self.type} – {self.name}"
+
+
+class NormRequirement(models.Model):
+    norm = models.ForeignKey(
+        "Norm", on_delete=models.CASCADE, related_name="requirements"
+    )
+    volume_min = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Minimum room volume in m³ (optional)",
+    )
+    volume_max = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Maximum room volume in m³ (optional)",
+    )
+    height_min = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Minimum room height in meters (optional)",
+    )
+    height_max = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Maximum room height in meters (optional)",
+    )
+    rt_max = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Maximum reverberation time T in seconds (optional)",
+    )
+    sti_min = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Minimum speech transmission index STI (optional)",
+    )
+    absorption_min_factor = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Minimum required sound absorption factor (optional, e.g. 0.6 × S)",
+    )
+
+    def __str__(self):
+        range_desc = []
+        if self.volume_min is not None and self.volume_max is not None:
+            range_desc.append(f"V: {self.volume_min}–{self.volume_max} m³")
+        if self.height_min is not None and self.height_max is not None:
+            range_desc.append(f"H: {self.height_min}–{self.height_max} m")
+        return f"Norm Requirement ({' | '.join(range_desc)})"
