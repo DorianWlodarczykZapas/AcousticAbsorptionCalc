@@ -211,3 +211,27 @@ class AcousticCalculator:
             "difference": round(difference, 2),
             "within_tolerance": within_tolerance,
         }
+
+    def find_applicable_requirement(self):
+        """
+        Finds the applicable NormRequirement based on room volume and height.
+        """
+        if self.room_volume == 0 or self.room_surface_area == 0:
+            self.calculate_room_geometry()
+
+        requirements = self.norm.requirements.all()
+
+        for req in requirements:
+            volume_ok = True
+            height_ok = True
+
+            if req.volume_min is not None and req.volume_max is not None:
+                volume_ok = req.volume_min <= self.room_volume <= req.volume_max
+
+            if req.height_min is not None and req.height_max is not None:
+                height_ok = req.height_min <= self.height <= req.height_max
+
+            if volume_ok and height_ok:
+                return req
+
+        return None
