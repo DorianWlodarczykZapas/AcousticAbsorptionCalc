@@ -20,10 +20,9 @@ class RoomMaterial(models.Model):
 
 
 class Furnishing(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    material = models.ForeignKey(Material, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="furnishings")
+    material = models.ForeignKey(Material, on_delete=models.PROTECT)
+    quantity = models.DecimalField(max_digits=10, decimal_places=2)
 
 
 class RoomSurface(models.Model):
