@@ -2,12 +2,12 @@ from calculations.acoustic_calculator import AcousticCalculator
 from calculations.models import Calculation
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, FormView, ListView, UpdateView
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from project_logs.projectlogger import ProjectLogger
 from user_logs.logger import Logger
 
-from .forms import FurnishingFormSet, MoveRoomForm, RoomForm
-from .models import Furnishing, Room, RoomMaterial
+from .forms import FurnishingFormSet, RoomForm, RoomSurfaceFormSet
+from .models import Furnishing, Room, RoomSurface
 
 
 class RoomListView(LoginRequiredMixin, ListView):
@@ -30,50 +30,46 @@ class RoomCreateView(LoginRequiredMixin, CreateView):
             context["furnishing_formset"] = FurnishingFormSet(
                 self.request.POST, prefix="furnishing"
             )
+            context["surface_formset"] = RoomSurfaceFormSet(
+                self.request.POST, prefix="surface"
+            )
         else:
             context["furnishing_formset"] = FurnishingFormSet(prefix="furnishing")
+            context["surface_formset"] = RoomSurfaceFormSet(prefix="surface")
+        return context
 
     def form_valid(self, form):
         context = self.get_context_data()
-        formset = context["furnishing_formset"]
+        furnishing_formset = context["furnishing_formset"]
+        surface_formset = context["surface_formset"]
 
-        if formset.is_valid():
+        if furnishing_formset.is_valid() and surface_formset.is_valid():
             form.instance.project_id = self.kwargs.get("project_id")
             response = super().form_valid(form)
 
-            construction_mapping = {
-                "floor": form.cleaned_data.get("floor_material"),
-                "ceiling": form.cleaned_data.get("ceiling_material"),
-                "wall A": form.cleaned_data.get("wall_a_material"),
-                "wall B": form.cleaned_data.get("wall_b_material"),
-                "wall C": form.cleaned_data.get("wall_c_material"),
-                "wall D": form.cleaned_data.get("wall_d_material"),
-            }
-
             construction_data = []
-            for location, material in construction_mapping.items():
-                if material:
-                    RoomMaterial.objects.create(
-                        room=self.object,
-                        material=material,
-                        location=location,
-                    )
-                    area = self._estimate_surface_area(self.object, location)
+            for surface_form in surface_formset:
+                if surface_form.cleaned_data and not surface_form.cleaned_data.get(
+                    "DELETE", False
+                ):
+                    surface = surface_form.save(commit=False)
+                    surface.room = self.object
+                    surface.save()
                     construction_data.append(
                         {
-                            "material": material,
-                            "area_m2": area,
+                            "material": surface.material,
+                            "area_m2": surface.area,
                         }
                     )
 
             furnishing_data = []
-            for f in formset:
+            for f in furnishing_formset:
                 if f.cleaned_data and not f.cleaned_data.get("DELETE", False):
                     Furnishing.objects.create(
                         room=self.object,
                         name=f.cleaned_data["material"].name,
                         material=f.cleaned_data["material"],
-                        quantity=1,
+                        quantity=f.cleaned_data["area"],
                     )
                     furnishing_data.append(
                         {
@@ -142,20 +138,6 @@ class RoomCreateView(LoginRequiredMixin, CreateView):
             "rooms:room_list", kwargs={"project_id": self.kwargs.get("project_id")}
         )
 
-    @staticmethod
-    def _estimate_surface_area(room, location: str) -> float:
-        width = float(room.width)
-        length = float(room.length)
-        height = float(room.height)
-
-        if location in ["wall A", "wall C"]:
-            return height * length
-        elif location in ["wall B", "wall D"]:
-            return height * width
-        elif location in ["floor", "ceiling"]:
-            return width * length
-        return 0.0
-
 
 class RoomUpdateView(LoginRequiredMixin, UpdateView):
     model = Room
@@ -165,54 +147,56 @@ class RoomUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         if self.request.POST:
             context["furnishing_formset"] = FurnishingFormSet(
                 self.request.POST, prefix="furnishing"
             )
+            context["surface_formset"] = RoomSurfaceFormSet(
+                self.request.POST, prefix="surface"
+            )
         else:
             furnishings = Furnishing.objects.filter(room=self.object)
-            initial_data = [
+            initial_furnishings = [
                 {"material": f.material, "area": f.quantity} for f in furnishings
             ]
             context["furnishing_formset"] = FurnishingFormSet(
-                initial=initial_data, prefix="furnishing"
+                initial=initial_furnishings, prefix="furnishing"
+            )
+
+            surfaces = RoomSurface.objects.filter(room=self.object)
+            context["surface_formset"] = RoomSurfaceFormSet(
+                queryset=surfaces, prefix="surface"
             )
 
         return context
 
     def form_valid(self, form):
         context = self.get_context_data()
-        formset = context["furnishing_formset"]
+        furnishing_formset = context["furnishing_formset"]
+        surface_formset = context["surface_formset"]
 
-        if not formset.is_valid():
+        if not (furnishing_formset.is_valid() and surface_formset.is_valid()):
             return self.form_invalid(form)
 
         response = super().form_valid(form)
 
-        RoomMaterial.objects.filter(room=self.object).delete()
-        construction_mapping = {
-            "floor": form.cleaned_data.get("floor_material"),
-            "ceiling": form.cleaned_data.get("ceiling_material"),
-            "wall A": form.cleaned_data.get("wall_a_material"),
-            "wall B": form.cleaned_data.get("wall_b_material"),
-            "wall C": form.cleaned_data.get("wall_c_material"),
-            "wall D": form.cleaned_data.get("wall_d_material"),
-        }
-        for location, material in construction_mapping.items():
-            if material:
-                RoomMaterial.objects.create(
-                    room=self.object, material=material, location=location
-                )
+        RoomSurface.objects.filter(room=self.object).delete()
+        for surface_form in surface_formset:
+            if surface_form.cleaned_data and not surface_form.cleaned_data.get(
+                "DELETE", False
+            ):
+                surface = surface_form.save(commit=False)
+                surface.room = self.object
+                surface.save()
 
         Furnishing.objects.filter(room=self.object).delete()
-        for f in formset:
+        for f in furnishing_formset:
             if f.cleaned_data and not f.cleaned_data.get("DELETE", False):
                 Furnishing.objects.create(
                     room=self.object,
                     name=f.cleaned_data["material"].name,
                     material=f.cleaned_data["material"],
-                    quantity=1,
+                    quantity=f.cleaned_data["area"],
                 )
 
         Logger.log_room_updated(user_id=self.object.pk, changed_by=self.request.user)
@@ -239,46 +223,4 @@ class RoomDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse_lazy(
             "rooms:room_list", kwargs={"project_id": self.object.project_id}
-        )
-
-
-class MoveRoomView(LoginRequiredMixin, FormView):
-    template_name = "rooms/move_room.html"
-    form_class = MoveRoomForm
-
-    def dispatch(self, request, *args, **kwargs):
-        self.room = Room.objects.get(pk=kwargs["pk"])
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["user"] = self.request.user
-        return kwargs
-
-    def form_valid(self, form):
-        old_project = self.room.project
-        new_project = form.cleaned_data["target_project"]
-        if new_project == old_project:
-            form.add_error("target_project", "Room is already in this project.")
-            return self.form_invalid(form)
-
-        self.room.project = new_project
-        self.room.save()
-
-        ProjectLogger.log_edit_furnishing(
-            project=new_project,
-            changed_by=self.request.user,
-            change_description=f"Room '{self.room.name}' moved from project '{old_project.name}'",
-            metadata={
-                "room_id": self.room.pk,
-                "from_project": old_project.pk,
-                "to_project": new_project.pk,
-            },
-        )
-
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy(
-            "rooms:room_list", kwargs={"project_id": self.room.project.pk}
         )
