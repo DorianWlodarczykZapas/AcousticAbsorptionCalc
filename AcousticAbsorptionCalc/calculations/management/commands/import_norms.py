@@ -1,6 +1,5 @@
+from calculations.models import Norm, NormCalculationType, NormRequirement
 from django.core.management.base import BaseCommand
-
-from .models import Norm, NormCalculationType, NormRequirement
 
 
 class Command(BaseCommand):
