@@ -20,30 +20,6 @@ class Norm(models.Model):
         default=NormCalculationType.NONE,
     )
 
-    rt_max = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
-        null=True,
-        blank=True,
-        help_text="Maximum allowed reverberation time in seconds (T ≤ ...)",
-    )
-
-    sti_min = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
-        null=True,
-        blank=True,
-        help_text="Minimum allowed STI value (STI ≥ ...)",
-    )
-
-    absorption_min_factor = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
-        null=True,
-        blank=True,
-        help_text="Minimum required sound absorption as a factor of surface area (A ≥ x × S)",
-    )
-
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
