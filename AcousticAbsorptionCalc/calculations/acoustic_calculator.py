@@ -131,27 +131,32 @@ class AcousticCalculator:
         - Absorption A
         - Reverberation Time (RT)
         - STI (estimated or provided)
-
-        Returns:
-            True if all applicable criteria are met, False otherwise.
+        based on the applicable NormRequirement.
         """
         a_actual = self.calculate_absorption()
-        a_required = self.calculate_required_absorption()
         rt = self.calculate_rt()
 
-        absorption_ok = a_actual >= a_required
+        requirement = self.find_applicable_requirement()
+        if not requirement:
+            return False
+
+        absorption_ok = True
         rt_ok = True
         sti_ok = True
 
-        if self.norm.rt_max is not None:
-            rt_ok = rt <= float(self.norm.rt_max)
+        if requirement.absorption_min_factor is not None:
+            a_required = requirement.absorption_min_factor * self.room_surface_area
+            absorption_ok = a_actual >= a_required
 
-        if self.norm.sti_min is not None:
+        if requirement.rt_max is not None:
+            rt_ok = rt <= float(requirement.rt_max)
+
+        if requirement.sti_min is not None:
             if estimated_sti is not None:
-                sti_ok = estimated_sti >= float(self.norm.sti_min)
+                sti_ok = estimated_sti >= float(requirement.sti_min)
             else:
                 estimated_sti = round(0.75 - rt * 0.2, 2)
-                sti_ok = estimated_sti >= float(self.norm.sti_min)
+                sti_ok = estimated_sti >= float(requirement.sti_min)
 
         return absorption_ok and rt_ok and sti_ok
 
