@@ -1,6 +1,7 @@
 from calculations.guidelines import NORM_GUIDELINES
 from django.db import models
 from django.utils.text import slugify
+from django.utils.translation import gettext_lazy as _
 
 
 class NormCalculationType(models.TextChoices):
@@ -32,6 +33,24 @@ class Norm(models.Model):
 
     def __str__(self):
         return self.name
+
+    def translated_name(self):
+        translations = {
+            "School Classrooms and Lecture Halls": _("Sale i pracownie szkolne"),
+            "Nursery and Kindergarten Rooms": _("Sale w żłobkach i przedszkolach"),
+            "School Common Rooms": _("Świetlice szkolne"),
+            "Teachers' Rooms": _("Pokoje nauczycielskie"),
+            "Technical Labs and School Workshops": _(
+                "Pracownie techniczne i warsztaty szkolne"
+            ),
+            "School and Kindergarten Changing Rooms": _(
+                "Szatnie w szkołach i przedszkolach"
+            ),
+            "School Sports Halls": _("Hale sportowe w szkołach"),
+            "School Corridors": _("Korytarze w szkołach"),
+            "School Canteens": _("Stołówki szkolne"),
+        }
+        return translations.get(self.name, self.name)
 
 
 class SurfaceElement(models.Model):

@@ -524,3 +524,9 @@ msgstr "Historia konta"
 
 msgid "Account Settings"
 msgstr "Ustawienia konta"
+
+msgid "Rooms List"
+msgstr "Lista pomieszczeń"
+
+msgid "No rooms available."
+msgstr "Brak utworzonych pomieszczeń."
