@@ -161,15 +161,8 @@ class AcousticCalculator:
         return absorption_ok and rt_ok and sti_ok
 
     def result(self) -> Dict[str, float | bool]:
-        """
-        Returns a complete summary of the acoustic evaluation.
-
-        Returns:
-            Dict with all calculated values and norm compliance flags.
-        """
         volume, surface = self.calculate_room_geometry()
         a_actual = self.calculate_absorption()
-        a_required = self.calculate_required_absorption()
         rt = self.calculate_rt()
         estimated_sti = round(0.75 - rt * 0.2, 2) if rt > 0 else 0.0
         within_norm = self.is_within_norm(estimated_sti)
@@ -178,7 +171,6 @@ class AcousticCalculator:
             "volume_m3": round(volume, 2),
             "surface_area_m2": round(surface, 2),
             "absorption_achieved": round(a_actual, 2),
-            "absorption_required": round(a_required, 2),
             "reverberation_time_s": round(rt, 2),
             "estimated_sti": estimated_sti,
             "norm_passed": within_norm,
