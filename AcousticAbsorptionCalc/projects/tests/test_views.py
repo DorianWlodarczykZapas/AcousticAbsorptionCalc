@@ -3,6 +3,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 from projects.factories import ProjectFactory, SharedProjectFactory
 from projects.models import Project
+from rooms.factories import RoomFactory
 from rooms.models import Room
 from users.factories import UserFactory
 from users.models import User
@@ -237,3 +238,13 @@ class ProjectRoomCreateViewTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertFalse(Room.objects.filter(name="Room with bad formset").exists())
+
+
+class ProjectRoomUpdateViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = UserFactory()
+        self.client.force_login(self.user)
+        self.project = ProjectFactory(user=self.user)
+        self.room = RoomFactory(project=self.project)
+        self.url = reverse("rooms:room_update", args=[self.room.pk])
