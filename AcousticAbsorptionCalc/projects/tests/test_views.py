@@ -187,3 +187,12 @@ class ProjectCSVViewTest(TestCase):
         url = reverse("projects:project_csv", args=[9999])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
+
+
+class ProjectRoomCreateViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = UserFactory()
+        self.client.force_login(self.user)
+        self.project = ProjectFactory(user=self.user)
+        self.url = reverse("rooms:room_create", args=[self.project.pk])
