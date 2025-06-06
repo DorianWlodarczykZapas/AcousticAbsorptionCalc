@@ -248,3 +248,16 @@ class ProjectRoomUpdateViewTest(TestCase):
         self.project = ProjectFactory(user=self.user)
         self.room = RoomFactory(project=self.project)
         self.url = reverse("rooms:room_update", args=[self.room.pk])
+
+    def test_update_room_success(self):
+        response = self.client.post(
+            self.url,
+            {
+                "name": "Updated Room",
+                "area": 50,
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.room.refresh_from_db()
+        self.assertEqual(self.room.name, "Updated Room")
+        self.assertEqual(self.room.area, 50)
