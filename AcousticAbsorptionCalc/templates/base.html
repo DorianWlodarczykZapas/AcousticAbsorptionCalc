@@ -14,23 +14,22 @@
         <link href="{% static 'ilanding/assets/vendor/bootstrap/css/bootstrap.min.css' %}"
               rel="stylesheet" />
         <link href="{% static 'ilanding/assets/css/main.css' %}" rel="stylesheet" />
+        <!-- GLightbox and AOS CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css"
+              rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
+              rel="stylesheet" />
         {% block extra_head %}{% endblock %}
     </head>
     <body>
-        {% block header %}
+        <header id="header" class="sticky-top">
             <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
                 <div class="container">
                     <a class="navbar-brand" href="{% url 'users:home' %}">{% trans "Acoustic Absorption Calculator" %}</a>
-                    <button class="navbar-toggler"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#navbarNav"
-                            aria-controls="navbarNav"
-                            aria-expanded="false"
-                            aria-label="{% trans "Toggle navigation" %}">
+                    <button class="navbar-toggler mobile-nav-toggle" type="button">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="collapse navbar-collapse navmenu" id="navbarNav">
                         <ul class="navbar-nav me-auto">
                             <li class="nav-item">
                                 <a class="nav-link {% if request.resolver_match.url_name == 'project_list' %}active{% endif %}"
@@ -52,6 +51,9 @@
                                 <a class="nav-link {% if request.resolver_match.url_name == 'edit_profile' %}active{% endif %}"
                                    href="{% url 'users:edit_profile' %}">{% trans "Account Settings" %}</a>
                             </li>
+                            <li class="nav-item toggle-dropdown">
+                                <a class="nav-link" href="#">Dropdown</a>
+                            </li>
                         </ul>
                         <ul class="navbar-nav ms-auto">
                             <li class="nav-item">
@@ -64,11 +66,21 @@
                     </div>
                 </div>
             </nav>
-        {% endblock %}
+        </header>
         <main id="main">
             {% block content %}{% endblock %}
         </main>
+        <div class="scroll-top"
+             style="display: none;
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    cursor: pointer">⬆️</div>
         {% block footer %}{% endblock %}
+        <!-- GLightbox and AOS JS -->
+        <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@srexi/purecounterjs/dist/purecounter_vanilla.js"></script>
         <script src="{% static 'ilanding/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
         <script src="{% static 'ilanding/assets/js/main.js' %}"></script>
         {% block extra_js %}{% endblock %}
