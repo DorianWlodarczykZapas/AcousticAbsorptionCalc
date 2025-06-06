@@ -273,3 +273,13 @@ class ProjectRoomUpdateViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.room.refresh_from_db()
         self.assertNotEqual(self.room.name, "")
+
+
+class ProjectRoomDeleteViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = UserFactory()
+        self.client.force_login(self.user)
+        self.project = ProjectFactory(user=self.user)
+        self.room = RoomFactory(project=self.project)
+        self.url = reverse("rooms:room_delete", args=[self.room.pk])
