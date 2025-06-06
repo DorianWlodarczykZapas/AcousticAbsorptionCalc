@@ -196,3 +196,9 @@ class ProjectRoomCreateViewTest(TestCase):
         self.client.force_login(self.user)
         self.project = ProjectFactory(user=self.user)
         self.url = reverse("rooms:room_create", args=[self.project.pk])
+
+    def test_display_create_room_form(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("form", response.context)
+        self.assertIn("furnishing_formset", response.context)
