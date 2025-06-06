@@ -222,3 +222,18 @@ class ProjectRoomCreateViewTest(TestCase):
         self.assertTrue(
             Room.objects.filter(name="Living Room", project=self.project).exists()
         )
+
+    def test_invalid_formset(self):
+        response = self.client.post(
+            self.url,
+            {
+                "name": "Room with bad formset",
+                "area": 30,
+                "furnishing_formset-TOTAL_FORMS": 1,
+                "furnishing_formset-INITIAL_FORMS": 0,
+                "furnishing_formset-0-material": "",
+                "furnishing_formset-0-area": "",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Room.objects.filter(name="Room with bad formset").exists())
