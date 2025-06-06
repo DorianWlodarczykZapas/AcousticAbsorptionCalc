@@ -168,3 +168,11 @@ class ProjectPDFViewTest(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
         self.assertIn("/login", response.url)
+
+
+class ProjectCSVViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = UserFactory()
+        self.project = ProjectFactory(user=self.user)
+        self.client.force_login(self.user)
