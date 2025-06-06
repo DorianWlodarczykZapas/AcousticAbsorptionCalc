@@ -3,6 +3,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 from projects.factories import ProjectFactory, SharedProjectFactory
 from projects.models import Project
+from rooms.models import Room
 from users.factories import UserFactory
 from users.models import User
 
@@ -202,3 +203,22 @@ class ProjectRoomCreateViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("form", response.context)
         self.assertIn("furnishing_formset", response.context)
+
+    def test_create_room_success(self):
+        response = self.client.post(
+            self.url,
+            {
+                "name": "Living Room",
+                "area": 25.5,
+                "furnishing_formset-TOTAL_FORMS": 1,
+                "furnishing_formset-INITIAL_FORMS": 0,
+                "furnishing_formset-MIN_NUM_FORMS": 0,
+                "furnishing_formset-MAX_NUM_FORMS": 1000,
+                "furnishing_formset-0-material": "1",
+                "furnishing_formset-0-area": 12.0,
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(
+            Room.objects.filter(name="Living Room", project=self.project).exists()
+        )
