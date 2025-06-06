@@ -283,3 +283,8 @@ class ProjectRoomDeleteViewTest(TestCase):
         self.project = ProjectFactory(user=self.user)
         self.room = RoomFactory(project=self.project)
         self.url = reverse("rooms:room_delete", args=[self.room.pk])
+
+    def test_delete_room_success(self):
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(Room.objects.filter(pk=self.room.pk).exists())
