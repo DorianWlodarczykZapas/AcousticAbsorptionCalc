@@ -261,3 +261,15 @@ class ProjectRoomUpdateViewTest(TestCase):
         self.room.refresh_from_db()
         self.assertEqual(self.room.name, "Updated Room")
         self.assertEqual(self.room.area, 50)
+
+    def test_invalid_update(self):
+        response = self.client.post(
+            self.url,
+            {
+                "name": "",
+                "area": 50,
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.room.refresh_from_db()
+        self.assertNotEqual(self.room.name, "")
