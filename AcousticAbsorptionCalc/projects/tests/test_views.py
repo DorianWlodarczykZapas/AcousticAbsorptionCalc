@@ -182,3 +182,8 @@ class ProjectCSVViewTest(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response["Content-Type"], "text/csv")
+
+    def test_404_if_project_does_not_exist(self):
+        url = reverse("projects:project_csv", args=[9999])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
