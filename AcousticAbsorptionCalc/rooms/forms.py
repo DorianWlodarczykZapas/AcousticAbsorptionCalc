@@ -1,9 +1,8 @@
 from django import forms
 from django.forms import formset_factory, modelformset_factory
 from django.utils.translation import gettext_lazy as _
-from projects.models import Project
 
-from .models import Material, Room, RoomMaterial, RoomSurface
+from .models import Material, Room, RoomSurface
 
 
 class RoomForm(forms.ModelForm):
@@ -16,7 +15,7 @@ class RoomForm(forms.ModelForm):
             "length": _("Length (m)"),
             "height": _("Height (m)"),
             "norm": _("Acoustic Norm"),
-            "project": _("Project"),
+            "project": _("Project (optional)"),
         }
         widgets = {
             "name": forms.TextInput(attrs={"class": "form-control"}),
@@ -31,21 +30,21 @@ class RoomForm(forms.ModelForm):
 class RoomSurfaceForm(forms.ModelForm):
     class Meta:
         model = RoomSurface
-        fields = ["material", "area", "surface_type"]
+        fields = ["surface_type", "material", "area"]
         labels = {
+            "surface_type": _("Surface Type"),
             "material": _("Material"),
             "area": _("Area (m²)"),
-            "surface_type": _("Surface Type"),
         }
         widgets = {
+            "surface_type": forms.Select(attrs={"class": "form-control"}),
             "material": forms.Select(attrs={"class": "form-control"}),
             "area": forms.NumberInput(attrs={"class": "form-control"}),
-            "surface_type": forms.Select(attrs={"class": "form-control"}),
         }
 
 
 RoomSurfaceFormSet = modelformset_factory(
-    RoomSurface, form=RoomSurfaceForm, extra=0, can_delete=True
+    RoomSurface, form=RoomSurfaceForm, extra=1, can_delete=True
 )
 
 
@@ -56,42 +55,10 @@ class FurnishingForm(forms.Form):
         widget=forms.Select(attrs={"class": "form-control"}),
     )
     area = forms.FloatField(
-        label=_("Area (m²)"),
+        label=_("Area (m²) / Quantity"),
         min_value=0.01,
         widget=forms.NumberInput(attrs={"class": "form-control"}),
     )
 
 
-FurnishingFormSet = formset_factory(FurnishingForm, extra=0, can_delete=True)
-
-
-class MoveRoomForm(forms.Form):
-    target_project = forms.ModelChoiceField(
-        queryset=None, label=_("Select target project")
-    )
-
-    def __init__(self, user, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["target_project"].queryset = Project.objects.filter(members=user)
-
-
-class RoomMaterialForm(forms.ModelForm):
-    class Meta:
-        model = RoomMaterial
-        fields = ["material", "location"]
-        labels = {
-            "material": _("Material"),
-            "location": _("Location"),
-        }
-        widgets = {
-            "material": forms.Select(attrs={"class": "form-control"}),
-            "location": forms.TextInput(attrs={"class": "form-control"}),
-        }
-
-
-RoomMaterialFormSet = modelformset_factory(
-    RoomMaterial,
-    form=RoomMaterialForm,
-    extra=1,
-    can_delete=True,
-)
+FurnishingFormSet = formset_factory(FurnishingForm, extra=1, can_delete=True)
