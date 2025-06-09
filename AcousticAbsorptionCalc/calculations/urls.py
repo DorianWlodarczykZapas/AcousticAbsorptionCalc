@@ -1,9 +1,11 @@
 from django.urls import path
 
-from .views import AcousticCalculationView
+from .views import RoomAcousticCalculationView
 
 urlpatterns = [
     path(
-        "api/calculate/", AcousticCalculationView.as_view(), name="acoustic-calculate"
+        "api/room-acoustic-calculate/",
+        RoomAcousticCalculationView.as_view(),
+        name="room_acoustic_calculate",
     ),
 ]

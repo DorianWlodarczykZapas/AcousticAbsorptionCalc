@@ -220,3 +220,7 @@ class NormRequirement(models.Model):
         if self.height_min is not None and self.height_max is not None:
             range_desc.append(f"H: {self.height_min}–{self.height_max} m")
         return f"Norm Requirement ({' | '.join(range_desc)})"
+
+
+class Room:
+    pass

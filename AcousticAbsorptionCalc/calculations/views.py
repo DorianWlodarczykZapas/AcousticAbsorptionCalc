@@ -1,59 +1,65 @@
 import json
-from typing import Any
 
-from django.http import HttpRequest, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from django.utils.translation import gettext as _
 from django.views import View
 
 from .acoustic_calculator import AcousticCalculator
-from .models import Material, Norm
+from .models import Calculation, Room
 
 
-class AcousticCalculationView(View):
-    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> JsonResponse:
+class RoomAcousticCalculationView(View):
+    def post(self, request, *args, **kwargs):
         try:
-            data: dict[str, Any] = json.loads(request.body)
+            data = json.loads(request.body)
 
-            height = data.get("height")
-            length = data.get("length")
-            width = data.get("width")
-            norm_id = data.get("norm_id")
-            frequency = data.get("frequency", "500")
+            room_id = data.get("room_id")
+            if not room_id:
+                return JsonResponse({"error": "Missing room_id"}, status=400)
 
-            construction_data = data.get("construction", [])
-            furnishing_data = data.get("furnishing", [])
+            room = get_object_or_404(Room, id=room_id)
 
-            if not all([height, length, width, norm_id]):
-                return JsonResponse({"error": _("Missing required data.")}, status=400)
+            room_dimensions = {
+                "width": float(room.width),
+                "length": float(room.length),
+                "height": float(room.height),
+            }
 
-            norm = get_object_or_404(Norm, id=norm_id)
+            construction_surfaces = [
+                {"material": surface.material, "area_m2": float(surface.area)}
+                for surface in room.surfaces.all()
+            ]
 
-            def parse_surfaces(
-                surface_data: list[dict[str, Any]]
-            ) -> list[dict[str, Any]]:
-                surfaces = []
-                for entry in surface_data:
-                    material_id = entry.get("material_id")
-                    area = entry.get("area_m2")
-                    if material_id is None or area is None:
-                        continue
-                    material = get_object_or_404(Material, id=material_id)
-                    surfaces.append({"material": material, "area_m2": area})
-                return surfaces
-
-            construction_surfaces = parse_surfaces(construction_data)
-            furnishing_elements = parse_surfaces(furnishing_data)
+            furnishing_elements = [
+                {"material": furnishing.material, "area_m2": float(furnishing.quantity)}
+                for furnishing in room.furnishings.all()
+            ]
 
             calculator = AcousticCalculator(
-                norm=norm,
-                room_dimensions={"width": width, "length": length, "height": height},
+                norm=room.norm,
+                room_dimensions=room_dimensions,
                 construction_surfaces=construction_surfaces,
                 furnishing_elements=furnishing_elements,
-                freq_band=frequency,
+                freq_band="500",
             )
 
             results = calculator.result()
+
+            # Update or create Calculation
+            Calculation.objects.update_or_create(
+                room=room,
+                defaults={
+                    "norm": room.norm,
+                    "room_height": room.height,
+                    "room_volume": results["volume_m3"],
+                    "room_surface_area": results["surface_area_m2"],
+                    "reverberation_time": results["reverberation_time_s"],
+                    "sti": results["estimated_sti"],
+                    "required_absorption": results["absorption_required"],
+                    "achieved_absorption": results["absorption_achieved"],
+                    "is_within_norm": results["norm_passed"],
+                },
+            )
 
             return JsonResponse(
                 {
@@ -64,15 +70,11 @@ class AcousticCalculationView(View):
                     "reverberation_time_s": results["reverberation_time_s"],
                     "estimated_sti": results["estimated_sti"],
                     "norm_passed": results["norm_passed"],
-                    "message": _("Calculation completed successfully."),
+                    "message": "Calculation completed successfully.",
                 }
             )
 
-        except Material.DoesNotExist:
-            return JsonResponse(
-                {"error": _("One or more materials not found.")}, status=404
-            )
-        except Norm.DoesNotExist:
-            return JsonResponse({"error": _("Norm not found.")}, status=404)
+        except Room.DoesNotExist:
+            return JsonResponse({"error": "Room not found."}, status=404)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
