@@ -8,8 +8,9 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <h2 class="card-title text-center mb-4">{% trans "Room Details" %}</h2>
-                <form method="post">
+                <form id="room-form" method="post">
                     {% csrf_token %}
+                    <!-- Section 1: Room Information -->
                     <h4 class="mb-3">{% trans "1. Room Information" %}</h4>
                     <div class="mb-3">{{ form.name.label_tag }} {{ form.name|add_class:"form-control" }}</div>
                     <div class="mb-3">{{ form.length.label_tag }} {{ form.length|add_class:"form-control" }}</div>
@@ -18,6 +19,7 @@
                     <div class="mb-3">{{ form.norm.label_tag }} {{ form.norm|add_class:"form-control" }}</div>
                     <div class="mb-3">{{ form.project.label_tag }} {{ form.project|add_class:"form-control" }}</div>
                     <hr />
+                    <!-- Section 2: Construction Materials -->
                     <h4 class="mb-3">{% trans "2. Construction Materials" %}</h4>
                     {{ surface_formset.management_form }}
                     <div id="surface-formset">
@@ -45,6 +47,7 @@
                         <button type="button" id="add-surface" class="btn btn-outline-primary btn-sm">{% trans 'Add Material' %}</button>
                     </div>
                     <hr />
+                    <!-- Section 3: Furnishing -->
                     <h4 class="mb-3">{% trans "3. Furnishing" %}</h4>
                     {{ furnishing_formset.management_form }}
                     <div id="furnishing-formset">
@@ -70,12 +73,13 @@
                                 class="btn btn-outline-primary btn-sm">{% trans 'Add Furnishing' %}</button>
                     </div>
                     <div class="d-flex justify-content-end mt-4">
-                        <button type="submit" class="btn btn-primary">{% trans "Calculate Acoustic Absorption" %}</button>
+                        <button type="button" id="calculate" class="btn btn-primary">{% trans "Calculate Acoustic Absorption" %}</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    <!-- JS for dynamic formsets and AJAX submit -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://rawcdn.githack.com/elo80ka/django-dynamic-formset/master/src/jquery.formset.js"></script>
     <script>
@@ -96,6 +100,39 @@ $(document).ready(function() {
         addCssClass: 'btn btn-outline-primary btn-sm mt-2',
         deleteCssClass: 'btn btn-outline-danger btn-sm',
         addButton: '#add-furnishing'
+    });
+
+    $("#calculate").click(function(e) {
+        e.preventDefault();
+        let form = $("#room-form");
+
+        $.ajax({
+            url: form.attr("action") || window.location.href,
+            type: form.attr("method"),
+            data: form.serialize(),
+            success: function(response) {
+                let roomId = response.room_id || response.id || null;
+                if (roomId) {
+                    $.ajax({
+                        url: '/api/room-acoustic-calculate/',
+                        type: 'POST',
+                        data: JSON.stringify({ room_id: roomId }),
+                        contentType: 'application/json',
+                        success: function(calcResponse) {
+                            window.location.href = '/rooms/' + roomId + '/summary/';
+                        },
+                        error: function() {
+                            alert("Error calculating absorption.");
+                        }
+                    });
+                } else {
+                    alert("Room saved, but no room ID returned.");
+                }
+            },
+            error: function() {
+                alert("Error saving room data.");
+            }
+        });
     });
 });
     </script>

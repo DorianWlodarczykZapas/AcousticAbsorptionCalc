@@ -1,6 +1,13 @@
+from calculations.models import Calculation
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
 
 from .forms import FurnishingFormSet, RoomForm, RoomSurfaceFormSet
 from .models import Furnishing, Room, RoomSurface
@@ -149,3 +156,17 @@ class RoomDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy("rooms:room_list")
+
+
+class RoomCalculationSummaryView(DetailView):
+    model = Room
+    template_name = "rooms/room_summary.html"
+    context_object_name = "room"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            context["calculation"] = self.object.calculation
+        except Calculation.DoesNotExist:
+            context["calculation"] = None
+        return context
