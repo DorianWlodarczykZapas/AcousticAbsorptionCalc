@@ -4,7 +4,9 @@ from projects.models import Project
 
 
 class Room(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(
+        Project, on_delete=models.CASCADE, null=True, blank=True
+    )
     name = models.CharField(max_length=255)
     width = models.DecimalField(max_digits=10, decimal_places=2)
     length = models.DecimalField(max_digits=10, decimal_places=2)
