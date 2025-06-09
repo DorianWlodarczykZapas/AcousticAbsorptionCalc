@@ -559,3 +559,84 @@ msgstr "Dodaj więcej materiałów"
 
 msgid "Remove"
 msgstr "Usuń"
+
+msgid "Room Information"
+msgstr "Informacje o pokoju"
+
+msgid "Project (optional)"
+msgstr "Projekt (opcjonalnie)"
+
+msgid "Construction Materials"
+msgstr "Materiały konstrukcyjne"
+
+msgid "Surface Type"
+msgstr "Typ powierzchni"
+
+msgid "Floor"
+msgstr "Podłoga"
+
+msgid "Ceiling"
+msgstr "Sufit"
+
+msgid "Front Wall"
+msgstr "Śćiana przednia"
+
+msgid "Back Wall"
+msgstr "Śćiana tylna"
+
+msgid "Left Wall"
+msgstr "Śćiana lewa"
+
+msgid "Right Wall"
+msgstr "Śćiana prawa"
+
+msgid "Add Material"
+msgstr "Dodaj materiał"
+
+msgid "Furnishing"
+msgstr "Umeblowanie"
+
+msgid "Add Furnishing"
+msgstr "Dodaj umeblowanie"
+
+msgid "Room Calculation Summary"
+msgstr "Podsumowanie obliczeń pokoju"
+
+msgid "Calculation Summary for"
+msgstr "Podsumowanie obliczeń dla"
+
+msgid "Volume (m³):"
+msgstr "Objętość (m³):"
+
+msgid "Surface Area (m²):"
+msgstr "Powierzchnia (m²):"
+
+msgid "Reverberation Time (s):"
+msgstr "Czas pogłosu (s):"
+
+msgid "Estimated STI:"
+msgstr "Szacowany STI:"
+
+msgid "Absorption Required (m²):"
+msgstr "Wymagana absorpcja (m²):"
+
+msgid "Absorption Achieved (m²):"
+msgstr "Osiągnięta absorpcja (m²):"
+
+msgid "Norm Passed:"
+msgstr "Norma spełniona:"
+
+msgid "Yes"
+msgstr "Tak"
+
+msgid "No"
+msgstr "Nie"
+
+msgid "Edit Room"
+msgstr "Edytuj pokój"
+
+msgid "Back to Projects"
+msgstr "Powrót do projektów"
+
+msgid "No calculation data available."
+msgstr "Brak dostępnych danych obliczeniowych."
