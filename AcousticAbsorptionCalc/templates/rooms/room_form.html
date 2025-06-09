@@ -1,65 +1,76 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n widget_tweaks %}
 {% block title %}
-    {% trans "Add Room" %}
+    {% trans "Add or Edit Room" %}
 {% endblock %}
 {% block content %}
     <div class="container mt-4">
         <div class="card shadow-sm">
             <div class="card-body">
-                <h2 class="card-title text-center mb-4">{% trans "Add New Room" %}</h2>
+                <h2 class="card-title text-center mb-4">{% trans "Room Details" %}</h2>
                 <form method="post">
                     {% csrf_token %}
-                    <div class="mb-3">{{ form.name.label_tag }} {{ form.name }}</div>
-                    <div class="mb-3">{{ form.length.label_tag }} {{ form.length }}</div>
-                    <div class="mb-3">{{ form.width.label_tag }} {{ form.width }}</div>
-                    <div class="mb-3">{{ form.height.label_tag }} {{ form.height }}</div>
-                    <div class="mb-3">{{ form.project.label_tag }} {{ form.project }}</div>
-                    <div class="mb-3">
-                        {{ form.norm.label_tag }}
-                        <select name="{{ form.norm.name }}"
-                                id="{{ form.norm.id_for_label }}"
-                                class="form-control">
-                            {% for norm in form.fields.norm.queryset %}
-                                <option value="{{ norm.id }}">{{ norm.translated_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <h5 class="mt-4 mb-3">{% trans "Construction Materials" %}</h5>
+                    <h4 class="mb-3">{% trans "1. Room Information" %}</h4>
+                    <div class="mb-3">{{ form.name.label_tag }} {{ form.name|add_class:"form-control" }}</div>
+                    <div class="mb-3">{{ form.length.label_tag }} {{ form.length|add_class:"form-control" }}</div>
+                    <div class="mb-3">{{ form.width.label_tag }} {{ form.width|add_class:"form-control" }}</div>
+                    <div class="mb-3">{{ form.height.label_tag }} {{ form.height|add_class:"form-control" }}</div>
+                    <div class="mb-3">{{ form.norm.label_tag }} {{ form.norm|add_class:"form-control" }}</div>
+                    <div class="mb-3">{{ form.project.label_tag }} {{ form.project|add_class:"form-control" }}</div>
+                    <hr />
+                    <h4 class="mb-3">{% trans "2. Construction Materials" %}</h4>
                     {{ surface_formset.management_form }}
                     <div id="surface-formset">
                         {% for form in surface_formset %}
-                            <div class="row mb-3 formset-row">
-                                <div class="col-md-4">{{ form.surface_type.label_tag }} {{ form.surface_type }}</div>
-                                <div class="col-md-4">{{ form.material.label_tag }} {{ form.material }}</div>
-                                <div class="col-md-3">{{ form.area.label_tag }} {{ form.area }}</div>
+                            <div class="row g-3 formset-row mb-2">
+                                <div class="col-md-4">
+                                    {{ form.surface_type.label_tag }}
+                                    {{ form.surface_type|add_class:"form-control" }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form.material.label_tag }}
+                                    {{ form.material|add_class:"form-control" }}
+                                </div>
+                                <div class="col-md-3">
+                                    {{ form.area.label_tag }}
+                                    {{ form.area|add_class:"form-control" }}
+                                </div>
                                 <div class="col-md-1 d-flex align-items-end">
-                                    <button type="button" class="btn btn-danger delete-row">{% trans "Remove" %}</button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm delete-row">{% trans "Delete" %}</button>
                                 </div>
                             </div>
                         {% endfor %}
                     </div>
                     <div class="d-flex justify-content-start mt-2">
-                        <button type="button" id="add-surface" class="btn btn-secondary">{% trans "Add Surface" %}</button>
+                        <button type="button" id="add-surface" class="btn btn-outline-primary btn-sm">{% trans 'Add Material' %}</button>
                     </div>
-                    <h5 class="mt-4 mb-3">{% trans "Furnishing Materials" %}</h5>
+                    <hr />
+                    <h4 class="mb-3">{% trans "3. Furnishing" %}</h4>
                     {{ furnishing_formset.management_form }}
                     <div id="furnishing-formset">
                         {% for form in furnishing_formset %}
-                            <div class="row mb-3 formset-row">
-                                <div class="col-md-6">{{ form.material.label_tag }} {{ form.material }}</div>
-                                <div class="col-md-4">{{ form.area.label_tag }} {{ form.area }}</div>
+                            <div class="row g-3 formset-row mb-2">
+                                <div class="col-md-6">
+                                    {{ form.material.label_tag }}
+                                    {{ form.material|add_class:"form-control" }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form.area.label_tag }}
+                                    {{ form.area|add_class:"form-control" }}
+                                </div>
                                 <div class="col-md-2 d-flex align-items-end">
-                                    <button type="button" class="btn btn-danger delete-row">{% trans "Remove" %}</button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm delete-row">{% trans "Delete" %}</button>
                                 </div>
                             </div>
                         {% endfor %}
                     </div>
                     <div class="d-flex justify-content-start mt-2">
-                        <button type="button" id="add-furnishing" class="btn btn-secondary">{% trans "Add Furnishing" %}</button>
+                        <button type="button"
+                                id="add-furnishing"
+                                class="btn btn-outline-primary btn-sm">{% trans 'Add Furnishing' %}</button>
                     </div>
                     <div class="d-flex justify-content-end mt-4">
-                        <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+                        <button type="submit" class="btn btn-primary">{% trans "Calculate Acoustic Absorption" %}</button>
                     </div>
                 </form>
             </div>
@@ -70,20 +81,20 @@
     <script>
 $(document).ready(function() {
     $("#surface-formset .formset-row").formset({
-        addText: "{% trans 'Add Surface' %}",
-        deleteText: "{% trans 'Remove' %}",
+        addText: "{% trans 'Add Material' %}",
+        deleteText: "{% trans 'Delete' %}",
         prefix: "surface",
-        addCssClass: 'btn btn-secondary mt-2',
-        deleteCssClass: 'btn btn-danger',
+        addCssClass: 'btn btn-outline-primary btn-sm mt-2',
+        deleteCssClass: 'btn btn-outline-danger btn-sm',
         addButton: '#add-surface'
     });
 
     $("#furnishing-formset .formset-row").formset({
         addText: "{% trans 'Add Furnishing' %}",
-        deleteText: "{% trans 'Remove' %}",
+        deleteText: "{% trans 'Delete' %}",
         prefix: "furnishing",
-        addCssClass: 'btn btn-secondary mt-2',
-        deleteCssClass: 'btn btn-danger',
+        addCssClass: 'btn btn-outline-primary btn-sm mt-2',
+        deleteCssClass: 'btn btn-outline-danger btn-sm',
         addButton: '#add-furnishing'
     });
 });
