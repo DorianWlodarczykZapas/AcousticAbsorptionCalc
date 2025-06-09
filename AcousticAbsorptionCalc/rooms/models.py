@@ -1,5 +1,6 @@
 from calculations.models import Material, Norm
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from projects.models import Project
 
 
@@ -28,21 +29,19 @@ class Furnishing(models.Model):
 
 
 class RoomSurface(models.Model):
-    SURFACE_TYPES = [
-        (1, "Floor"),
-        (2, "Ceiling"),
-        (3, "Wall A"),
-        (4, "Wall B"),
-        (5, "Wall C"),
-        (6, "Wall D"),
+    SURFACE_TYPE_CHOICES = [
+        ("floor", _("Floor")),
+        ("ceiling", _("Ceiling")),
+        ("wall_a", _("Front Wall")),
+        ("wall_b", _("Back Wall")),
+        ("wall_c", _("Left Wall")),
+        ("wall_d", _("Right Wall")),
     ]
 
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="surfaces")
-    material = models.ForeignKey(Material, on_delete=models.PROTECT)
-    area = models.DecimalField(
-        max_digits=10, decimal_places=2, help_text="Area of material in m²"
-    )
-    surface_type = models.PositiveSmallIntegerField(choices=SURFACE_TYPES)
+    surface_type = models.CharField(max_length=50, choices=SURFACE_TYPE_CHOICES)
+    material = models.ForeignKey(Material, on_delete=models.CASCADE)
+    area = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return (
