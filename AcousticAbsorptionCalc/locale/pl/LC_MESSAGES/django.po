@@ -579,16 +579,17 @@ msgid "Ceiling"
 msgstr "Sufit"
 
 msgid "Front Wall"
-msgstr "Śćiana przednia"
+msgstr "Ściana przednia"
 
 msgid "Back Wall"
-msgstr "Śćiana tylna"
+msgstr "Ściana tylna"
 
 msgid "Left Wall"
-msgstr "Śćiana lewa"
+msgstr "Ściana lewa"
 
 msgid "Right Wall"
-msgstr "Śćiana prawa"
+msgstr "Ściana prawa"
+
 
 msgid "Add Material"
 msgstr "Dodaj materiał"
@@ -632,11 +633,13 @@ msgstr "Tak"
 msgid "No"
 msgstr "Nie"
 
-msgid "Edit Room"
-msgstr "Edytuj pokój"
+
 
 msgid "Back to Projects"
 msgstr "Powrót do projektów"
 
 msgid "No calculation data available."
 msgstr "Brak dostępnych danych obliczeniowych."
+
+msgid "Area (m²) / Quantity:"
+msgstr "Powierzchnia (m²) / Ilość:"

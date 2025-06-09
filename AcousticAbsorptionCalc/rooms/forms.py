@@ -2,7 +2,7 @@ from django import forms
 from django.forms import formset_factory, modelformset_factory
 from django.utils.translation import gettext_lazy as _
 
-from .models import Material, Room, RoomSurface
+from .models import Furnishing, Room, RoomSurface
 
 
 class RoomForm(forms.ModelForm):
@@ -34,7 +34,7 @@ class RoomSurfaceForm(forms.ModelForm):
         labels = {
             "surface_type": _("Surface Type"),
             "material": _("Material"),
-            "area": _("Area (m²)"),
+            "area": _("Area (m²) / Quantity:"),
         }
         widgets = {
             "surface_type": forms.Select(attrs={"class": "form-control"}),
@@ -48,17 +48,18 @@ RoomSurfaceFormSet = modelformset_factory(
 )
 
 
-class FurnishingForm(forms.Form):
-    material = forms.ModelChoiceField(
-        queryset=Material.objects.all(),
-        label=_("Material"),
-        widget=forms.Select(attrs={"class": "form-control"}),
-    )
-    area = forms.FloatField(
-        label=_("Area (m²) / Quantity"),
-        min_value=0.01,
-        widget=forms.NumberInput(attrs={"class": "form-control"}),
-    )
+class FurnishingForm(forms.ModelForm):
+    class Meta:
+        model = Furnishing
+        fields = ["material", "quantity"]
+        labels = {
+            "material": _("Material"),
+            "quantity": _("Area (m²) / Quantity:"),
+        }
+        widgets = {
+            "material": forms.Select(attrs={"class": "form-control"}),
+            "quantity": forms.NumberInput(attrs={"class": "form-control"}),
+        }
 
 
 FurnishingFormSet = formset_factory(FurnishingForm, extra=1, can_delete=True)

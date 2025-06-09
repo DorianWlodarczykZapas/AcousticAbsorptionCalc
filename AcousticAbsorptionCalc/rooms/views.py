@@ -67,7 +67,7 @@ class RoomCreateView(LoginRequiredMixin, CreateView):
                     Furnishing.objects.create(
                         room=self.object,
                         material=furnishing_form.cleaned_data["material"],
-                        quantity=furnishing_form.cleaned_data["area"],
+                        quantity=furnishing_form.cleaned_data["quantity"],
                     )
 
             return super().form_valid(form)
@@ -101,7 +101,7 @@ class RoomUpdateView(LoginRequiredMixin, UpdateView):
 
             furnishings = Furnishing.objects.filter(room=self.object)
             initial_furnishings = [
-                {"material": f.material, "area": f.quantity} for f in furnishings
+                {"material": f.material, "quantity": f.quantity} for f in furnishings
             ]
             context["furnishing_formset"] = FurnishingFormSet(
                 initial=initial_furnishings, prefix="furnishing"
@@ -138,7 +138,7 @@ class RoomUpdateView(LoginRequiredMixin, UpdateView):
                     Furnishing.objects.create(
                         room=self.object,
                         material=furnishing_form.cleaned_data["material"],
-                        quantity=furnishing_form.cleaned_data["area"],
+                        quantity=furnishing_form.cleaned_data["quantity"],
                     )
 
             return response
