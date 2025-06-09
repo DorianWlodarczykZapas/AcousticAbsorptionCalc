@@ -560,14 +560,14 @@ msgstr "Dodaj więcej materiałów"
 msgid "Remove"
 msgstr "Usuń"
 
-msgid "Room Information"
-msgstr "Informacje o pokoju"
+msgid "1. Room Information"
+msgstr "1. Informacje o pokoju"
 
 msgid "Project (optional)"
 msgstr "Projekt (opcjonalnie)"
 
-msgid "Construction Materials"
-msgstr "Materiały konstrukcyjne"
+msgid "2. Construction Materials"
+msgstr "2. Materiały konstrukcyjne"
 
 msgid "Surface Type"
 msgstr "Typ powierzchni"
@@ -594,8 +594,8 @@ msgstr "Ściana prawa"
 msgid "Add Material"
 msgstr "Dodaj materiał"
 
-msgid "Furnishing"
-msgstr "Umeblowanie"
+msgid "3. Furnishing"
+msgstr "3. Umeblowanie"
 
 msgid "Add Furnishing"
 msgstr "Dodaj umeblowanie"
@@ -643,3 +643,9 @@ msgstr "Brak dostępnych danych obliczeniowych."
 
 msgid "Area (m²) / Quantity:"
 msgstr "Powierzchnia (m²) / Ilość:"
+
+msgid "Room Details"
+msgstr "Szczegóły pokoju"
+
+msgid "Calculate Acoustic Absorption"
+msgstr "Oblicz chłonnosć akustyczną"
