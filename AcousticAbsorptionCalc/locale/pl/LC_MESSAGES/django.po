@@ -649,3 +649,12 @@ msgstr "Szczegóły pokoju"
 
 msgid "Calculate Acoustic Absorption"
 msgstr "Oblicz chłonnosć akustyczną"
+
+msgid "No plan was selected."
+msgstr "Nie podano planu."
+
+msgid "The selected plan does not exist."
+msgstr "Wybrany plan nie istnieje."
+
+msgid "Your plan has been successfully updated."
+msgstr "Twój plan został pomyślnie zaktualizowany."

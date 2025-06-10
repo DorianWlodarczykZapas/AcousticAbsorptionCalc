@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import ListView, TemplateView
 from plans.services import StripeService
@@ -157,13 +158,13 @@ class ChangePlanView(LoginRequiredMixin, View):
         plan_id = request.POST.get("plan_id")
 
         if not plan_id:
-            messages.error(request, "Nie podano planu.")
+            messages.error(request, _("No plan was selected."))
             return redirect("plans:change")
 
         try:
             new_plan = Plan.objects.get(id=plan_id)
         except Plan.DoesNotExist:
-            messages.error(request, "Wybrany plan nie istnieje.")
+            messages.error(request, _("The selected plan does not exist."))
             return redirect("plans:change")
 
         user_plan = UserPlan.objects.filter(user=request.user, is_active=True).first()
