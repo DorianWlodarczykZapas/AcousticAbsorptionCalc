@@ -658,3 +658,6 @@ msgstr "Wybrany plan nie istnieje."
 
 msgid "Your plan has been successfully updated."
 msgstr "Twój plan został pomyślnie zaktualizowany."
+
+msgid "Project limit reached for your current plan."
+msgstr "Osiągnięto limit projektów dla Twojego planu."

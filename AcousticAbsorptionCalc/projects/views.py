@@ -12,9 +12,11 @@ from django.views.generic import (
     UpdateView,
     View,
 )
+from plans.models import UserPlan
 from project_logs.projectlogger import ProjectLogger
 from projects.forms import ProjectForm
 from projects.services import CSVExportService, PDFGeneratorService
+from pyexpat.errors import messages
 from rooms.forms import FurnishingFormSet, RoomForm
 from rooms.models import Room
 from user_logs.logger import Logger
@@ -30,18 +32,35 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("projects:project_list")
 
     def form_valid(self, form):
+        user = self.request.user
+
+        user_plan = (
+            UserPlan.objects.select_related("plan")
+            .filter(user=user, is_active=True)
+            .first()
+        )
+
+        if user_plan:
+            max_projects = user_plan.plan.max_projects
+            current_project_count = Project.objects.filter(user=user).count()
+
+            if current_project_count >= max_projects:
+                messages.error(
+                    self.request, _("Project limit reached for your current plan.")
+                )
+                return self.form_invalid(form)
+
         name = form.cleaned_data["name"]
         description = form.cleaned_data["description"]
 
         project = ProjectService.create_project(
-            user=self.request.user, name=name, description=description
+            user=user, name=name, description=description
         )
 
-        Logger.log_project_created(user_id=project.pk, changed_by=self.request.user)
-
+        Logger.log_project_created(user_id=project.pk, changed_by=user)
         ProjectLogger.log_created(
             project=project,
-            changed_by=self.request.user,
+            changed_by=user,
             change_description="Project created via form",
         )
 
