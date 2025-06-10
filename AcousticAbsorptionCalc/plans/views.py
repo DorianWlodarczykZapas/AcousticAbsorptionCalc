@@ -31,6 +31,8 @@ class PlanListView(ListView):
             if has_trial:
                 queryset = queryset.exclude(type=Plan.PlanType.TRIAL)
 
+        queryset = queryset.exclude(type=Plan.PlanType.BASE)
+
         return queryset
 
 
