@@ -35,6 +35,18 @@ class PlanListView(ListView):
 
         return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.user.is_authenticated:
+            context["user_plan"] = (
+                UserPlan.objects.select_related("plan")
+                .filter(user=self.request.user, is_active=True)
+                .first()
+            )
+
+        return context
+
 
 class CreateCheckoutSessionView(View):
     def post(self, request: HttpRequest) -> HttpResponse:
