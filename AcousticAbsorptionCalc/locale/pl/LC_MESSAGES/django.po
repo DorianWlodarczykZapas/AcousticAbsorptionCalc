@@ -664,3 +664,6 @@ msgstr "Osiągnięto limit projektów dla Twojego planu."
 
 msgid "Return to Home"
 msgstr "Powrót na stronę główną"
+
+msgid "Account created for %(username)s (%(email)s)"
+msgstr "Utworzono konto dla %(username)s (%(email)s)"
