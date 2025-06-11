@@ -21,51 +21,53 @@
         {% block extra_head %}{% endblock %}
     </head>
     <body>
-        <header id="header" class="sticky-top">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-                <div class="container">
-                    <a class="navbar-brand" href="{% url 'users:home' %}">{% trans "Acoustic Absorption Calculator" %}</a>
-                    <button class="navbar-toggler mobile-nav-toggle" type="button">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse navmenu" id="navbarNav">
-                        <ul class="navbar-nav me-auto">
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.resolver_match.url_name == 'project_list' %}active{% endif %}"
-                                   href="{% url 'projects:project_list' %}">{% trans "Projects" %}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.resolver_match.url_name == 'plan_list' %}active{% endif %}"
-                                   href="{% url 'plans:plan_list' %}">{% trans "Plans" %}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.resolver_match.url_name == 'room_list' %}active{% endif %}"
-                                   href="{% url 'rooms:room_list' %}">{% trans "Rooms" %}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.resolver_match.url_name == 'user-logs' %}active{% endif %}"
-                                   href="{% url 'user-logs:user-logs' %}">{% trans "Account History" %}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.resolver_match.url_name == 'edit_profile' %}active{% endif %}"
-                                   href="{% url 'users:edit_profile' %}">{% trans "Account Settings" %}</a>
-                            </li>
-                            <li class="nav-item toggle-dropdown">
-                                <a class="nav-link" href="#">Dropdown</a>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
-                                <form action="{% url 'users:logout' %}" method="post" class="d-inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-danger">{% trans "Log Out" %}</button>
-                                </form>
-                            </li>
-                        </ul>
+        {% block header %}
+            <header id="header" class="sticky-top">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+                    <div class="container">
+                        <a class="navbar-brand" href="{% url 'users:home' %}">{% trans "Acoustic Absorption Calculator" %}</a>
+                        <button class="navbar-toggler mobile-nav-toggle" type="button">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse navmenu" id="navbarNav">
+                            <ul class="navbar-nav me-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'project_list' %}active{% endif %}"
+                                       href="{% url 'projects:project_list' %}">{% trans "Projects" %}</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'plan_list' %}active{% endif %}"
+                                       href="{% url 'plans:plan_list' %}">{% trans "Plans" %}</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'room_list' %}active{% endif %}"
+                                       href="{% url 'rooms:room_list' %}">{% trans "Rooms" %}</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'user-logs' %}active{% endif %}"
+                                       href="{% url 'user-logs:user-logs' %}">{% trans "Account History" %}</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'edit_profile' %}active{% endif %}"
+                                       href="{% url 'users:edit_profile' %}">{% trans "Account Settings" %}</a>
+                                </li>
+                                <li class="nav-item toggle-dropdown">
+                                    <a class="nav-link" href="#">Dropdown</a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav ms-auto">
+                                <li class="nav-item">
+                                    <form action="{% url 'users:logout' %}" method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger">{% trans "Log Out" %}</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </nav>
-        </header>
+                </nav>
+            </header>
+        {% endblock %}
         <main id="main">
             {% block content %}{% endblock %}
         </main>
