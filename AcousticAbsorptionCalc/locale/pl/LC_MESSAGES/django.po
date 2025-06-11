@@ -661,3 +661,6 @@ msgstr "Twój plan został pomyślnie zaktualizowany."
 
 msgid "Project limit reached for your current plan."
 msgstr "Osiągnięto limit projektów dla Twojego planu."
+
+msgid "Return to Home"
+msgstr "Powrót na stronę główną"
