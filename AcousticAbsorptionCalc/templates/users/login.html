@@ -10,9 +10,11 @@
             <div class="row justify-content-center">
                 <div class="col-lg-6">
                     <h2 class="mb-4 text-center">{% trans "Login" %}</h2>
-                    {% if messages %}
-                        {% for message in messages %}<div class="alert alert-info">{{ message }}</div>{% endfor %}
-                    {% endif %}
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags == 'error' %}alert-danger {% elif message.tags == 'success' %}alert-success {% else %}alert-info{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
                     {% if error %}<div class="alert alert-danger">{{ error }}</div>{% endif %}
                     <form method="post" class="php-email-form">
                         {% csrf_token %}
