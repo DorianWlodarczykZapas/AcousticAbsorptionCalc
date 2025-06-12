@@ -13,7 +13,11 @@
                 <div class="col-lg-6">
                     <h2 class="mb-4 text-center">{% trans "Register" %}</h2>
                     {% if messages %}
-                        {% for message in messages %}<div class="alert alert-success">{{ message }}</div>{% endfor %}
+                        {% for message in messages %}
+                            <div class="alert {% if message.tags == 'error' %}alert-danger {% elif message.tags == 'success' %}alert-success {% elif message.tags == 'warning' %}alert-warning {% else %}alert-info{% endif %}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
                     {% endif %}
                     <form method="POST" class="php-email-form">
                         {% csrf_token %}
