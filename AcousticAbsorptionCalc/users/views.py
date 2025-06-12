@@ -62,7 +62,7 @@ class LoginView(View):
         else:
             error_msg = _("Invalid username/email or password")
             messages.error(request, error_msg)
-            return render(request, "users/login.html", {"error": error_msg})
+            return render(request, "users/login.html")
 
 
 class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
