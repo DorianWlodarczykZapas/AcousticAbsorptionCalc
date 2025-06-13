@@ -163,6 +163,9 @@ class RoomCalculationSummaryView(DetailView):
     template_name = "rooms/room_summary.html"
     context_object_name = "room"
 
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related("surfaces", "furnishings")
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
