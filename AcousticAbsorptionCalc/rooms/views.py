@@ -151,7 +151,7 @@ class RoomUpdateView(LoginRequiredMixin, UpdateView):
 
 class RoomDeleteView(LoginRequiredMixin, DeleteView):
     model = Room
-    template_name = "rooms/room_confirm_delete.html"
+    template_name = "rooms/room_delete.html"
     context_object_name = "room"
 
     def get_success_url(self):
