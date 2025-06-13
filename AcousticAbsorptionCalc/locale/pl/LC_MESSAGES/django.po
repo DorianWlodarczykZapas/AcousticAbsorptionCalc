@@ -667,3 +667,9 @@ msgstr "Powrót na stronę główną"
 
 msgid "Account created for %(username)s (%(email)s)"
 msgstr "Utworzono konto dla %(username)s (%(email)s)"
+
+msgid "Actions"
+msgstr "Działania"
+
+msgid "Edit"
+msgstr "Edytuj"

@@ -19,7 +19,7 @@ class RoomListView(LoginRequiredMixin, ListView):
     context_object_name = "rooms"
 
     def get_queryset(self):
-        return Room.objects.select_related("project").all()
+        return Room.objects.select_related("project").prefetch_related("furnishings")
 
 
 class RoomCreateView(LoginRequiredMixin, CreateView):
