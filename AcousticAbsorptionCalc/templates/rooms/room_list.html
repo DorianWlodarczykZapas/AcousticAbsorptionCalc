@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load static %}
 {% block title %}
     {% trans "Rooms" %}
 {% endblock %}
@@ -10,7 +9,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-10">
                     <h2 class="mb-4 text-center">{% trans "Rooms List" %}</h2>
-                    <div class="mb-3 text-right">
+                    <div class="mb-3 text-end">
                         <a href="{% url 'rooms:room_create' %}" class="btn btn-primary">{% trans "Add New Room" %}</a>
                     </div>
                     {% if rooms %}
@@ -18,17 +17,19 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th scope="col">{% trans "Name" %}</th>
-                                        <th scope="col">{% trans "Length (m)" %}</th>
-                                        <th scope="col">{% trans "Width (m)" %}</th>
-                                        <th scope="col">{% trans "Height (m)" %}</th>
-                                        <th scope="col">{% trans "Project" %}</th>
-                                        <th scope="col">{% trans "Actions" %}</th>
+                                        <th>{% trans "Name" %}</th>
+                                        <th>{% trans "Length (m)" %}</th>
+                                        <th>{% trans "Width (m)" %}</th>
+                                        <th>{% trans "Height (m)" %}</th>
+                                        <th>{% trans "Project" %}</th>
+                                        <th>{% trans "Actions" %}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for room in rooms %}
-                                        <tr>
+                                        <tr data-bs-toggle="collapse"
+                                            data-bs-target="#furnishing-{{ room.id }}"
+                                            style="cursor: pointer">
                                             <td>{{ room.name }}</td>
                                             <td>{{ room.length }}</td>
                                             <td>{{ room.width }}</td>
@@ -41,8 +42,25 @@
                                                 {% endif %}
                                             </td>
                                             <td>
+                                                <a href="{% url 'rooms:room_summary' pk=room.pk %}"
+                                                   class="btn btn-info btn-sm">{% trans "Details" %}</a>
+                                                <a href="{% url 'rooms:room_edit' pk=room.pk %}"
+                                                   class="btn btn-warning btn-sm">{% trans "Edit" %}</a>
                                                 <a href="{% url 'rooms:room_delete' pk=room.pk %}"
                                                    class="btn btn-danger btn-sm">{% trans "Delete" %}</a>
+                                            </td>
+                                        </tr>
+                                        <tr class="collapse bg-light" id="furnishing-{{ room.id }}">
+                                            <td colspan="6">
+                                                <strong>{% trans "Furnishings:" %}</strong>
+                                                <br>
+                                                {% if room.furnishings.all %}
+                                                    <ul class="mb-0">
+                                                        {% for f in room.furnishings.all %}<li>{{ f.material.name }} – {{ f.quantity }} m²</li>{% endfor %}
+                                                    </ul>
+                                                {% else %}
+                                                    <em>{% trans "No furnishings" %}</em>
+                                                {% endif %}
                                             </td>
                                         </tr>
                                     {% endfor %}
